@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # SAMSA, version 2.0
 
 Version 2 of the SAMSA pipeline - faster!  Lighter!  More options!  Less waiting!  Still in beta testing!  
@@ -44,3 +45,7 @@ Bolger, A. M., Lohse, M., & Usadel, B. (2014). Trimmomatic: A flexible trimmer f
 
 Magoc, T., and Salzberg, S. FLASH: Fast length adjustment of short reads to improve genome assemblies. Bioinformatics 27:21 (2011), 2957-63.
 
+=======
+# samsa_v2
+Version 2 of the SAMSA pipeline
+>>>>>>> 2d1602d7bfcec3d7d9c5390c62c2e87a6859814c
