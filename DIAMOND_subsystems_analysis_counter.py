@@ -116,43 +116,11 @@ for line in db:
 			db_hier = "NO HIERARCHY"
 		else:
 			hier_split = splitline[1].split("\t")
-			db_hier = hier_split[0] + "\t" + hier_split[1] + "\t" + hier_split[2] + "\t" + hier_split[3]
+			if hier_split[3].strip() != "":
+				db_hier = hier_split[0] + "\t" + hier_split[1] + "\t" + hier_split[2] + "\t" + hier_split[3]
+			else:
+				db_hier = hier_split[0] + "\t" + hier_split[1] + "\t\t" + hier_split[2] + "\t" + hier_split[3]
 		
-#		db_entry = line.split("[", 1)
-#		db_entry = db_entry[0].split(" ", 1)
-#		db_entry = db_entry[1][1:-1]
-#		
-#		# organism name
-#		if line.count("[") != 1:
-#			splitline = line.split("[")
-#
-#			db_org = splitline[line.count("[")].strip()[:-1]
-#			if db_org[0].isdigit():
-#				split_db_org = db_org.split()
-#				try:
-#					db_org = split_db_org[1] + " " + split_db_org[2]
-#				except IndexError:
-#					try:
-#						db_org = split_db_org[1]
-#					except IndexError:
-#						db_org = splitline[line.count("[")-1]
-#						if db_org[0].isdigit():
-#							split_db_org = db_org.split()
-#							db_org = split_db_org[1] + " " + split_db_org[2]
-#						print line
-#						print db_org
-#		else:	
-#			db_org = line.split("[", 1)
-#			db_org = db_org[1].split()
-#			try:
-#				db_org = str(db_org[1]) + " " + str(db_org[2])
-#			except IndexError:
-#				db_org = line.strip().split("[", 1)
-#				db_org = db_org[1][:-1]
-#				db_error_counter += 1
-#		
-#		db_org = re.sub('[^a-zA-Z0-9-_*. ]', '', db_org)
-
 		# add to dictionaries		
 		db_hier_dictionary[db_id] = db_hier
 		
@@ -207,7 +175,7 @@ for k, v in sorted(condensed_hit_db.items(), key=lambda (k,v): -v):
 		error_counter += 1
 		continue
 
-print "\Annotations saved to file: '" + outfile_name + "'."
+print "\nAnnotations saved to file: '" + outfile_name + "'."
 print "Number of errors: " + str(error_counter)
 
 db.close()
