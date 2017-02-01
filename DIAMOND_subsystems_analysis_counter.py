@@ -18,13 +18,13 @@
 #
 ##########################################################################
 #
-# DIAMOND_analysis_counter.py
-# Created 8/16/2016, this version created 1/10/2017
+# DIAMOND_subsystems_analysis_counter.py
+# Created 2/01/2017, this version created 2/01/2017
 # Sam Westreich, stwestreich@ucdavis.edu, github.com/transcript
 #
 # This program parses through the results file from a DIAMOND annotation run
 # (in BLAST m8 format) to get the results into something more compressed
-# and readable.
+# and readable, against the SUBSYSTEMS database.
 #
 # Usage: 
 #
@@ -32,11 +32,7 @@
 #								in m8 format)
 # -D		database		specifies a reference database to search against 
 #								for results
-# -O		organism		returns organism results
-# -F		function		returns functional results
-# -SO		specific org	creates a separate outfile for results that hit 
-#							a specific organism
-# 
+#
 ##########################################################################
 
 # imports
@@ -52,11 +48,6 @@ def string_find(usage_term):
 
 t0 = time.clock()
 
-# checking for an option (organism or function) to be specified
-if "-O" not in sys.argv:
-	if "-F" not in sys.argv:
-		sys.exit("WARNING: need to specify either organism results (with -O flag in command) or functional results (with -F flag in command).")
-
 # loading starting file
 if "-I" in sys.argv:
 	infile_name = string_find("-I")
@@ -66,7 +57,7 @@ else:
 infile = open (infile_name, "r")
 
 # setting up databases
-RefSeq_hit_count_db = {}
+hit_count_db = {}
 unique_seq_db = {}
 line_counter = 0
 
@@ -81,9 +72,9 @@ for line in infile:
 	unique_seq_db[splitline[0]] = 1
 
 	try:
-		RefSeq_hit_count_db[splitline[1]] += 1
+		hit_count_db[splitline[1]] += 1
 	except KeyError:
-		RefSeq_hit_count_db[splitline[1]] = 1
+		hit_count_db[splitline[1]] = 1
 		continue
 
 t1 = time.clock()
@@ -107,68 +98,63 @@ print "\nStarting database analysis now."
 
 t2 = time.clock()
 
-# optional outfile of specific organism results
-if "-SO" in sys.argv:
-	target_org = string_find("-SO")
-	target_org_outfile = open(infile_name[:-5] + "_" + target_org + ".tsv", "w")
-
 # building a dictionary of the reference database
-if "-F" in sys.argv:
-	db_func_dictionary = {}
-if "-O" in sys.argv:
-	db_org_dictionary = {}
+db_hier_dictionary = {}
 db_line_counter = 0
 db_error_counter = 0
 
 for line in db:
 	if line.startswith(">") == True:
 		db_line_counter += 1
-		splitline = line.split("  ")
+		splitline = line.split("\t", 1)
 		
 		# ID, the hit returned in DIAMOND results
 		db_id = str(splitline[0])[1:]
 		
 		# name and functional description
-		db_entry = line.split("[", 1)
-		db_entry = db_entry[0].split(" ", 1)
-		db_entry = db_entry[1][1:-1]
+		if "NO HIERARCHY" in splitline[1]:
+			db_hier = "NO HIERARCHY"
+		else:
+			hier_split = splitline[1].split("\t")
+			db_hier = hier_split[0] + "\t" + hier_split[1] + "\t" + hier_split[2] + "\t" + hier_split[3]
 		
-		# organism name
-		if line.count("[") != 1:
-			splitline = line.split("[")
-
-			db_org = splitline[line.count("[")].strip()[:-1]
-			if db_org[0].isdigit():
-				split_db_org = db_org.split()
-				try:
-					db_org = split_db_org[1] + " " + split_db_org[2]
-				except IndexError:
-					try:
-						db_org = split_db_org[1]
-					except IndexError:
-						db_org = splitline[line.count("[")-1]
-						if db_org[0].isdigit():
-							split_db_org = db_org.split()
-							db_org = split_db_org[1] + " " + split_db_org[2]
-						print line
-						print db_org
-		else:	
-			db_org = line.split("[", 1)
-			db_org = db_org[1].split()
-			try:
-				db_org = str(db_org[1]) + " " + str(db_org[2])
-			except IndexError:
-				db_org = line.strip().split("[", 1)
-				db_org = db_org[1][:-1]
-				db_error_counter += 1
-		
-		db_org = re.sub('[^a-zA-Z0-9-_*. ]', '', db_org)
+#		db_entry = line.split("[", 1)
+#		db_entry = db_entry[0].split(" ", 1)
+#		db_entry = db_entry[1][1:-1]
+#		
+#		# organism name
+#		if line.count("[") != 1:
+#			splitline = line.split("[")
+#
+#			db_org = splitline[line.count("[")].strip()[:-1]
+#			if db_org[0].isdigit():
+#				split_db_org = db_org.split()
+#				try:
+#					db_org = split_db_org[1] + " " + split_db_org[2]
+#				except IndexError:
+#					try:
+#						db_org = split_db_org[1]
+#					except IndexError:
+#						db_org = splitline[line.count("[")-1]
+#						if db_org[0].isdigit():
+#							split_db_org = db_org.split()
+#							db_org = split_db_org[1] + " " + split_db_org[2]
+#						print line
+#						print db_org
+#		else:	
+#			db_org = line.split("[", 1)
+#			db_org = db_org[1].split()
+#			try:
+#				db_org = str(db_org[1]) + " " + str(db_org[2])
+#			except IndexError:
+#				db_org = line.strip().split("[", 1)
+#				db_org = db_org[1][:-1]
+#				db_error_counter += 1
+#		
+#		db_org = re.sub('[^a-zA-Z0-9-_*. ]', '', db_org)
 
 		# add to dictionaries		
-		if "-F" in sys.argv:
-			db_func_dictionary[db_id] = db_entry
-		if "-O" in sys.argv:
-			db_org_dictionary[db_id] = db_org
+		db_hier_dictionary[db_id] = db_hier
 		
 		# line counter to show progress
 		if db_line_counter % 1000000 == 0:							# each million
@@ -183,28 +169,22 @@ print "Number of lines: " + str(db_line_counter)
 print "Number of errors: " + str(db_error_counter)
 
 # condensing down the identical matches
-condensed_RefSeq_hit_db = {}
+condensed_hit_db = {}
 
-for entry in RefSeq_hit_count_db.keys():
-	if "-O" in sys.argv:
-		org = db_org_dictionary[entry]
-	if "-F" in sys.argv:
-		org = db_func_dictionary[entry]
-	if org in condensed_RefSeq_hit_db.keys():
-		condensed_RefSeq_hit_db[org] += RefSeq_hit_count_db[entry]
+for entry in hit_count_db.keys():
+	org = db_hier_dictionary[entry]
+	if org in condensed_hit_db.keys():
+		condensed_hit_db[org] += hit_count_db[entry]
 	else:
-		condensed_RefSeq_hit_db[org] = RefSeq_hit_count_db[entry]
+		condensed_hit_db[org] = hit_count_db[entry]
 
 # dictionary output and summary
 print "\nDictionary database assembled."
 print "Time elapsed: " + str(t3-t2) + " seconds."
 print "Number of errors: " + str(db_error_counter)
 
-if "-O" in sys.argv:
-	print "\nTop ten organism matches:"
-if "-F" in sys.argv:
-	print "\nTop ten function matches:"
-for k, v in sorted(condensed_RefSeq_hit_db.items(), key=lambda (k,v): -v)[:10]:
+print "\nTop ten hierarchy matches:"
+for k, v in sorted(condensed_hit_db.items(), key=lambda (k,v): -v)[:10]:
 	try:
 		print (str(v) + "\t" + k )
 	except KeyError:
@@ -212,16 +192,13 @@ for k, v in sorted(condensed_RefSeq_hit_db.items(), key=lambda (k,v): -v)[:10]:
 		continue
 
 # creating the outfiles
-if "-O" in sys.argv:
-	outfile_name = infile_name[:-5] + "_organism.tsv"
-if "-F" in sys.argv:
-		outfile_name = infile_name[:-5] + "_function.tsv"
+outfile_name = infile_name[:-5] + "_hierarchy.tsv"
 
 outfile = open (outfile_name, "w")
 
 # writing the output
 error_counter = 0
-for k, v in sorted(condensed_RefSeq_hit_db.items(), key=lambda (k,v): -v):
+for k, v in sorted(condensed_hit_db.items(), key=lambda (k,v): -v):
 	try:
 		q = v * 100 / float(line_counter)
 		outfile.write (str(q) + "\t" + str(v) + "\t" + k + "\n")
