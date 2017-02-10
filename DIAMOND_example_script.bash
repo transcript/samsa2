@@ -20,12 +20,12 @@
 
 # setting variables:
 
-database = "starting_reference_database_name.fa"
-diamond_database = "starting_reference_database_name.daa"
-filename = "starting_fastq_input_file.fastq"
-diamond_location = /path/to/diamond/program/
-diamond_output = "name_of_DIAMOND_search_output.daa"
-final_output = "name_of_final_BLAST_m8_results.m8"
+database="starting_reference_database_name.fa"
+diamond_database="starting_reference_database_name.daa"
+filename="starting_fastq_input_file.fastq"
+diamond_location=/path/to/diamond/program/
+diamond_output="name_of_DIAMOND_search_output.daa"
+final_output="name_of_final_BLAST_m8_results.m8"
 
 ####################################################################
 
