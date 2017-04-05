@@ -30,7 +30,7 @@ control_files <- list.files(
   pattern = "control_*", full.names = T, recursive = FALSE)
 control_names = ""
 for (name in control_files) {
-  control_names <- c(control_names, unlist(strsplit(name, split='_', fixed=TRUE))[4])}
+  control_names <- c(control_names, unlist(strsplit(name, split='_', fixed=TRUE))[2])}
 control_names <- control_names[-1]
 control_names_trimmed = ""
 for (name in control_names) {
@@ -41,7 +41,7 @@ exp_files <- list.files(
   pattern = "experimental_*", full.names = T, recursive = FALSE)
 exp_names = ""
 for (name in exp_files) {
-  exp_names <- c(exp_names, unlist(strsplit(name, split='_', fixed=TRUE))[4])}
+  exp_names <- c(exp_names, unlist(strsplit(name, split='_', fixed=TRUE))[2])}
 exp_names <- exp_names[-1]
 exp_names_trimmed = ""
 for (name in exp_names) {
@@ -54,31 +54,52 @@ y <- 0
 for (x in control_files) {
   y <- y + 1
   if (y == 1) {
-    control_table <- read.table(file = x, header = F, quote = "", sep = "\t")
-    colnames(control_table) = c("DELETE", x, "V3")
-    control_table <- control_table[,c(2,3)]      }
+    control_table <- read.table(file = x, header=F, quote = "", sep = "\t", fill = TRUE)
+    if (ncol(control_table) == 4) {
+      colnames(control_table) = c("DELETE", x, "V3", "md5")
+      control_table <- control_table[,c(4,2,3)] 
+    } else {
+      colnames(control_table) = c("DELETE", x, "V3")
+      control_table <- control_table[,c(3,2)] }
+    if (nrow(control_table) > 1000) {
+      control_table <- control_table[c(1:1000),] }}     # can be deleted, restricts to top 1k hits
   if (y > 1) {
-    temp_table <- read.table(file = x, header = F, quote = "", sep = "\t")
-    colnames(temp_table) = c("DELETE", x, "V3")
-    temp_table <- temp_table[,c(2,3)]
-    control_table <- merge(control_table, temp_table, by = "V3", all = T)  }
+    temp_table <- read.table(file = x, header = F, quote = "", sep = "\t", fill = TRUE)
+    if (nrow(temp_table) > 1000) {
+      temp_table <- temp_table[c(1:1000),] }      # can be deleted, restricts to top 1k hits
+    print (x)
+    if (ncol(temp_table) == 4) {
+      colnames(temp_table) = c("DELETE", x, "V3", "md5") 
+    } else {
+      colnames(temp_table) = c("DELETE", x, "V3") }
+    control_table <- merge(control_table, temp_table[,c(2,3)], by = "V3", all.x = T)  }
 }
 control_table[is.na(control_table)] <- 0
 rownames(control_table) = control_table$V3
-control_table_trimmed <- control_table[,-1]
+control_table_trimmed <- control_table[,-1, drop = FALSE]
 
-# loading the experimental table
+# loading the exp table
 y <- 0
 for (x in exp_files) {
   y <- y + 1
   if (y == 1) {
-    exp_table <- read.table(file = x, header=F, quote = "", sep = "\t")
-    colnames(exp_table) = c("DELETE", x, "V3")
-    exp_table <- exp_table[,c(2,3)]  }
+    exp_table <- read.table(file = x, header=F, quote = "", sep = "\t", fill = TRUE)
+    if (ncol(exp_table) == 4) {
+      colnames(exp_table) = c("DELETE", x, "V3", "md5")
+      exp_table <- exp_table[,c(4,2,3)] 
+    } else {
+      colnames(exp_table) = c("DELETE", x, "V3")
+      exp_table <- exp_table[,c(3,2)] }
+    if (nrow(exp_table) > 1000) { exp_table <- exp_table[c(1:1000),] }} # can be deleted, restricts to top 1k hits
   if (y > 1) {
-    temp_table <- read.table(file = x, header = F, quote = "", sep = "\t")
-    colnames(temp_table) = c("DELETE", x, "V3")
-    exp_table <- merge(exp_table, temp_table[,c(2,3)], by = "V3", all = T)  }
+    temp_table <- read.table(file = x, header = F, quote = "", sep = "\t", fill = TRUE)
+    if (nrow(temp_table) > 1000) { temp_table <- temp_table[c(1:1000),] }    # can be deleted, restricts to top 1k hits
+    print (x)
+    if (ncol(temp_table) == 4) {
+      colnames(temp_table) = c("DELETE", x, "V3", "md5") 
+    } else {
+      colnames(temp_table) = c("DELETE", x, "V3") }
+    exp_table <- merge(exp_table, temp_table[,c(2,3)], by = "V3", all.x = T)  }
 }
 exp_table[is.na(exp_table)] <- 0
 rownames(exp_table) = exp_table$V3
@@ -126,7 +147,7 @@ pheatmap(sampleDistMatrix,
 
 # saving and finishing up
 cat ("Saving PCA plot as ", save_filename, " now.\n")
-pdf(file = paste(save_filename, ".pdf", sep = ""), width=10, height=7)
+pdf(file = paste("macaque_function_heatmap_3-28", ".pdf", sep = ""), width=10, height=7)
 pheatmap(sampleDistMatrix,
          clustering_distance_rows=dists,
          clustering_distance_cols=dists,

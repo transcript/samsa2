@@ -1,0 +1,48 @@
+11.6389548694	49	NO HIERARCHY
+6.1757719715	26	Beta-lactamase (EC 3.5.2.6)	Beta-lactamase	Virulence, Disease and Defense	Resistance to antibiotics and toxic compounds
+6.1757719715	26	Ribosomal RNA large subunit methyltransferase N (EC 2.1.1.-)	Conserved_gene_cluster_associated_with_Met-tRNA_formyltransferase		Clustering-based subsystems	
+5.46318289786	23	Chromosomal replication initiator protein DnaA	DNA-replication	DNA Metabolism	DNA replication
+3.80047505938	16	Ribosomal RNA small subunit methyltransferase B (EC 2.1.1.-)	Conserved_gene_cluster_associated_with_Met-tRNA_formyltransferase		Clustering-based subsystems	
+3.80047505938	16	Sensor protein PhoQ (EC 2.7.13.3)	Lipid_A_modifications	Cell Wall and Capsule	Gram-Negative cell wall components
+3.80047505938	16	Beta-lactamase regulatory sensor-transducer BlaR1	BlaR1_Family_Regulatory_Sensor-transducer_Disambiguation	Virulence	Resistance to antibiotics and toxic compounds
+3.56294536817	15	D-lactate dehydrogenase (EC 1.1.1.28)	Fermentations:_Mixed_acid	Carbohydrates	Fermentation
+3.32541567696	14	DNA topoisomerase III (EC 5.99.1.2)	DNA_processing_cluster	DNA Metabolism	DNA uptake, competence
+3.32541567696	14	bifunctional hemolysin-adenylate cyclase precursor	cAMP_signaling_in_bacteria		Regulation and Cell signaling	
+3.32541567696	14	Type III secretion transcriptional activator HilA	Type_III_secretion_system_orphans	Membrane Transport	Protein secretion system, Type III
+2.61282660333	11	Fumarate hydratase class II (EC 4.2.1.2)	TCA_Cycle	Carbohydrates	Central carbohydrate metabolism
+2.61282660333	11	Beta-lactamase	Beta-lactamase	Virulence, Disease and Defense	Resistance to antibiotics and toxic compounds
+2.61282660333	11	Potassium uptake protein, integral membrane component, KtrB	Hyperosmotic_potassium_uptake		Potassium metabolism	
+2.37529691211	10	SOS-response repressor and protease LexA (EC 3.4.21.88)	DNA_repair,_bacterial_UmuCD_system	DNA Metabolism	DNA repair
+2.37529691211	10	Alpha-galactosidase (EC 3.2.1.22)	Melibiose_Utilization	Carbohydrates	Di- and oligosaccharides
+2.1377672209	9	Sucrose phosphorylase (EC 2.4.1.7)	Fructooligosaccharides(FOS)_and_Raffinose_Utilization	Carbohydrates	Di- and oligosaccharides
+2.1377672209	9	Sporulation initiation inhibitor protein Soj	Bacterial_Cytoskeleton		Cell Division and Cell Cycle	
+1.90023752969	8	Ribosomal RNA small subunit methyltransferase E (EC 2.1.1.-)	Heat_shock_dnaK_gene_cluster_extended	Stress Response	Heat shock
+1.66270783848	7	Nicotinate phosphoribosyltransferase (EC 2.4.2.11)	Redox-dependent_regulation_of_nucleus_processes	Stress Response	Oxidative stress
+1.66270783848	7	Tryptophan synthase alpha chain (EC 4.2.1.20)	Tryptophan_synthesis	Amino Acids and Derivatives	Aromatic amino acids and derivatives
+1.66270783848	7	Dihydrofolate reductase (EC 1.5.1.3)	5-FCL-like_protein	Cofactors, Vitamins, Prosthetic Groups, Pigments	Folate and pterines
+1.66270783848	7	Aminopeptidase C (EC 3.4.22.40)	Protein_degradation	Protein Metabolism	Protein degradation
+1.42517814727	6	Sucrose phosphorylase (EC 2.4.1.7)	Sucrose_utilization	Carbohydrates	Di- and oligosaccharides
+1.42517814727	6	Uridylate kinase (EC 2.7.4.-)	CBSS-312309.3.peg.1965		Clustering-based subsystems	
+1.42517814727	6	Vancomycin response regulator VanR	Resistance_to_Vancomycin	Virulence, Disease and Defense	Resistance to antibiotics and toxic compounds
+1.42517814727	6	RNA methyltransferase, TrmA family	At3g21300	Miscellaneous	Plant-Prokaryote DOE project
+1.18764845606	5	L-serine dehydratase, beta subunit (EC 4.3.1.17)	Pyruvate_Alanine_Serine_Interconversions	Carbohydrates	Central carbohydrate metabolism
+1.18764845606	5	Sortase A, LPXTG specific	Heme,_hemin_uptake_and_utilization_systems_in_GramPositives		Iron acquisition and metabolism	
+1.18764845606	5	23S rRNA (Uracil-5-) -methyltransferase rumB (EC 2.1.1.-)	rRNA_modification_Bacteria	RNA Metabolism	RNA processing and modification
+1.18764845606	5	Orotate phosphoribosyltransferase (EC 2.4.2.10)	Iojap	Miscellaneous	Plant-Prokaryote DOE project
+0.950118764846	4	Spectinomycin 9-O-adenylyltransferase	Aminoglycoside_adenylyltransferases	Virulence, Disease and Defense	Resistance to antibiotics and toxic compounds
+0.950118764846	4	16S rRNA processing protein RimM	Ribosome_biogenesis_bacterial	Protein Metabolism	Protein biosynthesis
+0.950118764846	4	S-ribosylhomocysteine lyase (EC 4.4.1.21)	Methionine_Biosynthesis	Amino Acids and Derivatives	Lysine, threonine, methionine, and cysteine
+0.950118764846	4	Exonuclease SbcC	DNA_repair,_bacterial	DNA Metabolism	DNA repair
+0.712589073634	3	Transposase for insertion sequence-like element IS431mec	Methicillin_resistance_in_Staphylococci	Virulence, Disease and Defense	Resistance to antibiotics and toxic compounds
+0.712589073634	3	ATP-binding protein p271	Tn552	Phages, Prophages, Transposable elements, Plasmids	Transposable elements
+0.712589073634	3	RNA polymerase sigma factor RpoS	Transcription_initiation,_bacterial_sigma_factors	RNA Metabolism	Transcription
+0.712589073634	3	ATP phosphoribosyltransferase (EC 2.4.2.17)	Histidine_Biosynthesis	Amino Acids and Derivatives	Histidine Metabolism
+0.475059382423	2	Hypoxanthine-guanine phosphoribosyltransferase (EC 2.4.2.8)	Purine_conversions	Nucleosides and Nucleotides	Purines
+0.475059382423	2	Retron-type reverse transcriptase	Group_II_intron-associated_genes		RNA Metabolism	
+0.475059382423	2	Dihydroorotate dehydrogenase electron transfer subunit (EC 1.3.3.1)	De_Novo_Pyrimidine_Synthesis	Nucleosides and Nucleotides	Pyrimidines
+0.475059382423	2	Ribosomal large subunit pseudouridine synthase D (EC 4.2.1.70)	Ribosome_biogenesis_bacterial	Protein Metabolism	Protein biosynthesis
+0.237529691211	1	Membrane alanine aminopeptidase N (EC 3.4.11.2)	Aminopeptidases_(EC_3.4.11.-)	Protein Metabolism	Protein degradation
+0.237529691211	1	hydrogenase, subunit gamma related protein	Hydrogenases	Respiration	Electron donating reactions
+0.237529691211	1	Cadmium efflux system accessory protein	Cadmium_resistance	Virulence, Disease and Defense	Resistance to antibiotics and toxic compounds
+0.237529691211	1	Glutamate synthase [NADPH] small chain (EC 1.4.1.13)	Glutamine,_Glutamate,_Aspartate_and_Asparagine_Biosynthesis	Amino Acids and Derivatives	Glutamine, glutamate, aspartate, asparagine; ammonia assimilation
+0.237529691211	1	anthrax toxin moiety, protective antigen, pagA formerly pag, plasmid pXO1, B. anthracis (M22589, P13423)	cAMP_signaling_in_bacteria		Regulation and Cell signaling	
