@@ -1,14 +1,42 @@
 #!/usr/lib/python2.7
 
+##########################################################################
+#
+# Copyright (C) 2015-2016 Sam Westreich
+#
+# This program is free software; you can redistribute it and/or modify it
+# under the terms of the GNU General Public License as published by the
+# Free Software Foundation;
+#
+# This program is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+# See the GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License along
+# with this program; if not, write to the Free Software Foundation, Inc.,
+# 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+#
+##########################################################################
+#
 # DIAMOND_specific_organism_retriever.py
-# Created 1/30/17, by Sam Westreich
+# Created 1/30/17, this version updated 5/22/17
+# Sam Westreich, stwestreich@ucdavis.edu, github.com/transcript
+#
+# Purpose: This takes a DIAMOND outfile and the RefSeq database and pulls 
+# out hits to any specific organism, identifying the raw input reads that 
+# were mapped to that organism.
 
-# Purpose: This takes a DIAMOND outfile and the RefSeq database and pulls out hits to any specific organism, identifying the raw input reads that were mapped to that organism.
-
-# Bad usage:
-# -I		infile
-# -SO		specific target organism
-# -D		database file
+# Usage:
+#
+# -I		infile				specifies the infile (a DIAMOND results file
+#									in m8 format)	
+# -SO		specific target 	the organism search term, either genus or
+#									species.
+# -D		database file		specifies a reference database to search
+#									against for results
+#
+##########################################################################
 
 # imports
 import operator, sys, time, gzip, re
@@ -86,8 +114,7 @@ for line in db:
 							if db_org[0].isdigit():
 								split_db_org = db_org.split()
 								db_org = split_db_org[1] + " " + split_db_org[2]
-#							print line
-#							print db_org
+
 			else:	
 				db_org = line.split("[", 1)
 				db_org = db_org[1].split()
@@ -127,16 +154,11 @@ for line in infile:
 	except KeyError:
 		continue
 		
-#	unique_seq_db[splitline[0]] = 1
-#	try:
-#		RefSeq_hit_count_db[splitline[1]] += 1
-#	except KeyError:
-#		RefSeq_hit_count_db[splitline[1]] = 1
-#		continue
 	if line_counter % 1000000 == 0:
 		t99 = time.clock()
 		print str(line_counter)[:-6] + "M lines processed so far in " + str(t99-t1) + " seconds."
 
+# results stats
 t100 = time.clock()		
 print "Run complete!"
 print "Number of sequences found matching target organism, " + target_org + ": " + str(hit_counter)

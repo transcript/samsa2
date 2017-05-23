@@ -110,7 +110,7 @@ t2 = time.clock()
 # optional outfile of specific organism results
 if "-SO" in sys.argv:
 	target_org = string_find("-SO")
-	target_org_outfile = open(infile_name[:-5] + "_" + target_org + ".tsv", "w")
+	db_SO_dictionary = {}
 
 # building a dictionary of the reference database
 if "-F" in sys.argv:
@@ -169,6 +169,9 @@ for line in db:
 			db_func_dictionary[db_id] = db_entry
 		if "-O" in sys.argv:
 			db_org_dictionary[db_id] = db_org
+		if "-SO" in sys.argv:
+			if target_org in db_org:
+				db_SO_dictionary[db_id] = db_entry
 		
 		# line counter to show progress
 		if db_line_counter % 1000000 == 0:							# each million
@@ -195,6 +198,18 @@ for entry in RefSeq_hit_count_db.keys():
 	else:
 		condensed_RefSeq_hit_db[org] = RefSeq_hit_count_db[entry]
 
+if "SO" in sys.argv:
+	condensed_RefSeq_SO_hit_db = {}
+
+	for entry in RefSeq_hit_count_db.keys():
+		if entry in db_SO_dictionary.values():
+			org = db_SO_dictionary[entry]
+			if org in condensed_RefSeq_SO_hit_db.keys():
+				condensed_RefSeq_SO_hit_db[org] += RefSeq_hit_count_db[entry]
+			else:
+				condensed_RefSeq_SO_hit_db[org] = RefSeq_hit_count_db[entry]
+
+
 # dictionary output and summary
 print "\nDictionary database assembled."
 print "Time elapsed: " + str(t3-t2) + " seconds."
@@ -215,7 +230,9 @@ for k, v in sorted(condensed_RefSeq_hit_db.items(), key=lambda (k,v): -v)[:10]:
 if "-O" in sys.argv:
 	outfile_name = infile_name[:-5] + "_organism.tsv"
 if "-F" in sys.argv:
-		outfile_name = infile_name[:-5] + "_function.tsv"
+	outfile_name = infile_name[:-5] + "_function.tsv"
+if "=SO" in sys.argv:
+	target_org_outfile = open(infile_name[:-5] + "_" + target_org + ".tsv", "w")
 
 outfile = open (outfile_name, "w")
 
@@ -229,6 +246,17 @@ for k, v in sorted(condensed_RefSeq_hit_db.items(), key=lambda (k,v): -v):
 		outfile.write (str(q) + "\t" + str(v) + "\tWARNING: Key not found for " + k + "\n")
 		error_counter += 1
 		continue
+
+# writing the output if optional specific organism flag is active
+if "-SO" in sys.argv:
+	for k, v in sorted(condensed_RefSeq_SO_hit_db.items(), key=lambda (k,v): -v):
+		try:
+			q = v * 100 / float(line_counter)
+			target_org_outfile.write (str(q) + "\t" + str(v) + "\t" + k + "\n")
+		except KeyError:
+			target_org_outfile.write (str(q) + "\t" + str(v) + "\tWARNING: Key not found for " + k + "\n")
+			error_counter += 1
+			continue
 
 print "\Annotations saved to file: '" + outfile_name + "'."
 print "Number of errors: " + str(error_counter)

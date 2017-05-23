@@ -5,7 +5,7 @@
 library("ggplot2")
 library("data.table")
 
-setwd("~/Desktop/Projects/Lab Stuff/Aim 3/subsystems_results/")
+setwd("~/Desktop/Projects/Lab Stuff/Aim 3/subsystems_results/reduced_files/")
 
 # get list of files
 files_list <- list.files( pattern = "*.reduced", full.names = T, recursive = FALSE)

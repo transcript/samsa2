@@ -87,6 +87,7 @@ for line in infile:
 
 t1 = time.clock()
 
+# results reporting
 print "\nAnalysis of " + infile_name + " complete."
 print "Number of total lines: " + str(line_counter)
 print "Number of unique sequences: " + str(len(unique_seq_db))

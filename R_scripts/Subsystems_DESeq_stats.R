@@ -85,16 +85,18 @@ l1_exp_table <- data.table(exp_table[, !names(exp_table) %in% c("Level1", "Level
 names(l1_control_table)[names(l1_control_table) == 'Level3'] <- 'Level1'
 names(l1_exp_table)[names(l1_exp_table) == 'Level3'] <- 'Level1'
 # OR for level 4 comparisons
-l1_control_table <- data.table(control_table[, !names(control_table) %in% c("Level1", "Level3", "Level4")])
+l1_control_table <- data.table(control_table[, !names(control_table) %in% c("Level1", "Level3", "Level2")])
 l1_exp_table <- data.table(exp_table[, !names(exp_table) %in% c("Level1", "Level3", "Level2")])
 names(l1_control_table)[names(l1_control_table) == 'Level4'] <- 'Level1'
 names(l1_exp_table)[names(l1_exp_table) == 'Level4'] <- 'Level1'
+l1_control_table <- data.table(as.data.frame(l1_control_table)[,c(2:(ncol(l1_control_table)),1)])
+l1_exp_table <- data.table(as.data.frame(l1_exp_table)[,c(2:(ncol(l1_exp_table)),1)])
 
 # remove blank spots (no hierarchy)
 l1_control_table <- l1_control_table[-which(l1_control_table$Level1 == ""), ]
 l1_exp_table <- l1_exp_table[-which(l1_exp_table$Level1 == ""), ]
 
-# simplified DESeq comparing two controls to two dosed individuals
+# reducing stuff down to avoid duplicates
 colnames(l1_control_table) <- c(control_names_trimmed, "Level1")
 colnames(l1_exp_table) <- c(exp_names_trimmed, "Level1")
 l1_control_table <- l1_control_table[, lapply(.SD, sum), by=Level1]
@@ -103,6 +105,7 @@ l1_table <- merge(l1_control_table, l1_exp_table, by="Level1", all.x = T)
 rownames(l1_table) <- l1_table$Level1
 l1_names <- l1_table$Level1
 l1_table$Level1 <- NULL
+l1_table[is.na(l1_table)] <- 0
 
 # now the DESeq stuff
 completeCondition <- data.frame(condition=factor(c(rep("experimental", length(exp_files)), 
@@ -121,5 +124,5 @@ l1_results <- l1_results[,c(1,2,8,9,3,4,5,6,7)]
 colnames(l1_results)[c(3,4)] <- c("controlMean", "experimentalMean")
 l1_results <- l1_results[order(-l1_results$baseMean),]
 
-write.table(l1_results, file = "Subsystems_level_1_DESeq_results.tab", 
+write.table(l1_results, file = "Subsystems_level_4_DESeq_results.tab", 
   append = FALSE, quote = FALSE, sep = "\t", row.names = FALSE, col.names = TRUE)
