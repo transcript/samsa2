@@ -7,17 +7,19 @@ Version 2 of the SAMSA pipeline - faster!  Lighter!  More options!  Less waiting
 * Option to annotate against custom databases.
 * Better, more polished R scripts that can be executed from the command line.
 * PCA plots and other graphical outputs.
-* More updates to come!
+* Filtering of ribosomes for even more speed.
+* And more!
 
 ## Quick start
 1. Clone or download the following programs:
 	1. SAMSA, version 2.0: https://github.com/transcript/samsa_v2
 	2. DIAMOND: https://github.com/bbuchfink/diamond
 	3. Trimmomatic, a flexible read cleaner: http://www.usadellab.org/cms/?page=trimmomatic
-	4. FLASH, if using paired-end data (recommended): https://ccb.jhu.edu/software/FLASH/
-2. Preprocess your reads using "SAMSA\_pre\_annotation\_pipeline.py".  
-3. Use DIAMOND to annotate your reads against a database of your choosing (note that database must be local and DIAMOND-indexed).  See "example\_DIAMOND\_annotation\_script.bash" for more details.
-4. Use "DIAMOND\_analysis\_counter.py" to create a ranked abundance summary of the DIAMOND results from each metatransciptome file.
+	4. PEAR, if using paired-end data (recommended): https://sco.h-its.org/exelixis/web/software/pear/
+	5. SortMeRNA: http://bioinfo.lifl.fr/RNA/sortmerna/
+2. Make changes to the master_script.bash, which performs the first 3 of 4 steps in the SAMSA pipeline (preprocessing, annotation, aggregation)
+3. If not using master_script, use DIAMOND to annotate your reads against a database of your choosing (note that database must be local and DIAMOND-indexed).  See "example\_DIAMOND\_annotation\_script.bash" for more details.
+4. If not using master_script, use "DIAMOND\_analysis\_counter.py" to create a ranked abundance summary of the DIAMOND results from each metatransciptome file.
 5. Import these abundance summaries into R and use "run\_DESeq\_stats.R" to determine the most significantly differing features between either individual metatranscriptomes, or control vs. experimental groups.
 
 
@@ -26,7 +28,7 @@ Metatranscriptome, RNA-seq data from multiple members of a microbial community, 
 
 However, working with metatranscriptome data often proves challenging, given its high complexity and large size.  SAMSA is one of the first bioinformatics pipelines designed with metatranscriptome data specifically in mind.  It accepts raw sequence data in FASTQ form as its input, and performs four phases:
 
-**Preprocessing:** If the sequencing was paired-end, FLASH is used to merge mate pairs.  Trimmomatic is used for the removal of adaptor contamination and low-quality reads.
+**Preprocessing:** If the sequencing was paired-end, PEAR is used to merge mate pairs.  Trimmomatic is used for the removal of adaptor contamination and low-quality reads.  SortMeRNA removes ribosomal sequences, as these don't contribute to the mRNA functional profile of the metatranscriptome.
 
 **Annotation:** Annotation is completed using [DIAMOND, an accelerated BLAST-like sequence aligner.](https://github.com/bbuchfink/diamond)  (Why DIAMOND?  At a standard rate of 10 annotations per second, a standard BLAST approach would take several months to finish - just for a single file!)
 
@@ -37,16 +39,17 @@ However, working with metatranscriptome data often proves challenging, given its
 ### Individual programs in SAMSA v.2.0 and their functions
 For more information, please consult the manual, which goes into more detail on each step in the SAMSA pipeline.
 
-**Preprocessing:**
+**Preprocessing:** The following program steps can either be run through master_script.bash or individually:
 
-* SAMSA_pre\_annotation\_pipeline.py - this program handles read trimming and merging, using FLASH (for merging mate-pairs if analyzing paired-end sequencing) and Trimmomatic for quality control.
-* SortMeRNA_example\_script.bash [shell] - example script for using SortMeRNA to remove ribosomal reads from raw data before annotation.  STILL TO COME  
+* PEAR - merges two paired-end FASTQ sequencing files together to make a single file of extended fragments.
+* Trimmomatic - removes low-quality sequences and/or adaptor contamination.
+* SortMeRNA - removes ribosomal reads, as these don't contribute to the mRNA profile of the metatranscriptome.
 
-**Annotation:**
+**Annotation:** This step can be performed through master_script.bash, or individually.
 
 * DIAMOND_example\_script.bash - a guide to structuring commmands for DIAMOND to perform annotations or for building dictionaries, including customizable paths to system locations and reference dictionaries.
 
-**Aggregation:**
+**Aggregation:** This step can be performed through master_script.bash, or individually.
 
 * DIAMOND_analysis\_counter.py - creates a summary file from DIAMOND results, condensing identical matches and providing counts.  Can be enabled to return either organism or functional results.  STILL TO COME
 
