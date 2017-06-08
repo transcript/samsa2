@@ -35,6 +35,7 @@
 #									species.
 # -D		database file		specifies a reference database to search
 #									against for results
+# -O 		outfile name		optional; changes the default outfile name
 #
 ##########################################################################
 
@@ -58,7 +59,18 @@ else:
 # optional outfile of specific organism results
 if "-SO" in sys.argv:
 	target_org = string_find("-SO")
-	target_org_outfile = open(infile_name[:-5] + "_" + target_org + ".tsv", "w")
+	if '"' in target_org:
+		for idx, elem in enumerate(sys.argv):
+			this_elem = elem
+			next_elem = sys.argv[(idx + 1) % len(sys.argv)]
+			second_elem = sys.argv[(idx + 2) % len(sys.argv)]
+			if elem == "-SO":
+				 target_org = next_elem + " " + second_elem
+	
+	if "-O" in sys.argv:
+		target_org_outfile = open(string_find("-O"), "w")
+	else:
+		target_org_outfile = open(infile_name[:-4] + "_" + target_org + ".tsv", "w")
 else:
 	sys.exit("Need to specify target organism with -SO flag.")
 

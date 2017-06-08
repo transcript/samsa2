@@ -107,7 +107,7 @@ infile.close()
 # time to search for these in the reference database
 db = open (db_name, "r")
 
-print "\nStarting database analysis now."
+print "\nReading in reference dadtabase now."
 
 t2 = time.clock()
 
@@ -135,8 +135,8 @@ for line in db:
 		# name and functional description
 		db_entry = line.split("[", 1)
 		db_entry = db_entry[0].split(" ", 1)
-		print db_entry[1]
 		db_entry = db_entry[1][1:-1]
+
 		
 		# organism name
 		if line.count("[") != 1:
@@ -159,16 +159,19 @@ for line in db:
 						print db_org
 		else:	
 			db_org = line.split("[", 1)
-			db_org = db_org[1].split()
+			db_org = db_org[1].split(" ")
 			try:
-				db_org = str(db_org[1]) + " " + str(db_org[2])
+				db_org = str(db_org[0]) + " " + str(db_org[1])
 			except IndexError:
 				db_org = line.strip().split("[", 1)
 				db_org = db_org[1][:-1]
 				db_error_counter += 1
-		
+
 		db_org = re.sub('[^a-zA-Z0-9-_*. ]', '', db_org)
 
+		if db_org == "theta CCMP2712":
+			print line + "\t" + db_org
+		
 		# add to dictionaries		
 		if "-F" in sys.argv:
 			db_func_dictionary[db_id] = db_entry
@@ -237,9 +240,9 @@ for k, v in sorted(condensed_RefSeq_hit_db.items(), key=lambda (k,v): -v)[:10]:
 
 # creating the outfiles
 if "-O" in sys.argv:
-	outfile_name = infile_name[:-4] + "_organism.tsv"
+	outfile_name = infile_name[:-3] + "_organism.tsv"
 if "-F" in sys.argv:
-	outfile_name = infile_name[:-4] + "_function.tsv"
+	outfile_name = infile_name[:-3] + "_function.tsv"
 if "=SO" in sys.argv:
 	target_org_outfile = open(infile_name[:-4] + "_" + target_org + ".tsv", "w")
 
