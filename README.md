@@ -1,6 +1,6 @@
 # SAMSA, version 2.0
 
-Version 2 of the SAMSA pipeline - faster!  Lighter!  More options!  Less waiting!  Still in pre-alpha testing and design!  
+Version 2 of the SAMSA pipeline - faster!  Lighter!  More options!  Less waiting!  
 
 ### New in version 2:
 * DIAMOND integration, allowing for SAMSA to be run without ever needing an MG-RAST account.
@@ -13,7 +13,7 @@ Version 2 of the SAMSA pipeline - faster!  Lighter!  More options!  Less waiting
 ## Quick start
 1. Clone or download the following programs:
 	1. SAMSA, version 2.0: https://github.com/transcript/samsa_v2
-	2. DIAMOND: https://github.com/bbuchfink/diamond
+	2. DIAMOND, version 0.8.3: https://github.com/bbuchfink/diamond
 	3. Trimmomatic, a flexible read cleaner: http://www.usadellab.org/cms/?page=trimmomatic
 	4. PEAR, if using paired-end data (recommended): https://sco.h-its.org/exelixis/web/software/pear/
 	5. SortMeRNA: http://bioinfo.lifl.fr/RNA/sortmerna/
@@ -51,7 +51,9 @@ For more information, please consult the manual, which goes into more detail on 
 
 **Aggregation:** This step can be performed through master_script.bash, or individually.
 
-* DIAMOND_analysis\_counter.py - creates a summary file from DIAMOND results, condensing identical matches and providing counts.  Can be enabled to return either organism or functional results.  STILL TO COME
+* DIAMOND_analysis\_counter.py - creates a summary file from DIAMOND results, condensing identical matches and providing counts.  Can be enabled to return either organism or functional results.
+* DIAMOND_subsystems_analysis_counter.py - handles Subsystems hierarchical annotations, keeping all hierarchy levels in the output.
+* DIAMOND_specific_organism_counter.py - allows for subsetting of results to obtain only results matching a specific genus, species, or function.
 
 **Analysis:**    
 Note: these programs are located in the "R_scripts" folder.  They all require two sets of DIAMOND summarized results from the aggregation step; an experimental set and a control set.
@@ -65,7 +67,7 @@ Note: these programs are located in the "R_scripts" folder.  They all require tw
 #### Need assistance?    
 Step 1: check the documentation!  The documentation includes in-depth explanations of each step, including sample commands.  Be sure to check there if you're having an issue on one particular step.
 
-If you're unsure if your files are being processed properly, take a look at the sample files.  These correspond to each step in the pipeline.  If a quick look ("less $file") reveals a dissimilar setup to these example files, there may be an issue with the most recent program used in the pipeline.
+If you're unsure if your files are being processed properly, take a look at the sample files.  These correspond to each step in the pipeline.  If a quick look (from the command line, "less $file") reveals a dissimilar setup to these example files, there may be an issue with the most recent program used in the pipeline.
 
 Check out the Google Group for SAMSA!  [https://groups.google.com/forum/#!forum/samsa-bioinformatics-group](https://groups.google.com/forum/#!forum/samsa-bioinformatics-group).  
 
