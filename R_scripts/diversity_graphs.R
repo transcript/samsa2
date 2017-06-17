@@ -1,28 +1,36 @@
-# diversity_graph.R
+# diversity_graphs.R
 # Created 8/11/16
-# Arguments that need to be specified: working directory (-d)
-# Files need to be properly named, as this reads in all files in directory matching the naming structure.
+# Last updated 6/16/2017
+# Run with --help flag for help.
 
-args <- commandArgs(TRUE)
+suppressPackageStartupMessages({
+  library(optparse)
+})
 
-library(optparse)
 option_list = list(
-  make_option(c("-d", "--directory"), type="character", default=NULL,
-              help="working directory location", metavar="character")
-); 
+  make_option(c("-I", "--input"), type="character", default="./",
+              help="Input directory", metavar="character"),
+  make_option(c("-O", "--out"), type="character", default="diversity_graph.pdf", 
+              help="output file name [default= %default]", metavar="character")
+)
 
 opt_parser = OptionParser(option_list=option_list);
 opt = parse_args(opt_parser);
 
-# check for necessary specs
-if (is.null(opt$directory)) {
-  print ("WARNING: No working directory specified with '-d' flag.")
-  stop()
-} else {
-  cat ("Working directory is ", opt$directory, "\n")
-  wd_location <- opt$directory
-}
+print("USAGE: $ diversity_graphs.R -I working_directory/ -O save.filename")
 
+# check for necessary specs
+if (is.null(opt$input)) {
+  print ("WARNING: No working input directory specified with '-I' flag.")
+  stop()
+} else {  cat ("Working directory is ", opt$input, "\n")
+  wd_location <- opt$input  
+  setwd(wd_location)  }
+
+cat ("Saving diversity graphs as", opt$out, "\n")
+save_filename <- opt$out
+
+# import other necessary packages
 suppressPackageStartupMessages({
   library(DESeq2)
   library(scales)
@@ -31,8 +39,6 @@ suppressPackageStartupMessages({
   library(vegan)
   library(gridExtra)
 })
-
-setwd(wd_location)
 
 # GET FILE NAMES
 control_files <- list.files(
@@ -124,4 +130,7 @@ simpson_plot <- ggplot(data = graphing_table, aes(x=order, y=Simpson,
   ggtitle("Simpson diversity of control vs experimental samples") +
   theme(legend.position = "bottom")
 
+cat ("\nSuccess!\nSaving diversity graphs as ", save_filename, " now.\n")
+pdf(file = save_filename, width=10, height=7)
 grid.arrange(shannon_plot, simpson_plot, ncol=1)
+dev.off()

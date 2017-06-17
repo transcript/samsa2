@@ -1,28 +1,31 @@
 # diversity_stats.R
 # Created 8/11/16
-# Arguments that need to be specified: working directory (-d)
-# Files need to be properly named, as this reads in all files in directory matching the naming structure.
+# Last updated 6/16/2017
+# Run with --help flag for help.
 
-args <- commandArgs(TRUE)
+suppressPackageStartupMessages({
+  library(optparse)
+})
 
-library(optparse)
 option_list = list(
-  make_option(c("-d", "--directory"), type="character", default=NULL,
-              help="working directory location", metavar="character")
-); 
+  make_option(c("-I", "--input"), type="character", default="./",
+              help="Input directory", metavar="character")
+)
 
 opt_parser = OptionParser(option_list=option_list);
 opt = parse_args(opt_parser);
 
-# check for necessary specs
-if (is.null(opt$directory)) {
-  print ("WARNING: No working directory specified with '-d' flag.")
-  stop()
-} else {
-  cat ("Working directory is ", opt$directory, "\n")
-  wd_location <- opt$directory
-}
+print("USAGE: $ diversity_stats.R -I working_directory/ ")
 
+# check for necessary specs
+if (is.null(opt$input)) {
+  print ("WARNING: No working input directory specified with '-I' flag.")
+  stop()
+} else {  cat ("Working directory is ", opt$input, "\n")
+  wd_location <- opt$input  
+  setwd(wd_location)  }
+
+# import other necessary packages
 suppressPackageStartupMessages({
   library(DESeq2)
   library(scales)
@@ -30,8 +33,6 @@ suppressPackageStartupMessages({
   library(knitr)
   library(vegan)
 })
-
-setwd(wd_location)
 
 # GET FILE NAMES
 control_files <- list.files(

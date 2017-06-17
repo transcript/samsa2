@@ -1,26 +1,39 @@
-# run_DESeq_stats.R
-# Created 6/22/16
-# Arguments that need to be specified: working directory (ARGV1), save filename (ARGV2)
+# Created 6/22/16, updated 6/16/2017
+# Run with --help flag for help.
 
-args <- commandArgs(TRUE)
+suppressPackageStartupMessages({
+  library(optparse)
+})
 
-library(DESeq2, quietly=TRUE)
+option_list = list(
+  make_option(c("-I", "--input"), type="character", default="./",
+              help="Input directory", metavar="character"),
+  make_option(c("-O", "--out"), type="character", default="DESeq_results.tab", 
+              help="output file name [default= %default]", metavar="character")
+)
+
+opt_parser = OptionParser(option_list=option_list);
+opt = parse_args(opt_parser);
+
+print("USAGE: $ run_DESeq_stats.R -I working_directory/ -O save.filename")
 
 # check for necessary specs
-if (!is.na(args[1])) {
-  cat ("Working directory is ", args[1], "\n")
-  wd_location <- args[1]
-} else {
-  print ("WARNING: No working directory specified as ARGV1") 
-  stop() }
+if (is.null(opt$input)) {
+  print ("WARNING: No working input directory specified with '-I' flag.")
+  stop()
+} else {  cat ("Working directory is ", opt$input, "\n")
+  wd_location <- opt$input  
+  setwd(wd_location)  }
 
-if (!is.na(args[2])) {
-  save_filename <- args[2]
-} else {
-  print ("WARNING: No name of saved results file specified as ARGV2")
-  stop() }
+if (is.null(opt$out)) {
+  print ("WARNING: No save name for DESeq results specified; defaulting to 'DESeq_results.tab'.") 
+  save_filename <- opt$out
+} else { save_filename <- opt$out }
 
-setwd(wd_location)
+# import other necessary packages
+suppressPackageStartupMessages({
+  library(DESeq2)
+})
 
 # GET FILE NAMES
 control_files <- list.files(
@@ -99,7 +112,6 @@ completeCondition2 <- data.frame(condition=factor(c(
   rep("experimental", length(exp_files)))))
 
 dds <- DESeqDataSetFromMatrix(complete_table, completeCondition2, ~condition)
-
 dds <- DESeq(dds)
 
 baseMeanPerLvl <- sapply( levels(dds$condition), function(lvl) rowMeans( counts(dds,normalized=TRUE)[,dds$condition == lvl] ) )
@@ -115,5 +127,5 @@ sorted_org_results <- org_results[order(-org_results$baseMean),]
 colnames(sorted_org_results)[1] <- "Organism Name"
 
 # saving and finishing up
-cat ("Saving results file as ", save_filename, "\n")
+cat ("\nSuccess!\nSaving results file as ", save_filename, "\n")
 write.table(sorted_org_results, file = save_filename, append = FALSE, quote = FALSE, sep = "\t", row.names = FALSE, col.names = TRUE)

@@ -1,17 +1,50 @@
 # Subsystems_pie_charts.R
 # Created 3/03/2017, by Sam Westreich
-# Last updated 3/03/2017
+# Last updated 6/16/2017
+# Run with --help flag for help.
 
-library("ggplot2")
-library("data.table")
+suppressPackageStartupMessages({
+  library(optparse)
+})
 
-setwd("~/Desktop/Projects/Lab Stuff/Aim 3/subsystems_results/reduced_files/")
+option_list = list(
+  make_option(c("-I", "--input"), type="character", default="./",
+              help="Input directory", metavar="character"),
+  make_option(c("-O", "--out"), type="character", default="Subsys_pie_chart.pdf", 
+              help="output image name; [default= %default]", metavar="character"),
+  make_option(c("-L", "--level"), type="integer", default=1,
+              help="level of Subsystems hierarchy for pie chart; [default=%default]", metavar="character")
+)
+
+opt_parser = OptionParser(option_list=option_list);
+opt = parse_args(opt_parser);
+
+print("USAGE: $ Subsystems_pie_charts.R -I working_directory/ -O save.filename -L level (1,2,3,4)")
+
+# check for necessary specs
+if (is.null(opt$input)) {
+  print ("WARNING: No working input directory specified with '-I' flag.")
+  stop()
+} else {  cat ("Working directory is ", opt$input, "\n")
+  wd_location <- opt$input  
+  setwd(wd_location)  }
+
+cat ("Saving results as ", opt$out, "\n")
+save_filename <- opt$out
+
+cat ("Creating pie chart for hierarchy level ", opt$level, "\n")
+
+# import other necessary packages
+suppressPackageStartupMessages({
+  library("ggplot2")
+  library("data.table")
+})
 
 # get list of files
 files_list <- list.files( pattern = "*.reduced", full.names = T, recursive = FALSE)
 file_names = ""
 for (name in files_list) {
-  file_names <- c(file_names, strsplit(name, split='./')[2])}
+  file_names <- c(file_names, strsplit(name, split='./')[1])}
 file_names <- file_names[-1]
 file_names_trimmed = ""
 for (name in file_names) {
@@ -45,8 +78,20 @@ data_table <- data_table[order(-data_table$Average),]
 data_table <- data_table[-which(data_table$Level1 == ""), ]
 
 # Now, the next block run will change based on which level is wanted for the final pie chart:
-# Starting with level 1
-l1_table <- data.table(data_table[,c("Average","Level1")])  #NOTE: Change this for different levels
+if (opt$level == 1) {
+  l1_table <- data.table(data_table[,c("Average","Level1")])
+} else if (opt$level == 2) {
+  l1_table <- data.table(data_table[,c("Average","Level2")])
+  colnames(l1_table) <- c("Average", "Level1")
+} else if (opt$level == 3) {
+  l1_table <- data.table(data_table[,c("Average","Level3")])
+  colnames(l1_table) <- c("Average", "Level1")
+} else if (opt$level == 4) {
+  l1_table <- data.table(data_table[,c("Average","Level4")])
+  colnames(l1_table) <- c("Average", "Level1")
+}
+
+l1_table <- l1_table[-which(l1_table$Level1 == ""), ]
 l1_table <- l1_table[, lapply(.SD, sum), by=Level1]
 l1_table <- l1_table[order(-l1_table$Average)]
 
@@ -67,7 +112,7 @@ pie <- bp + coord_polar("y", start=0) +
 #    geom_text(aes(x=1, label=Level1)) +
     theme(axis.text=element_blank(), legend.position = "right" ) 
 
-cat ("Saving Subsystems pie chart as ", save_filename, " now.\n")
-pdf(file = paste("Subsystems_pie_chart", ".pdf", sep = ""), width=10, height=7)
+cat ("\nSuccess!\nSaving Subsystems pie chart as ", save_filename, " now.\n")
+pdf(file = save_filename, width=10, height=7)
 pie
 dev.off()

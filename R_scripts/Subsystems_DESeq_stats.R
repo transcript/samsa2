@@ -1,11 +1,44 @@
 # Subsystems_DESeq_stats.R
 # Created 3/06/2017, by Sam Westreich
-# Last updated 3/06/2017
+# Last updated 6/16/2017
+# Run with --help flag for help.
 
-library("DESeq2")
-library("data.table")
+suppressPackageStartupMessages({
+  library(optparse)
+})
 
-setwd("~/path/to/files")
+option_list = list(
+  make_option(c("-I", "--input"), type="character", default="./",
+              help="Input directory", metavar="character"),
+  make_option(c("-O", "--out"), type="character", default="DESeq_results.tab", 
+              help="output file name [default= %default]", metavar="character"),
+  make_option(c("-L", "--level"), type="integer", default=1,
+              help="level of Subsystems hierarchy for DESeq stats [default=%default]", metavar="character")
+)
+
+opt_parser = OptionParser(option_list=option_list);
+opt = parse_args(opt_parser);
+
+print("USAGE: $ run_DESeq_stats.R -I working_directory/ -O save.filename -L level (1,2,3,4)")
+
+# check for necessary specs
+if (is.null(opt$input)) {
+  print ("WARNING: No working input directory specified with '-I' flag.")
+  stop()
+} else {  cat ("Working directory is ", opt$input, "\n")
+  wd_location <- opt$input  
+  setwd(wd_location)  }
+
+cat ("Saving results as ", opt$out, "\n")
+save_filename <- opt$out
+
+cat ("Calculating DESeq results for hierarchy level ", opt$level, "\n")
+
+# import other necessary packages
+suppressPackageStartupMessages({
+  library(DESeq2)
+  library("data.table")
+})
 
 # get list of files
 control_files <- list.files(
@@ -68,29 +101,39 @@ for (x in exp_files) {
 }
 exp_table <- exp_table[,-ncol(exp_table)]
 
+# Some level 1 entries are blank; this bit repopulates them from level 2.
+control_table$Level1 <- ifelse(control_table$Level1 == "", as.character(control_table$Level2), 
+                               as.character(control_table$Level1))
+exp_table$Level1 <- ifelse(exp_table$Level1 == "", as.character(exp_table$Level2), 
+                               as.character(exp_table$Level1))
+
 # At this point, the whole table is read in.  Next step (for statistical comparison) is to 
 # get just the level we want to compare.
 
-# for Level 1 comparisons:
-l1_control_table <- data.table(control_table[, !names(control_table) %in% c("Level2", "Level3", "Level4")])
-l1_exp_table <- data.table(exp_table[, !names(exp_table) %in% c("Level2", "Level3", "Level4")])
-# OR for level 2 comparisons
-l1_control_table <- data.table(control_table[, !names(control_table) %in% c("Level1", "Level3", "Level4")])
-l1_exp_table <- data.table(exp_table[, !names(exp_table) %in% c("Level1", "Level3", "Level4")])
-names(l1_control_table)[names(l1_control_table) == 'Level2'] <- 'Level1'
-names(l1_exp_table)[names(l1_exp_table) == 'Level2'] <- 'Level1'
-# OR for level 3 comparisons
-l1_control_table <- data.table(control_table[, !names(control_table) %in% c("Level1", "Level2", "Level4")])
-l1_exp_table <- data.table(exp_table[, !names(exp_table) %in% c("Level1", "Level2", "Level4")])
-names(l1_control_table)[names(l1_control_table) == 'Level3'] <- 'Level1'
-names(l1_exp_table)[names(l1_exp_table) == 'Level3'] <- 'Level1'
-# OR for level 4 comparisons
-l1_control_table <- data.table(control_table[, !names(control_table) %in% c("Level1", "Level3", "Level2")])
-l1_exp_table <- data.table(exp_table[, !names(exp_table) %in% c("Level1", "Level3", "Level2")])
-names(l1_control_table)[names(l1_control_table) == 'Level4'] <- 'Level1'
-names(l1_exp_table)[names(l1_exp_table) == 'Level4'] <- 'Level1'
-l1_control_table <- data.table(as.data.frame(l1_control_table)[,c(2:(ncol(l1_control_table)),1)])
-l1_exp_table <- data.table(as.data.frame(l1_exp_table)[,c(2:(ncol(l1_exp_table)),1)])
+if (opt$level == 1) {
+  l1_control_table <- data.table(control_table[, !names(control_table) %in% c("Level2", "Level3", "Level4")])
+  l1_exp_table <- data.table(exp_table[, !names(exp_table) %in% c("Level2", "Level3", "Level4")])
+}
+if (opt$level == 2) {
+  l1_control_table <- data.table(control_table[, !names(control_table) %in% c("Level1", "Level3", "Level4")])
+  l1_exp_table <- data.table(exp_table[, !names(exp_table) %in% c("Level1", "Level3", "Level4")])
+  names(l1_control_table)[names(l1_control_table) == 'Level2'] <- 'Level1'
+  names(l1_exp_table)[names(l1_exp_table) == 'Level2'] <- 'Level1'
+}
+if (opt$level == 3) {
+  l1_control_table <- data.table(control_table[, !names(control_table) %in% c("Level1", "Level2", "Level4")])
+  l1_exp_table <- data.table(exp_table[, !names(exp_table) %in% c("Level1", "Level2", "Level4")])
+  names(l1_control_table)[names(l1_control_table) == 'Level3'] <- 'Level1'
+  names(l1_exp_table)[names(l1_exp_table) == 'Level3'] <- 'Level1'
+}
+if (opt$level == 4) {
+  l1_control_table <- data.table(control_table[, !names(control_table) %in% c("Level1", "Level3", "Level2")])
+  l1_exp_table <- data.table(exp_table[, !names(exp_table) %in% c("Level1", "Level3", "Level2")])
+  names(l1_control_table)[names(l1_control_table) == 'Level4'] <- 'Level1'
+  names(l1_exp_table)[names(l1_exp_table) == 'Level4'] <- 'Level1'
+  l1_control_table <- data.table(as.data.frame(l1_control_table)[,c(2:(ncol(l1_control_table)),1)])
+  l1_exp_table <- data.table(as.data.frame(l1_exp_table)[,c(2:(ncol(l1_exp_table)),1)])
+}
 
 # remove blank spots (no hierarchy)
 l1_control_table <- l1_control_table[-which(l1_control_table$Level1 == ""), ]
@@ -108,8 +151,8 @@ l1_table$Level1 <- NULL
 l1_table[is.na(l1_table)] <- 0
 
 # now the DESeq stuff
-completeCondition <- data.frame(condition=factor(c(rep("experimental", length(exp_files)), 
-  rep("control", length(control_files)))))
+completeCondition <- data.frame(condition=factor(c(rep("control", length(control_files)), 
+  rep("experimental", length(exp_files)))))
 dds <- DESeqDataSetFromMatrix(l1_table, completeCondition, ~ condition)
 dds <- DESeq(dds)
 baseMeanPerLvl <- sapply( levels(dds$condition), function(lvl) rowMeans( 
@@ -124,5 +167,7 @@ l1_results <- l1_results[,c(1,2,8,9,3,4,5,6,7)]
 colnames(l1_results)[c(3,4)] <- c("controlMean", "experimentalMean")
 l1_results <- l1_results[order(-l1_results$baseMean),]
 
-write.table(l1_results, file = "Subsystems_level_4_DESeq_results.tab", 
+# saving and finishing up
+cat ("\nSuccess!\nSaving results file as ", save_filename, "\n")
+write.table(l1_results, file = save_filename, 
   append = FALSE, quote = FALSE, sep = "\t", row.names = FALSE, col.names = TRUE)
