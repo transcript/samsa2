@@ -42,7 +42,6 @@ if (is.null(opt$out)) {
 
 suppressPackageStartupMessages({
   library(DESeq2)
-  library("RColorBrewer")
   library("ggplot2")
   library(gridExtra)
   library(scales)

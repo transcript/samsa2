@@ -1,29 +1,44 @@
 # make_DESeq_heatmap.R
 # Created 6/27/16
-# Arguments that need to be specified: working directory (ARGV1), save filename (ARGV2)
+# Last updated 6/16/2017
+# Run with --help flag for help.
 
-args <- commandArgs(TRUE)
+suppressPackageStartupMessages({
+  library(optparse)
+})
 
-library(DESeq2, quietly=TRUE)
-library("pheatmap", quietly = TRUE)
-library("RColorBrewer", quietly = TRUE)
-library("ggplot2", quietly = TRUE)
+option_list = list(
+  make_option(c("-I", "--input"), type="character", default="./",
+              help="Input directory", metavar="character"),
+  make_option(c("-O", "--out"), type="character", default="DESeq_heatmap.pdf", 
+              help="output file name [default= %default]", metavar="character")
+)
+
+opt_parser = OptionParser(option_list=option_list);
+opt = parse_args(opt_parser);
+
+print("USAGE: $ run_DESeq_stats.R -I working_directory/ -O save.filename -L level (1,2,3,4)")
 
 # check for necessary specs
-if (!is.na(args[1])) {
-  cat ("Working directory is ", args[1], "\n")
-  wd_location <- args[1]
-} else {
-  print ("WARNING: No working directory specified as ARGV1") 
-  stop() }
+if (is.null(opt$input)) {
+  print ("WARNING: No working input directory specified with '-I' flag.")
+  stop()
+} else {  cat ("Working directory is ", opt$input, "\n")
+  wd_location <- opt$input  
+  setwd(wd_location)  }
 
-if (!is.na(args[2])) {
-  save_filename <- args[2]
-} else {
-  print ("WARNING: No name of saved PCA plot specified as ARGV2")
-  stop() }
+cat ("Saving results as ", opt$out, "\n")
+save_filename <- opt$out
 
-setwd(wd_location)
+cat ("Calculating DESeq results for hierarchy level ", opt$level, "\n")
+
+# import other necessary packages
+suppressPackageStartupMessages({
+  library(DESeq2)
+  library("pheatmap")
+  library(RColorBrewer)
+  library(ggplot2)
+})
 
 # GET FILE NAMES
 control_files <- list.files(
@@ -138,16 +153,10 @@ sampleDistMatrix <- as.matrix( dists )
 rownames(sampleDistMatrix) <- colnames(complete_array)
 colnames(sampleDistMatrix) <- transformed_data$condition
 colors <- colorRampPalette( rev(brewer.pal(9, "Blues")) )(255)
-pheatmap(sampleDistMatrix,
-         clustering_distance_rows=dists,
-         clustering_distance_cols=dists,
-         show_rownames = TRUE,
-         show_colnames = TRUE,
-         col=colors)
 
 # saving and finishing up
 cat ("Saving PCA plot as ", save_filename, " now.\n")
-pdf(file = paste("macaque_function_heatmap_3-28", ".pdf", sep = ""), width=10, height=7)
+pdf(file = save_filename, width=10, height=7)
 pheatmap(sampleDistMatrix,
          clustering_distance_rows=dists,
          clustering_distance_cols=dists,

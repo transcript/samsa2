@@ -40,7 +40,7 @@ control_files <- list.files(
   pattern = "control_*", full.names = T, recursive = FALSE)
 control_names = ""
 for (name in control_files) {
-  control_names <- c(control_names, unlist(strsplit(name, split='_', fixed=TRUE))[4])}
+  control_names <- c(control_names, unlist(strsplit(name, split='_', fixed=TRUE))[2])}
 control_names <- control_names[-1]
 control_names_trimmed = ""
 for (name in control_names) {
@@ -51,7 +51,7 @@ exp_files <- list.files(
   pattern = "experimental_*", full.names = T, recursive = FALSE)
 exp_names = ""
 for (name in exp_files) {
-  exp_names <- c(exp_names, unlist(strsplit(name, split='_', fixed=TRUE))[4])}
+  exp_names <- c(exp_names, unlist(strsplit(name, split='_', fixed=TRUE))[2])}
 exp_names <- exp_names[-1]
 exp_names_trimmed = ""
 for (name in exp_names) {
@@ -100,6 +100,7 @@ colnames(exp_table_trimmed) = exp_names_trimmed
 
 complete_table <- merge(control_table_trimmed, exp_table_trimmed, by=0, all = TRUE)
 complete_table[is.na(complete_table)] <- 1
+complete_table[complete_table == 0] <- 1
 rownames(complete_table) <- complete_table$Row.names
 complete_table <- complete_table[,-1]
 completeCondition <- data.frame(condition=factor(c(

@@ -53,7 +53,7 @@ def string_find(usage_term):
 			 return next_elem
 
 if "-I" not in sys.argv:
-	sys.exit("Specify the file of reads to be retrieved with the -I flag.")
+	sys.exit("Specify the file of RefSeq reads to be retrieved with the -I flag.")
 if "-S" not in sys.argv:
 	sys.exit("Specify the SEED Subsystems annotation results with the -S flag.")
 if "-O" not in sys.argv:
@@ -72,8 +72,8 @@ noMatch = 0
 original_db = {}
 line_counter = 0
 
-# getting the read IDs from the original reads
-sr_file = open(string_find("-I"), "r")
+# getting the read IDs from the Subsystems reads
+sr_file = open(string_find("-S"), "r")
 for line in sr_file:
 	splitline = line.split("\t")
 	if search_flag == True:
@@ -95,7 +95,7 @@ print "\nRead IDs scanned: " + str(len(read_id_list)) + " IDs found.\n"
 
 # reading in the original file
 outfile = open(string_find("-O"), "w")
-infile = open(string_find("-S"), "r")
+infile = open(string_find("-I"), "r")
 i = 0
 line_counter = 0
 

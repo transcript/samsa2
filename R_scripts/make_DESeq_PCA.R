@@ -1,30 +1,43 @@
 # make_DESeq_PCA.R
 # Created 6/28/16
-# Arguments that need to be specified: working directory (ARGV1), save filename (ARGV2)
-
-args <- commandArgs(TRUE)
+# Last updated 6/16/2017
+# Run with --help flag for help.
 
 suppressPackageStartupMessages({
-  library(DESeq2) })
-library("pheatmap", quietly = TRUE)
-library("RColorBrewer", quietly = TRUE)
-library("ggplot2", quietly = TRUE)
+  library(optparse)
+})
+
+option_list = list(
+  make_option(c("-I", "--input"), type="character", default="./",
+              help="Input directory", metavar="character"),
+  make_option(c("-O", "--out"), type="character", default="PCA_plot.tab", 
+              help="output file name [default= %default]", metavar="character")
+)
+
+opt_parser = OptionParser(option_list=option_list);
+opt = parse_args(opt_parser);
+
+print("USAGE: $ run_DESeq_stats.R -I working_directory/ -O save.filename -L level (1,2,3,4)")
 
 # check for necessary specs
-if (!is.na(args[1])) {
-  cat ("Working directory is ", args[1], "\n")
-  wd_location <- args[1]
-} else {
-  print ("WARNING: No working directory specified as ARGV1") 
-  stop() }
+if (is.null(opt$input)) {
+  print ("WARNING: No working input directory specified with '-I' flag.")
+  stop()
+} else {  cat ("Working directory is ", opt$input, "\n")
+  wd_location <- opt$input  
+  setwd(wd_location)  }
 
-if (!is.na(args[2])) {
-  save_filename <- args[2]
-} else {
-  print ("WARNING: No name of saved PCA plot specified as ARGV2")
-  stop() }
+cat ("Saving results as ", opt$out, "\n")
+save_filename <- opt$out
 
-setwd(wd_location)
+cat ("Calculating DESeq results for hierarchy level ", opt$level, "\n")
+
+# import other necessary packages
+suppressPackageStartupMessages({
+  library(DESeq2)
+  library("pheatmap")
+  library(ggplot2)
+})
 
 # GET FILE NAMES
 control_files <- list.files(
@@ -106,7 +119,6 @@ dds <- DESeqDataSetFromMatrix(complete_table, completeCondition2, ~condition)
 
 dds <- DESeq(dds)
 transformed_data <- rlog(dds, blind=FALSE)
-#complete_array <- data.matrix(data_table_filtered)
 
 # making the PCA plot
 
@@ -117,13 +129,12 @@ percentVar <- round(100 * attr(PCAplot, "percentVar"))
 
 # saving and finishing up
 cat ("Saving PCA plot as ", save_filename, " now.\n")
-pdf(file = paste(save_filename), ".pdf", sep = ""), width=10, height=7)
+pdf(file = save_filename, sep = "", width=10, height=7)
 ggplot(PCAplot, aes(PC1, PC2, color=condition)) +
     geom_point(size=3) +
 #    geom_text(aes(label=name), hjust=1, vjust=-1) +
     ggtitle("PCA Plot of control vs. experimental organism data") +
     theme(legend.position = "bottom") +
-#    xlim(-35, 25) + ylim(-25, 40) +
     xlab(paste0("PC1: ",percentVar[1],"% variance")) +
     ylab(paste0("PC2: ",percentVar[2],"% variance"))
 dev.off()
