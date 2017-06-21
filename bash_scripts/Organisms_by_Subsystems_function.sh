@@ -29,6 +29,9 @@ RefSeq_results_location=/share/milklab/sam/test_files/output_diamond
 Subsys_results_location=/share/milklab/sam/test_files/Subsys_results/receipts
 base_directory=/share/milklab/sam/test_files
 
+raw_counts_file=/share/milklab/sam/test_files/raw_counts.txt
+# note: generated at step 2.9 in master_script.sh
+
 export R_LIBS="/share/milklab/sam/R_scripts/packages"
 R_programs=/share/milklab/sam/R_scripts
 
@@ -90,7 +93,7 @@ mv $base_directory/$new_dir_name/*organism.tsv $base_directory/$new_dir_name/agg
 #
 # STEP 3 - Run R to get DESeq analysis of the organism results
 
-Rscript $R_programs/run_DESeq_stats.R -I $base_directory/$new_dir_name/aggregated/ -O RefSeq.$specific_function.org_DESeq_results.tab
+Rscript $R_programs/run_DESeq_stats.R -I $base_directory/$new_dir_name/aggregated/ -O RefSeq.$specific_function.org_DESeq_results.tab -R $raw_counts_file.txt
 
 #
 ####################################################################

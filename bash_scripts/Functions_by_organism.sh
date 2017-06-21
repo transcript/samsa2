@@ -27,6 +27,9 @@ RefSeq_db="/share/milklab/sam/databases/bct"
 
 RefSeq_results_location=/share/milklab/sam/test_files/output_diamond
 
+raw_counts_file=/share/milklab/sam/test_files/raw_counts.txt
+# note: generated at step 2.9 in master_script.sh
+
 export R_LIBS="/share/milklab/sam/R_scripts/packages"
 R_programs=/share/milklab/sam/R_scripts
 
@@ -68,6 +71,6 @@ mv $RefSeq_results_location/*$specific_organism*function.tsv $RefSeq_results_loc
 # NOTE: Make sure that files have the appropriate prefixes ('control_' 
 #	or 'experimental_') so that R can recognize them!
 
-Rscript $R_programs/run_DESeq_stats.R -I $RefSeq_results_location/$specific_organism/aggregated/ -O RefSeq.$specific_organism.func_DESeq_results.tab
+Rscript $R_programs/run_DESeq_stats.R -I $RefSeq_results_location/$specific_organism/aggregated/ -O RefSeq.$specific_organism.func_DESeq_results.tab -R $raw_counts_file
 
 
