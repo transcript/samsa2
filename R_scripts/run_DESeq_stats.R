@@ -9,7 +9,9 @@ option_list = list(
   make_option(c("-I", "--input"), type="character", default="./",
               help="Input directory", metavar="character"),
   make_option(c("-O", "--out"), type="character", default="DESeq_results.tab", 
-              help="output file name [default= %default]", metavar="character")
+              help="output file name [default= %default]", metavar="character"),
+  make_option(c("-R", "--raw_counts"), type="character", default=NULL,
+              help="raw (total) read counts for this starting file", metavar="character")
 )
 
 opt_parser = OptionParser(option_list=option_list);
@@ -29,6 +31,12 @@ if (is.null(opt$out)) {
   print ("WARNING: No save name for DESeq results specified; defaulting to 'DESeq_results.tab'.") 
   save_filename <- opt$out
 } else { save_filename <- opt$out }
+
+if (is.null(opt$raw_counts)) {
+  print ("WARNING: no raw counts file specified, skipping this info for DESeq analysis.")
+} else {
+  counts_file <- opt$raw_counts
+}
 
 # import other necessary packages
 suppressPackageStartupMessages({
@@ -98,11 +106,33 @@ exp_table_trimmed <- exp_table[,-1]
 colnames(control_table_trimmed) = control_names_trimmed
 colnames(exp_table_trimmed) = exp_names_trimmed
 
+# merging the two tables
 complete_table <- merge(control_table_trimmed, exp_table_trimmed, by=0, all = TRUE)
-complete_table[is.na(complete_table)] <- 1
-complete_table[complete_table == 0] <- 1
+complete_table[is.na(complete_table)] <- 0
+#complete_table[complete_table == 0] <- 1
 rownames(complete_table) <- complete_table$Row.names
 complete_table <- complete_table[,-1]
+
+# OPTIONAL: importing the raw counts
+if (is.null(opt$raw_counts) == FALSE) {
+  raw_counts_table <- read.table(counts_file, header=FALSE, sep = "\t", quote = "")
+  raw_counts_table <- data.frame(raw_counts_table, 
+        do.call(rbind, strsplit(as.character(raw_counts_table$V1),'_')))
+  raw_counts_table$X2 <- as.numeric(as.character(raw_counts_table$X2))
+  raw_counts_table <- t(raw_counts_table[,c("X2", "V2")])
+  row.names(raw_counts_table) <- c("SAMPLE","RAW TOTAL")
+  colnames(raw_counts_table) <- raw_counts_table[1,]
+  raw_counts_table <- as.data.frame(raw_counts_table)
+  raw_counts_table <- raw_counts_table[-1,]
+  
+  # Need to subtract off the total number of annotations
+  raw_counts_table["ANNOTATION COUNT",] <- colSums(complete_table)
+  raw_counts_table["OTHER",] <- raw_counts_table[1,] - raw_counts_table[2,]
+
+  complete_table <- rbind(complete_table, raw_counts_table["OTHER",])
+}
+
+# DESeq statistical calculations
 completeCondition <- data.frame(condition=factor(c(
   rep(paste("control", 1:length(control_files), sep=".")), 
   rep(paste("experimental", 1:length(exp_files), sep=".")))))

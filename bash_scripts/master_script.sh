@@ -24,6 +24,7 @@
 #	5.   Aggregation using analysis_counter.py
 #   4.1  Annotation using DIAMOND against the Subsystems database
 #   5.1  Aggregation using Subsystems-specific analysis counter.py
+#	6.	 Running R scripts to get DESeq statistical analysis.
 #
 ####################################################################
 #
@@ -48,6 +49,8 @@ diamond_location="/home/swestreich/programs"
 
 #	5. Aggregation
 python_programs=/share/milklab/sam/python_scripts
+RefSeq_db="/share/milklab/sam/databases/bct"
+Subsys_db="/share/milklab/sam/databases/full_subsys_db.fa"
 
 #	6. R scripts and paths
 export R_LIBS="/share/milklab/sam/R_scripts/packages"
@@ -57,15 +60,23 @@ R_programs=/share/milklab/sam/R_scripts
 #
 # STEP 1: MERGING OF PAIRED-END FILES USING PEAR
 # Note: paired-end files are usually named using R1 and R2 in the name.
+#		Example: control_1.R1.fastq
+#				 control_1.R2.fastq
+#
 # Note: if using single-end sequencing, skip this step (comment out).
 # Note: if performing R analysis (step 6), be sure to name files with 
 # 	the appropriate prefix ("control_$file" and "experimental_$file")!
 
+for file in $starting_location/*.gz
+do
+	gunzip $file
+done
+
 for file in $starting_location/*R1*
 do
 	file1=$file
-	file2=`echo $file1 | awk -F"R1" '{print $1 "R2" $2}'`
-	out_path=`echo $file | awk -F"R1" '{print $1 "merged"}'`
+	file2=`echo $file1 | awk -F "R1" '{print $1 "R2" $2}'`
+	out_path=`echo $file | awk -F "R1" '{print $1 "merged"}'`
 	out_name=`echo ${out_path##*/}`
 
 	$pear_location/pear-0.9.6 -f $file1 -r $file2 -o $out_name
@@ -77,12 +88,12 @@ mv $starting_location/*merged* $starting_location/step_1_output/
 ####################################################################
 #
 # STEP 2: CLEANING FILES WITH TRIMMOMATIC
-# Note: if skipping FLASH, make sure that all starting files are in the
+# Note: if skipping PEAR, make sure that all starting files are in the
 # $starting_location/step_1_output/ folder!
 
-for file in $starting_location/step_1_output/*.assembled*
+for file in $starting_location/step_1_output/*.merged*
 do
-	shortname=`echo $file | awk -F"assembled" '{print $1 "cleaned.fastq"}'`
+	shortname=`echo $file | awk -F "merged" '{print $1 "cleaned.fastq"}'`
 
 	java -jar $trimmomatic_location/trimmomatic-0.33.jar SE -phred33 $file $shortname SLIDINGWINDOW:4:15 MINLEN:99
 done
@@ -92,14 +103,31 @@ mv $starting_location/step_1_output/*cleaned.fastq $starting_location/step_2_out
 
 ####################################################################
 #
+# STEP 2.9: GETTING RAW SEQUENCES COUNTS
+# Note: These are used later for statistical analysis.
+
+if [ -f $starting_location/step_2_output/raw_counts.txt]
+then
+	rm $starting_location/step_2_output/raw_counts.txt
+	touch $starting_location/step_2_output/raw_counts.txt
+else
+	touch $starting_location/step_2_output/raw_counts.txt
+fi	
+
+for file in $starting_location/step_2_output/*.cleaned.fastq
+do
+	python $python_programs/raw_read_counter.py -I $file -O $starting_location/step_2_output/raw_counts.txt
+done
+
+####################################################################
+#
 # STEP 3: REMOVING RIBOSOMAL READS WITH SORTMERNA
 # Note: this step assumes that the SortMeRNA databases are indexed.  If not,
 # do that first (see the SortMeRNA user manual for details).
 
 for file in $starting_location/step_2_output/*.cleaned.fastq
 do
-	unzip_name=`echo $file | awk -F".gz" '{print $1}'`
-	shortname=`echo $file | awk -F"fna" '{print $1 "ribodepleted"}'`
+	shortname=`echo $file | awk -F "cleaned" '{print $1 "ribodepleted"}'`
 
 	$sortmerna_location/sortmerna --ref $sortmerna_location/rRNA_databases/silva-bac-16s-id90.fasta,$sortmerna_location/index/silva-bac-16s-db --reads $file --aligned $file.ribosomes --other $shortname --fastx --num_alignments 0 --log -v
 
@@ -116,14 +144,14 @@ mv $starting_location/step_2_output/*ribodepleted $starting_location/step_3_outp
 
 echo "Now starting on DIAMOND org annotations at: "; date
 
-for file in $starting_location/step_3_output/*ribodepleted
+for file in $starting_location/step_3_output/*ribodepleted.fastq
 do
-	shortname=`echo $file | awk -F "ribodepleted" '{print $1 "annotated"}'`
+	shortname=`echo $file | awk -F "ribodepleted" '{print $1 "RefSeq_annotated"}'`
 	echo "Now starting on " $file 
 	echo "Converting to " $shortname
 
 	$diamond_location/diamond blastx --db $diamond_database -q $file -a $file.RefSeq -t ./ -k 1 --sensitive
-	$diamond_location/diamond view --daa $file.dmd -o $shortname -f tab
+	$diamond_location/diamond view --daa $file.RefSeq.daa -o $shortname -f tab
 done
 
 mkdir $starting_location/step_4_output/
@@ -138,12 +166,14 @@ echo "RefSeq DIAMOND annotations completed at: "; date
 #
 # STEP 5: AGGREGATING WITH ANALYSIS_COUNTER
 
-for file in $starting_location/step_4_output/*annotated*
+for file in $starting_location/step_4_output/*RefSeq_annotated
 do
-	python $python_programs/DIAMOND_analysis_counter.py -I $file -D $diamond_database -O
-	python $python_programs/DIAMOND_analysis_counter.py -I $file -D $diamond_database -F
+	python $python_programs/DIAMOND_analysis_counter.py -I $file -D $RefSeq_db -O
+	python $python_programs/DIAMOND_analysis_counter.py -I $file -D $RefSeq_db -F
 done
 
+mkdir $starting_location/step_5_output/
+mkdir $starting_location/step_5_output/RefSeq_results/
 mkdir $starting_location/step_5_output/RefSeq_results/org_results/
 mkdir $starting_location/step_5_output/RefSeq_results/func_results/
 mv $starting_location/step_4_output/*organism.tsv $starting_location/step_5_output/RefSeq_results/org_results/
@@ -155,13 +185,13 @@ mv $starting_location/step_4_output/*function.tsv $starting_location/step_5_outp
 
 echo "Now starting on DIAMOND Subsystems annotations at: "; date
 
-for file in $starting_location/step_3_output/*ribodepleted
+for file in $starting_location/step_3_output/*ribodepleted.fastq
 do
-	shortname=`echo $file | awk -F"ribodepleted" '{print $1 "subsys_annotated"}'`
+	shortname=`echo $file | awk -F "ribodepleted" '{print $1 "subsys_annotated"}'`
 	echo "Now starting on Subsystems annotations for " $file
 
 	$diamond_location/diamond blastx --db $diamond_subsys_db -q $file -a $file.Subsys -t ./ -k 1 --sensitive
-	$diamond_location/diamond view --daa $file.dmd -o $shortname -f tab
+	$diamond_location/diamond view --daa $file.Subsys.daa -o $shortname -f tab
 done
 
 mv $starting_location/step_3_output/*subsys_annotated* $starting_location/step_4_output/
@@ -175,7 +205,7 @@ echo "DIAMOND Subsystems annotations completed at: "; date
 
 for file in $starting_location/step_4_output/*subsys_annotated*
 do
-	python $python_programs/DIAMOND_subsystems_analysis_counter.py -I $file -D $diamond_subsys_db.fa -P $file.receipt
+	python $python_programs/DIAMOND_subsystems_analysis_counter.py -I $file -D $Subsys_db -O $file.hierarchy -P $file.receipt
 	
 	# This quick program reduces down identical hierarchy annotations
 	python $python_programs/subsys_reducer.py -I $file.hierarchy
@@ -199,9 +229,9 @@ rm $starting_location/step_4_output/*.hierarchy
 # Note: For R to properly identify files to compare/contrast, they must include 
 # the appropriate prefix (either "control_$file" or experimental_$file")!
 
-Rscript $R_programs/run_DESeq_stats.R -I $starting_location/step_5_output/RefSeq_results/org_results/ -O RefSeq_org_DESeq_results.tab
-Rscript $R_programs/run_DESeq_stats.R -I $starting_location/step_5_output/RefSeq_results/func_results/ -O RefSeq_func_DESeq_results.tab
-Rscript $R_programs/Subsystems_DESeq_stats.R -I $starting_location/step_5_output/Subsystems_results/ -O Subsystems_level-1_DESeq_results.tab -L 1
+Rscript $R_programs/run_DESeq_stats.R -I $starting_location/step_5_output/RefSeq_results/org_results/ -O RefSeq_org_DESeq_results.tab -R $starting_location/raw_counts.txt
+Rscript $R_programs/run_DESeq_stats.R -I $starting_location/step_5_output/RefSeq_results/func_results/ -O RefSeq_func_DESeq_results.tab -R $starting_location/raw_counts.txt
+Rscript $R_programs/Subsystems_DESeq_stats.R -I $starting_location/step_5_output/Subsystems_results/ -O Subsystems_level-1_DESeq_results.tab -L 1 -R $starting_location/raw_counts.txt
 
 echo "Master bash script finished running at: "; date
 exit

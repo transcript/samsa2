@@ -12,6 +12,8 @@ option_list = list(
               help="Input directory", metavar="character"),
   make_option(c("-O", "--out"), type="character", default="DESeq_results.tab", 
               help="output file name [default= %default]", metavar="character"),
+  make_option(c("-R", "--raw_counts"), type="character", default=NULL,
+              help="raw (total) read counts for this starting file", metavar="character"),
   make_option(c("-L", "--level"), type="integer", default=1,
               help="level of Subsystems hierarchy for DESeq stats [default=%default]", metavar="character")
 )
@@ -31,6 +33,12 @@ if (is.null(opt$input)) {
 
 cat ("Saving results as ", opt$out, "\n")
 save_filename <- opt$out
+
+if (is.null(opt$raw_counts)) {
+  print ("WARNING: no raw counts file specified, skipping this info for DESeq analysis.")
+} else {
+  counts_file <- opt$raw_counts
+}
 
 cat ("Calculating DESeq results for hierarchy level ", opt$level, "\n")
 
@@ -83,10 +91,18 @@ for (x in control_files) {
     colnames(temp_table) = c("DELETE", x, "Level4", "Level3", "Level1", "Level2")
     rownames(temp_table) <- temp_table$Level4
     temp_table <- temp_table[,c(2,3)]
-    control_table <- merge(temp_table, control_table, by = "Level4")  
+    control_table <- merge(temp_table, control_table, by = "Level4", all=T)  
   }
 }
 control_table <- control_table[,-ncol(control_table)]
+control_table[is.na(control_table)] <- ""
+
+# Need to convert NAs to 0s
+control_data <- control_table[,c(2:(length(control_files)+1))]
+control_data <- lapply(control_data, function(x) as.numeric(as.character(x)))
+control_data <- as.data.frame(control_data)
+control_data[is.na(control_data)] <- 0
+control_table[,c(2:(length(control_files)+1))] <- control_data
 
 # loading the experimental files in
 y <- 0
@@ -102,10 +118,18 @@ for (x in exp_files) {
     colnames(temp_table) = c("DELETE", x, "Level4", "Level3", "Level1", "Level2")
     rownames(temp_table) <- temp_table$Level4
     temp_table <- temp_table[,c(2,3)]
-    exp_table <- merge(temp_table, exp_table, by = "Level4")  
+    exp_table <- merge(temp_table, exp_table, by = "Level4", all=T)  
   }
 }
 exp_table <- exp_table[,-ncol(exp_table)]
+exp_table[is.na(exp_table)] <- ""
+
+# converting NAs to 0s
+exp_data <- exp_table[,c(2:(length(exp_files)+1))]
+exp_data <- lapply(exp_data, function(x) as.numeric(as.character(x)))
+exp_data <- as.data.frame(exp_data)
+exp_data[is.na(exp_data)] <- 0
+exp_table[,c(2:(length(exp_files)+1))] <- exp_data
 
 # Some level 1 entries are blank; this bit repopulates them from level 2.
 control_table$Level1 <- ifelse(control_table$Level1 == "", as.character(control_table$Level2), 
@@ -142,8 +166,8 @@ if (opt$level == 4) {
 }
 
 # remove blank spots (no hierarchy)
-l1_control_table <- l1_control_table[-which(l1_control_table$Level1 == ""), ]
-l1_exp_table <- l1_exp_table[-which(l1_exp_table$Level1 == ""), ]
+#l1_control_table <- l1_control_table[-which(l1_control_table$Level1 == ""), ]
+#l1_exp_table <- l1_exp_table[-which(l1_exp_table$Level1 == ""), ]
 
 # reducing stuff down to avoid duplicates
 colnames(l1_control_table) <- c(control_names_trimmed, "Level1")
@@ -151,10 +175,33 @@ colnames(l1_exp_table) <- c(exp_names_trimmed, "Level1")
 l1_control_table <- l1_control_table[, lapply(.SD, sum), by=Level1]
 l1_exp_table <- l1_exp_table[, lapply(.SD, sum), by=Level1]
 l1_table <- merge(l1_control_table, l1_exp_table, by="Level1", all.x = T)
+l1_table$Level1 <- sub("^$", "NO HIERARCHY", l1_table$Level1)
 rownames(l1_table) <- l1_table$Level1
 l1_names <- l1_table$Level1
 l1_table$Level1 <- NULL
 l1_table[is.na(l1_table)] <- 0
+
+
+# OPTIONAL: importing the raw counts
+if (is.null(opt$raw_counts) == FALSE) {
+  raw_counts_table <- read.table(counts_file, header=FALSE, sep = "\t", quote = "")
+  raw_counts_table <- data.frame(raw_counts_table, 
+        do.call(rbind, strsplit(as.character(raw_counts_table$V1),'_')))
+  raw_counts_table$X2 <- as.numeric(as.character(raw_counts_table$X2))
+  raw_counts_table <- t(raw_counts_table[,c("X2", "V2")])
+  row.names(raw_counts_table) <- c("SAMPLE","RAW TOTAL")
+  colnames(raw_counts_table) <- raw_counts_table[1,]
+  raw_counts_table <- as.data.frame(raw_counts_table)
+  raw_counts_table <- raw_counts_table[-1,]
+  
+  # Need to subtract off the total number of annotations
+  raw_counts_table["ANNOTATION COUNT",] <- colSums(l1_table)
+  raw_counts_table["OTHER",] <- raw_counts_table[1,] - raw_counts_table[2,]
+  
+  l1_table <- rbind(l1_table, raw_counts_table["OTHER",])
+  l1_names <- c(l1_names, "OTHER")
+  rownames(l1_table) <- l1_names
+}
 
 # now the DESeq stuff
 completeCondition <- data.frame(condition=factor(c(rep("control", length(control_files)), 
