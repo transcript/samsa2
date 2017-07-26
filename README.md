@@ -36,7 +36,7 @@ However, working with metatranscriptome data often proves challenging, given its
 
 **Analysis:** R scripts use DESeq to compute most significantly different features between control vs. experimental samples.  These R scripts generate a tabular output with assigned p-values and log2FoldChange scores for each feature.  These 'features' can be either organisms or specific functions.  R can also create graphs showing visual representation of the metatranscriptome(s).
 
-### Individual programs in SAMSA v.2.0 and their functions
+### Individual programs in SAMSA2 and their functions
 For more information, please consult the manual, which goes into more detail on each step in the SAMSA pipeline.
 
 **Preprocessing:** The following program steps can either be run through master_script.bash or individually:
@@ -78,6 +78,8 @@ Westreich, S.T., Korf, I., Mills, D.A., Lemay, D.G.  (2016) SAMSA: A comprehensi
 
 Bolger, A. M., Lohse, M., & Usadel, B. (2014). Trimmomatic: A flexible trimmer for Illumina Sequence Data. Bioinformatics, btu170.
 
-Magoc, T., and Salzberg, S. FLASH: Fast length adjustment of short reads to improve genome assemblies. Bioinformatics 27:21 (2011), 2957-63.
+Kopylova E., Noé L. and Touzet H., "SortMeRNA: Fast and accurate filtering of ribosomal RNAs in metatranscriptomic data", Bioinformatics (2012), doi: 10.1093/bioinformatics/bts611.
+
+Zhang, J., Kobert, K., Flouri, T., Stamatakis, A.  (2014). PEAR: a fast and accurate Illumina paired-end Paired-End reAd mergeR. Bioinformatics.
 
 =======
