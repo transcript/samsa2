@@ -55,6 +55,6 @@ The R packages used by SAMSA2's analysis scripts include:
 In R, you can use the following commands to install the above-listed versions of these packages:
 
     install_version("optparse", version = "1.4.4", repos = "http://cran.us.r-project.org")
-    install_version("ggplot2", version = "1.10.4", repos = "http://cran.us.r-project.org")
+    install_version("data.table", version = "1.10.4", repos = "http://cran.us.r-project.org")
 
 For DESeq2, as it is a BioConductor package, the above-listed version can be accessed at the following URL, under BioConductor version 3.5: [https://bioconductor.org/packages/3.5/bioc/html/DESeq2.html](https://bioconductor.org/packages/3.5/bioc/html/DESeq2.html)
