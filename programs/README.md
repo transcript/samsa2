@@ -48,6 +48,13 @@ DIAMOND's Github page: [https://github.com/bbuchfink/diamond](https://github.com
 
 The R packages used by SAMSA2's analysis scripts include:
 
-* optparse, MIT license
-* DESeq, GNU General Public License v3.0
-* data.table, GNU General Public License v3.0
+* optparse, version 1.4.4, MIT license
+* data.table, version 1.10.4, GNU General Public License v3.0
+* DESeq2, version 1.16.1, GNU General Public License v3.0
+
+In R, you can use the following commands to install the above-listed versions of these packages:
+
+    install_version("optparse", version = "1.4.4", repos = "http://cran.us.r-project.org")
+    install_version("ggplot2", version = "1.10.4", repos = "http://cran.us.r-project.org")
+
+For DESeq2, as it is a BioConductor package, the above-listed version can be accessed at the following URL, under BioConductor version 3.5: [https://bioconductor.org/packages/3.5/bioc/html/DESeq2.html](https://bioconductor.org/packages/3.5/bioc/html/DESeq2.html)
