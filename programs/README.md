@@ -16,17 +16,15 @@ For files that cannot be provided here, linkes are given to provide access to do
 
 The PEAR version used for SAMSA2 is 0.9.6.  
 
-PEAR requires registration to download, and so cannot be hosted here; however, PEAR is free for academic use.
+PEAR is free for academic use under the Creative Commmons license; gzipped copies (for both x32 and x86 versions) are provided in this directory.
 
 PEAR's homepage: [https://sco.h-its.org/exelixis/web/software/pear/](https://sco.h-its.org/exelixis/web/software/pear/)
-
-PEAR's download page: [https://www.h-its.org/downloads/pear-academic/](https://www.h-its.org/downloads/pear-academic/)
 
 ### Trimmomatic
 
 The Trimmomatic version used for SAMSA2 is 0.36.
 
-Trimmomatic does not have any explicit license, but can be downloaded from the lab's page.
+Trimmomatic is available under the GNU 3.0 General License; a gzipped copy is provided in this directory.
 
 Trimmomatic's homepage: [http://www.usadellab.org/cms/?page=trimmomatic](http://www.usadellab.org/cms/?page=trimmomatic)
 
