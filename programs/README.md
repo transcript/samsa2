@@ -1,4 +1,4 @@
-# Programs readme file
+## Programs readme file
 ******
 
 The following programs are used in the SAMSA2 pipeline:
@@ -12,7 +12,7 @@ The following programs are used in the SAMSA2 pipeline:
 Several of these dependencies are included here in this folder, when licenses allow.  
 For files that cannot be provided here, linkes are given to provide access to download the program, along with details such as version number verified to work with SAMSA2.
 
-## PEAR
+### PEAR
 
 The PEAR version used for SAMSA2 is 0.9.6.  
 
@@ -22,7 +22,7 @@ PEAR's homepage: [https://sco.h-its.org/exelixis/web/software/pear/](https://sco
 
 PEAR's download page: [https://www.h-its.org/downloads/pear-academic/](https://www.h-its.org/downloads/pear-academic/)
 
-## Trimmomatic
+### Trimmomatic
 
 The Trimmomatic version used for SAMSA2 is 0.36.
 
@@ -30,7 +30,7 @@ Trimmomatic does not have any explicit license, but can be downloaded from the l
 
 Trimmomatic's homepage: [http://www.usadellab.org/cms/?page=trimmomatic](http://www.usadellab.org/cms/?page=trimmomatic)
 
-## SortMeRNA
+### SortMeRNA
 
 The SortMeRNA version used for SAMSA2 is 2.1.
 
@@ -38,7 +38,7 @@ SortMeRNA is available under the GNU 3.0 General License; a gzipped copy of Sort
 
 SortMeRNA's Github page: [https://github.com/biocore/sortmerna](https://github.com/biocore/sortmerna)
 
-## DIAMOND
+### DIAMOND
 
 The DIAMOND version used for SAMSA2 is 0.8.38 (NOTE: more recent versions of DIAMOND are available, but have not yet been tested with SAMSA2.  Older versions of DIAMOND, such as 0.7.9, will **not work.**)
 
@@ -46,7 +46,7 @@ DIAMOND is available under the AGPL GNU General License; a gzipped copy of DIAMO
 
 DIAMOND's Github page: [https://github.com/bbuchfink/diamond](https://github.com/bbuchfink/diamond)
 
-## R packages
+### R packages
 
 The R packages used by SAMSA2's analysis scripts include:
 
