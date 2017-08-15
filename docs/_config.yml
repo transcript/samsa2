@@ -1,3 +1,4 @@
 theme: jekyll-theme-dinky
 title: SAMSA2
 description: A complete metatranscriptome analysis pipeline
+show_downloads: true
