@@ -1,3 +1,3 @@
 theme: jekyll-theme-slate
-title: SAMSA2, a complete cluster-based pipeline for metatranscriptomics analysis
-description: SAMSA2 is a faster, more customizable version of the original SAMSA pipeline, designed to analyze large microbiome RNA-seq experiments.  Built for use on a supercomputing cluster.
+title: SAMSA2
+description: A complete metatranscriptome analysis pipeline
