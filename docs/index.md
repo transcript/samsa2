@@ -1,4 +1,4 @@
-# SAMSA2 - 
+# SAMSA2
 
 Version 2 of the SAMSA pipeline - faster!  Lighter!  More options!  Less waiting!  
 
