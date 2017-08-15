@@ -1,5 +1,3 @@
-# SAMSA2
-
 Version 2 of the SAMSA pipeline - faster!  Lighter!  More options!  Less waiting!  
 
 ### New in version 2:
