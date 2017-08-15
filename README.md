@@ -1,4 +1,4 @@
-# SAMSA2 - 
+# SAMSA2 - A complete metatranscriptome analysis pipeline
 
 Version 2 of the SAMSA pipeline - faster!  Lighter!  More options!  Less waiting!  
 
