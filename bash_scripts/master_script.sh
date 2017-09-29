@@ -1,8 +1,9 @@
 #!/bin/bash
 #SBATCH --mem=100000
 #SBATCH --time=7-0:0:0
-#SBATCH --mail-user=stwestreich@ucdavis.edu
-#SBATCH --mail-type=END
+
+# Lines starting with #SBATCH are for SLURM job management systems
+# and may be removed if user is not submitting jobs to SLURM
 
 ####################################################################
 #
