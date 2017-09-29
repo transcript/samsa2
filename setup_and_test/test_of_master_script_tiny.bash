@@ -8,7 +8,7 @@
 
 ####################################################################
 #
-# master_script_for_sample_files.bash
+# test_of_master_script_tiny.bash
 # Created April 2017 by Sam Westreich, github.com/transcript
 # This version modified by Michelle Treiber on September 28, 2017
 #
