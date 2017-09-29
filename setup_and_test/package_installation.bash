@@ -68,3 +68,4 @@ $sortmerna_location/indexdb_rna --ref $sortmerna_location/rRNA_databases/silva-b
 
 echo "Finished downloading and installing all SAMSA2 package dependencies at: "; date
 echo "Completed!"
+exit
