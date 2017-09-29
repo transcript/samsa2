@@ -39,8 +39,8 @@ set -e # terminate script after first thing fails
 
 echo "WARNING: THIS IS A TEST RUN."
 echo "You are running an example script to test SAMSA2 using TINY databases." 
-echo "To run real metatranscriptomes, please download one or both of the databases by running full_database_download.bash located at https://github.com/transcript/samsa2/tree/master/setup.\n"
-echo "NOTE: Before running this script, please download and run package_installation.bash located at https://github.com/transcript/samsa2/tree/master/setup in order to set up SAMSA2 dependencies.\n\n\n"
+echo "To run real metatranscriptomes, please download one or both of the databases by running full_database_download.bash located at https://github.com/transcript/samsa2/tree/master/setup."
+echo -e "NOTE: Before running this script, please download and run package_installation.bash located at https://github.com/transcript/samsa2/tree/master/setup in order to set up SAMSA2 dependencies.\n\n"
 
 ####################################################################
 #
