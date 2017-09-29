@@ -44,27 +44,31 @@ echo "NOTE: Before running this script, please download and run package_installa
 
 ####################################################################
 #
-# VARIABLES - Set pathway for starting_location to location of samsa2 GitHub download
+# VARIABLES
 #
-# 	0. Starting location:
+# 	0. Starting location- Set pathway to location of samsa2 GitHub download
 starting_location=/home/samsa2
 
-#	00. Starting files location
+#	1. Starting files location
 starting_files_location=$starting_location/sample_files_paired-end/1_starting_files
 
-#	000. Python scripts location
+#	2. Output files location
+mkdir $starting_files_location/output_test
+output_location=$starting_files_location/output_test
+
+#	3. Python scripts location
 python_programs=$starting_location/python_scripts
 
-#	1. PEAR
+#	4. PEAR
 pear_location=$starting_location/programs/pear-0.9.10-linux-x86_64/bin
 
-# 	2. Trimmomatic
+# 	5. Trimmomatic
 trimmomatic_location=$starting_location/programs/Trimmomatic-0.36
 
-#	3. SortMeRNA
+#	6. SortMeRNA
 sortmerna_location=$starting_location/programs/sortmerna-2.1
 
-#	4. DIAMOND
+#	7. DIAMOND
 diamond_database="$starting_location/setup_and_test/databases_tiny/RefSeq_bac_TINY_24MB"
 diamond_subsys_db="$starting_location/setup_and_test/databases_tiny/subsys_db_TINY_24MB"
 diamond_location="$starting_location/programs/diamond"
@@ -93,8 +97,8 @@ do
 	$pear_location/pear -f $file1 -r $file2 -o $out_name
 done
 
-mkdir $starting_files_location/step_1_output_test/
-mv $starting_files_location/*merged* $starting_files_location/step_1_output_test/
+mkdir $output_location/step_1_output_test/
+mv $starting_files_location/*merged* $output_location/step_1_output_test/
 echo "STEP 1 DONE"
 
 ####################################################################
@@ -110,8 +114,8 @@ do
 	java -jar $trimmomatic_location/trimmomatic-0.36.jar SE -phred33 $file $shortname SLIDINGWINDOW:4:15 MINLEN:99
 done
 
-mkdir $starting_files_location/step_2_output_test/
-mv $starting_files_location/step_1_output_test/*cleaned.fastq $starting_files_location/step_2_output_test/
+mkdir $output_location/step_2_output_test/
+mv $output_location/step_1_output_test/*cleaned.fastq $output_location/step_2_output_test/
 echo "STEP 2 DONE"
 
 ####################################################################
@@ -119,19 +123,19 @@ echo "STEP 2 DONE"
 # STEP 2.9: GETTING RAW SEQUENCES COUNTS
 # Note: These are used later for statistical analysis.
 
-if [ -f $starting_files_location/step_2_output_test/raw_counts.txt]
+if [ -f $output_location/step_2_output_test/raw_counts.txt]
 then
-	rm $starting_files_location/step_2_output_test/raw_counts.txt
-	touch $starting_files_location/step_2_output_test/raw_counts.txt
+	rm $output_location/step_2_output_test/raw_counts.txt
+	touch $output_location/step_2_output_test/raw_counts.txt
 else
-	touch $starting_files_location/step_2_output_test/raw_counts.txt
+	touch $output_location/step_2_output_test/raw_counts.txt
 fi	
 
-for file in $starting_files_location/step_2_output_test/*cleaned.fastq
+for file in $output_location/step_2_output_test/*cleaned.fastq
 do
-	python $python_programs/raw_read_counter.py -I $file -O $starting_files_location/step_2_output_test/raw_counts.txt
+	python $python_programs/raw_read_counter.py -I $file -O $output_location/step_2_output_test/raw_counts.txt
 done
-echo "STEP 2.9 DONE" 
+echo "Counting raw sequences completed!"
 
 ####################################################################
 #
@@ -139,7 +143,7 @@ echo "STEP 2.9 DONE"
 # Note: this step assumes that the SortMeRNA databases are indexed.  If not,
 # do that first (see the SortMeRNA user manual for details).
 
-for file in $starting_files_location/step_2_output_test/*cleaned.fastq
+for file in $output_location/step_2_output_test/*cleaned.fastq
 do
 	shortname=`echo $file | awk -F "cleaned" '{print $1 "ribodepleted"}'`
 
@@ -147,10 +151,10 @@ do
 
 done
 
-mkdir $starting_files_location/step_3_output_test/
-mv $starting_files_location/step_2_output_test/*ribodepleted* $starting_files_location/step_3_output_test/
+mkdir $output_location/step_3_output_test/
+mv $output_location/step_2_output_test/*ribodepleted* $output_location/step_3_output_test/
 
-echo "STEP 3 DONE"
+echo "Ribosomal read removal step completed!"
 
 ####################################################################
 #
@@ -160,7 +164,7 @@ echo "STEP 3 DONE"
 
 echo "Now starting on DIAMOND org annotations at: "; date
 
-for file in $starting_files_location/step_3_output_test/*ribodepleted.fastq
+for file in $output_location/step_3_output_test/*ribodepleted.fastq
 do
 	shortname=`echo $file | awk -F "ribodepleted" '{print $1 "RefSeq_annotated"}'`
 	echo "Now starting on " $file 
@@ -170,14 +174,13 @@ do
 	$diamond_location view --daa $file.RefSeq.daa -o $shortname -f tab
 done
 
-mkdir $starting_files_location/step_4_output_test/
-mkdir $starting_files_location/step_4_output_test/daa_binary_files/
+mkdir $output_location/step_4_output_test/
+mkdir $output_location/step_4_output_test/daa_binary_files/
 
-mv $starting_files_location/step_3_output_test/*annotated* $starting_files_location/step_4_output_test/
-mv $starting_files_location/step_3_output_test/*.daa $starting_files_location/step_4_output_test/daa_binary_files/
+mv $output_location/step_3_output_test/*annotated* $output_location/step_4_output_test/
+mv $output_location/step_3_output_test/*.daa $output_location/step_4_output_test/daa_binary_files/
 
 echo "RefSeq DIAMOND annotations completed at: "; date
-echo "STEP 4 DONE"
 
 ####################################################################
 #
@@ -185,7 +188,7 @@ echo "STEP 4 DONE"
 
 echo "Now starting on DIAMOND Subsystems annotations at: "; date
 
-for file in $starting_files_location/step_3_output_test/*ribodepleted.fastq
+for file in $output_location/step_3_output_test/*ribodepleted.fastq
 do
 	shortname=`echo $file | awk -F "ribodepleted" '{print $1 "subsys_annotated"}'`
 	echo "Now starting on Subsystems annotations for " $file
@@ -194,11 +197,13 @@ do
 	$diamond_location view --daa $file.Subsys.daa -o $shortname -f tab
 done
 
-mv $starting_files_location/step_3_output_test/*subsys_annotated* $starting_files_location/step_4_output_test/
-mv $starting_files_location/step_3_output_test/*.daa $starting_files_location/step_4_output_test/daa_binary_files/
+mv $output_location/step_3_output_test/*subsys_annotated* $output_location/step_4_output_test/
+mv $output_location/step_3_output_test/*.daa $output_location/step_4_output_test/daa_binary_files/
 
 echo "DIAMOND Subsystems annotations completed at: "; date
 
-echo "test_of_master_script_tiny.bash finished running at: "; date
-echo "Completed!"
+echo "Now removing output files."
+rm -r $output_location
+echo "SUCCESS! test_of_master_script.bash successfully ran."
+exit
 ##################################################################
