@@ -28,7 +28,7 @@ starting_location=/home/samsa2
 mkdir $starting_location/full_databases
 cd $starting_location/full_databases
 
-echo "NOTE: The databases are up to 28GB and may require many hours to download. Users may want to consider running this download overnight."
+echo -e "NOTE: The databases are up to 28GB and may require hours to download. Users may want to consider running this download overnight.\n"
 # Download NCBI RefSeq database:
 echo "NOW DOWNLOADING NCBI REFSEQ DATABASE AT: "; date
 wget "https://bioshare.bioinformatics.ucdavis.edu/bioshare/download/2c8s521xj9907hn/RefSeq_bac.fa"
@@ -37,7 +37,7 @@ wget "https://bioshare.bioinformatics.ucdavis.edu/bioshare/download/2c8s521xj990
 echo "NOW DOWNLOADING SEED SUBSYSTEMS DATABASE AT: "; date
 wget "https://bioshare.bioinformatics.ucdavis.edu/bioshare/download/2c8s521xj9907hn/subsys_db.fa"
 
-echo "\n\nNOTE: IF USERS ARE USING A DIFFERENT VERSION OF DIAMOND OR
+echo -e "\n\nNOTE: IF USERS ARE USING A DIFFERENT VERSION OF DIAMOND OR
 WOULD RATHER MAKE THEIR OWN DIAMOND COMPATIBLE DATABASES
 TO SAVE TIME:
 1. Run package_installation.bash located at 
