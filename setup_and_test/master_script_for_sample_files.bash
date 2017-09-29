@@ -8,7 +8,7 @@
 
 ####################################################################
 #
-# test_of_master_script_tiny.bash
+# master_script_for_sample_files.bash
 # Created April 2017 by Sam Westreich, github.com/transcript
 # This version modified by Michelle Treiber on September 28, 2017
 #
@@ -34,6 +34,9 @@
 #
 ####################################################################
 #
+
+set -e # terminate script after first thing fails
+
 echo "WARNING: THIS IS A TEST RUN."
 echo "You are running an example script to test SAMSA2 using TINY databases." 
 echo "To run real metatranscriptomes, please download one or both of the databases by running full_database_download.bash located at https://github.com/transcript/samsa2/tree/master/setup.\n"
@@ -48,6 +51,9 @@ starting_location=/home/samsa2
 
 #	00. Starting files location
 starting_files_location=$starting_location/sample_files_paired-end/1_starting_files
+
+#	000. Python scripts location
+python_programs=$starting_location/python_scripts
 
 #	1. PEAR
 pear_location=$starting_location/programs/pear-0.9.10-linux-x86_64/bin
