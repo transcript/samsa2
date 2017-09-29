@@ -35,7 +35,7 @@
 #
 ####################################################################
 #
-echo "NOTE: Before running this script, please download and run package_installation.bash located at https://github.com/transcript/samsa2/tree/master/setup in order to set up SAMSA2 dependencies.\n\n\n"
+echo -e "NOTE: Before running this script, please download and run package_installation.bash located at https://github.com/transcript/samsa2/tree/master/setup in order to set up SAMSA2 dependencies.\n\n\n"
 #
 # VARIABLES - Set pathway for starting_location to location of samsa2 GitHub download
 #
