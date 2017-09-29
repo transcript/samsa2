@@ -60,7 +60,7 @@ diamond_subsys_db="$starting_location/full_databases/subsys_db"
 diamond_location="$starting_location/programs/diamond"
 
 #	5. Aggregation
-python_programs=$starting_location
+python_programs=$starting_location/python_scripts
 RefSeq_db="$starting_location/full_databases/RefSeq_bac.fa"
 Subsys_db="$starting_location/full_databases/subsys_db.fa"
 
