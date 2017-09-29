@@ -99,7 +99,7 @@ done
 
 mkdir $output_location/step_1_output_test/
 mv $starting_files_location/*merged* $output_location/step_1_output_test/
-echo "STEP 1 DONE"
+echo -e "\nPaired-end merging step completed.\n"
 
 ####################################################################
 #
@@ -116,7 +116,7 @@ done
 
 mkdir $output_location/step_2_output_test/
 mv $output_location/step_1_output_test/*cleaned.fastq $output_location/step_2_output_test/
-echo "STEP 2 DONE"
+echo -e "\nCleaning files with Trimmomatic completed.\n"
 
 ####################################################################
 #
@@ -135,7 +135,7 @@ for file in $output_location/step_2_output_test/*cleaned.fastq
 do
 	python $python_programs/raw_read_counter.py -I $file -O $output_location/step_2_output_test/raw_counts.txt
 done
-echo "Counting raw sequences completed!"
+echo -e "\nCounting raw sequences completed!\n"
 
 ####################################################################
 #
@@ -154,7 +154,7 @@ done
 mkdir $output_location/step_3_output_test/
 mv $output_location/step_2_output_test/*ribodepleted* $output_location/step_3_output_test/
 
-echo "Ribosomal read removal step completed!"
+echo -e "\nRibosomal read removal step completed!\n"
 
 ####################################################################
 #
@@ -180,7 +180,7 @@ mkdir $output_location/step_4_output_test/daa_binary_files/
 mv $output_location/step_3_output_test/*annotated* $output_location/step_4_output_test/
 mv $output_location/step_3_output_test/*.daa $output_location/step_4_output_test/daa_binary_files/
 
-echo "RefSeq DIAMOND annotations completed at: "; date
+echo -e "\nRefSeq DIAMOND annotations completed at: "; date
 
 ####################################################################
 #
@@ -200,7 +200,7 @@ done
 mv $output_location/step_3_output_test/*subsys_annotated* $output_location/step_4_output_test/
 mv $output_location/step_3_output_test/*.daa $output_location/step_4_output_test/daa_binary_files/
 
-echo "DIAMOND Subsystems annotations completed at: "; date
+echo -e "\nDIAMOND Subsystems annotations completed at: "; date
 
 echo "Now removing output files."
 rm -r $output_location
