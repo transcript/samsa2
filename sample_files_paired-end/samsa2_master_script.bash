@@ -218,7 +218,6 @@ mv $starting_files_location/step_3_output/*subsys_annotated* $starting_files_loc
 mv $starting_files_location/step_3_output/*.daa $starting_files_location/step_4_output/daa_binary_files/
 
 echo "DIAMOND Subsystems annotations completed at: "; date
-
 echo "STEP 4.1 DONE"
 
 ##################################################################
