@@ -61,3 +61,4 @@ wget "https://bioshare.bioinformatics.ucdavis.edu/bioshare/download/2c8s521xj990
 # $starting_location/programs/diamond makedb --in $starting_location/full_databases/subsys_db.fa --db $starting_location/full_databases/subsys_db
 
 echo "Completed!"
+exit
