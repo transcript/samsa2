@@ -8,7 +8,7 @@
 
 ####################################################################
 #
-# example_master_script.bash
+# master_script_for_sample_files.bash
 # Created April 2017 by Sam Westreich, github.com/transcript
 # This version modified by Michelle Treiber on August 9, 2017
 #
