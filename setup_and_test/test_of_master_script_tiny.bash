@@ -105,9 +105,9 @@ echo "STEP 1 DONE"
 #
 # STEP 2: CLEANING FILES WITH TRIMMOMATIC
 # Note: if skipping PEAR, make sure that all starting files are in the
-# $starting_files_location/step_1_output_test/ folder!
+# $output_location/step_1_output_test/ folder!
 
-for file in $starting_files_location/step_1_output_test/*assembled*
+for file in $output_location/step_1_output_test/*assembled*
 do
 	shortname=`echo $file | awk -F "merged" '{print $1 "cleaned.fastq"}'`
 
