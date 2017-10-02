@@ -31,11 +31,11 @@ cd $starting_location/full_databases
 echo -e "NOTE: The databases are up to 28GB and may require hours to download. Users may want to consider running this download overnight.\n"
 # Download NCBI RefSeq database:
 echo "NOW DOWNLOADING NCBI REFSEQ DATABASE AT: "; date
-wget "https://bioshare.bioinformatics.ucdavis.edu/bioshare/download/2c8s521xj9907hn/RefSeq_bac.fa"
+wget "https://bioshare.bioinformatics.ucdavis.edu/bioshare/download/2c8s521xj9907hn/RefSeq_bac.fa" --no-check-certificate
 
 # Download SEED Subsystems database:
 echo "NOW DOWNLOADING SEED SUBSYSTEMS DATABASE AT: "; date
-wget "https://bioshare.bioinformatics.ucdavis.edu/bioshare/download/2c8s521xj9907hn/subsys_db.fa"
+wget "https://bioshare.bioinformatics.ucdavis.edu/bioshare/download/2c8s521xj9907hn/subsys_db.fa" --no-check-certificate
 
 echo -e "\n\nNOTE: IF USERS ARE USING A DIFFERENT VERSION OF DIAMOND OR
 WOULD RATHER MAKE THEIR OWN DIAMOND COMPATIBLE DATABASES
@@ -51,11 +51,11 @@ TO SAVE TIME:
 
 # Download DIAMOND compatible RefSeq database:
 echo "NOW DOWNLOADING DIAMOND COMPATIBLE REFSEQ DATABASE AT: "; date
-wget "https://bioshare.bioinformatics.ucdavis.edu/bioshare/download/2c8s521xj9907hn/RefSeq_bac.dmnd"
+wget "https://bioshare.bioinformatics.ucdavis.edu/bioshare/download/2c8s521xj9907hn/RefSeq_bac.dmnd" --no-check-certificate
 
 # Download DIAMOND compatible Subsystems database:
 echo "NOW DOWNLOADING DIAMOND COMPATIBLE SUBSYSTEMS DATABASE AT: "; date
-wget "https://bioshare.bioinformatics.ucdavis.edu/bioshare/download/2c8s521xj9907hn/subsys_db.dmnd"
+wget "https://bioshare.bioinformatics.ucdavis.edu/bioshare/download/2c8s521xj9907hn/subsys_db.dmnd" --no-check-certificate
 
 # $starting_location/programs/diamond makedb --in $starting_location/full_databases/RefSeq_bac.fa --db $starting_location/full_databases/RefSeq_bac
 # $starting_location/programs/diamond makedb --in $starting_location/full_databases/subsys_db.fa --db $starting_location/full_databases/subsys_db
