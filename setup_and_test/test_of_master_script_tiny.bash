@@ -69,8 +69,8 @@ trimmomatic_location=$starting_location/programs/Trimmomatic-0.36
 sortmerna_location=$starting_location/programs/sortmerna-2.1
 
 #	7. DIAMOND
-diamond_database="$starting_location/setup_and_test/databases_tiny/RefSeq_bac_TINY_24MB"
-diamond_subsys_db="$starting_location/setup_and_test/databases_tiny/subsys_db_TINY_24MB"
+diamond_database="$starting_location/setup_and_test/tiny_databases/RefSeq_bac_TINY_24MB"
+diamond_subsys_db="$starting_location/setup_and_test/tiny_databases/subsys_db_TINY_24MB"
 diamond_location="$starting_location/programs/diamond"
 
 ####################################################################
