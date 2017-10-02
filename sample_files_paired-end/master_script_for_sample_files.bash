@@ -186,8 +186,8 @@ echo "STEP 4 DONE"
 
 for file in $starting_files_location/step_4_output/*RefSeq_annotated*
 do
-	python $python_programs/standardized_DIAMOND_analysis_counter_mlt.py -I $file -D $RefSeq_db -O
-	python $python_programs/standardized_DIAMOND_analysis_counter_mlt.py -I $file -D $RefSeq_db -F
+	python $python_programs/standardized_DIAMOND_analysis_counter.py -I $file -D $RefSeq_db -O
+	python $python_programs/standardized_DIAMOND_analysis_counter.py -I $file -D $RefSeq_db -F
 done
 
 mkdir $starting_files_location/step_5_output/
