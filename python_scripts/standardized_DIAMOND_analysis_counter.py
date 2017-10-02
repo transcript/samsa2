@@ -58,10 +58,10 @@ if "-O" not in sys.argv:
 		sys.exit("WARNING: need to specify either organism results (with -O flag in command) or functional results (with -F flag in command).")
 
 # loading starting file
-# if "-I" in sys.argv:
-# 	infile_name = string_find("-I")
-# else:
-# 	sys.exit ("WARNING: infile must be specified using '-I' flag.")
+if "-I" in sys.argv:
+	infile_name = string_find("-I")
+else:
+	sys.exit ("WARNING: infile must be specified using '-I' flag.")
 
 # checking to make sure database is specified
 if "-D" in sys.argv:
@@ -70,39 +70,39 @@ else:
 	sys.exit( "No database file indicated; skipping database search step.")
 
 
-# infile = open (infile_name, "r")
-# 
-# # setting up databases
-# RefSeq_hit_count_db = {}
-# unique_seq_db = {}
-# line_counter = 0
-# 
-# # reading through the infile - the DIAMOND results m8 format
-# print "\nNow reading through the m8 results infile."
-# 
-# for line in infile:
-# 	line_counter += 1
-# 	splitline = line.split("\t")
-# 	if line_counter % 1000000 == 0:
-# 		t99 = time.clock()
-# 		print str(line_counter)[:-6] + "M lines processed so far in " + str(t99-t0) + " seconds."
-# 	
-# 	unique_seq_db[splitline[0]] = 1
-# 
-# 	try:
-# 		RefSeq_hit_count_db[splitline[1]] += 1
-# 	except KeyError:
-# 		RefSeq_hit_count_db[splitline[1]] = 1
-# 		continue
-# 
-# t1 = time.clock()
-# 
-# print "\nAnalysis of " + infile_name + " complete."
-# print "Number of total lines: " + str(line_counter)
-# print "Number of unique sequences: " + str(len(unique_seq_db))
-# print "Time elapsed: " + str(t1-t0) + " seconds."
-# 
-# infile.close()
+infile = open (infile_name, "r")
+
+# setting up databases
+RefSeq_hit_count_db = {}
+unique_seq_db = {}
+line_counter = 0
+
+# reading through the infile - the DIAMOND results m8 format
+print "\nNow reading through the m8 results infile."
+
+for line in infile:
+	line_counter += 1
+	splitline = line.split("\t")
+	if line_counter % 1000000 == 0:
+		t99 = time.clock()
+		print str(line_counter)[:-6] + "M lines processed so far in " + str(t99-t0) + " seconds."
+	
+	unique_seq_db[splitline[0]] = 1
+
+	try:
+		RefSeq_hit_count_db[splitline[1]] += 1
+	except KeyError:
+		RefSeq_hit_count_db[splitline[1]] = 1
+		continue
+
+t1 = time.clock()
+
+print "\nAnalysis of " + infile_name + " complete."
+print "Number of total lines: " + str(line_counter)
+print "Number of unique sequences: " + str(len(unique_seq_db))
+print "Time elapsed: " + str(t1-t0) + " seconds."
+
+infile.close()
 	
 # time to search for these in the reference database
 db = open (db_name, "r")
