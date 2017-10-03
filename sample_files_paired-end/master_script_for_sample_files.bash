@@ -252,9 +252,9 @@ echo "STEP 5.1 DONE"
 # Note: For R to properly identify files to compare/contrast, they must include 
 # the appropriate prefix (either "control_$file" or experimental_$file")!
 
-Rscript $R_programs/run_DESeq_stats.R -I $starting_files_location/step_5_output/RefSeq_results/org_results/ -O RefSeq_org_DESeq_results.tab -R $starting_files_location/step_2_output/raw_counts.txt
-Rscript $R_programs/run_DESeq_stats.R -I $starting_files_location/step_5_output/RefSeq_results/func_results/ -O RefSeq_func_DESeq_results.tab -R $starting_files_location/step_2_output/raw_counts.txt
-Rscript $R_programs/Subsystems_DESeq_stats.R -I $starting_files_location/step_5_output/Subsystems_results/ -O Subsystems_level-1_DESeq_results.tab -L 1 -R $starting_files_location/step_2_output/raw_counts.txt
+Rscript $R_programs/run_DESeq_stats.R -I $starting_files_location/step_5_output/RefSeq_results/org_results/ -O RefSeq_org_DESeq_results.tab # -R $starting_files_location/step_2_output/raw_counts.txt
+Rscript $R_programs/run_DESeq_stats.R -I $starting_files_location/step_5_output/RefSeq_results/func_results/ -O RefSeq_func_DESeq_results.tab # -R $starting_files_location/step_2_output/raw_counts.txt
+Rscript $R_programs/Subsystems_DESeq_stats.R -I $starting_files_location/step_5_output/Subsystems_results/ -O Subsystems_level-1_DESeq_results.tab -L 1 # -R $starting_files_location/step_2_output/raw_counts.txt
 
 echo "STEP 6 DONE"
 echo "Master bash script finished running at: "; date
