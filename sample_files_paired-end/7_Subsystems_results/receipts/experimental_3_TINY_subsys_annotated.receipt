@@ -1,0 +1,132 @@
+J00113:48:H3TLJBBXX:3:1101:26849:1384	fig|537011.5.peg.1282	Ribonucleotide reductase of class III (anaerobic), large subunit (EC 1.17.4.2)	Ribonucleotide_reduction		Nucleosides and Nucleotides	
+K00188:32:H3W5KBBXX:4:1101:26557:1404	fig|563008.3.peg.278	Tyrosine-protein kinase Wzc (EC 2.7.10.2)	CBSS-258594.1.peg.3339	Clustering-based subsystems	Biosynthesis of galactoglycans and related lipopolysacharides
+J00113:48:H3TLJBBXX:3:1101:6816:1279	fig|679189.3.peg.114	NADH pyrophosphatase (EC 3.6.1.22)	Nudix_proteins_(nucleoside_triphosphate_hydrolases)	Nucleosides and Nucleotides	Detoxification
+J00113:48:H3TLJBBXX:2:1101:18051:1367	fig|10847.1.peg.8	Phage capsid and scaffold	Phage_capsid_proteins	Phages, Prophages, Transposable elements	Bacteriophage structural proteins
+J00113:48:H3TLJBBXX:1:1101:18507:1314	fig|537011.5.peg.4646	Glycogen debranching enzyme (EC 3.2.1.-)	Glycogen_metabolism	Carbohydrates	Polysaccharides
+J00113:48:H3TLJBBXX:2:1101:22506:1314	fig|553174.3.peg.1495	Beta-galactosidase (EC 3.2.1.23)	Galactosylceramide_and_Sulfatide_metabolism		Sulfur Metabolism	
+K00188:32:H3W5KBBXX:3:1101:14733:1527	fig|619693.3.peg.1307	SSU ribosomal protein S2p (SAe)	Ribosome_SSU_bacterial	Protein Metabolism	Protein biosynthesis
+K00188:32:H3W5KBBXX:3:1101:26476:1510	fig|639282.3.peg.1755	Methionine aminopeptidase (EC 3.4.11.18)	CBSS-312309.3.peg.1965		Clustering-based subsystems	
+J00113:48:H3TLJBBXX:1:1101:13464:1332	fig|484018.6.peg.1648	Possible alternative L-fucose mutarotase	L-fucose_utilization	Carbohydrates	Monosaccharides
+J00113:48:H3TLJBBXX:1:1101:14478:1332	fig|680198.5.peg.7812	Tryptophanase (EC 4.1.99.1)	Aromatic_amino_acid_degradation	Amino Acids and Derivatives	Aromatic amino acids and derivatives
+K00188:32:H3W5KBBXX:4:1101:17118:1545	fig|457424.5.peg.1791	Alpha-L-fucosidase (EC 3.2.1.51)	L-fucose_utilization	Carbohydrates	Monosaccharides
+J00113:48:H3TLJBBXX:3:1101:6837:1279	fig|679189.3.peg.114	NADH pyrophosphatase (EC 3.6.1.22)	Nudix_proteins_(nucleoside_triphosphate_hydrolases)	Nucleosides and Nucleotides	Detoxification
+K00188:32:H3W5KBBXX:4:1101:16357:1457	fig|817.1.peg.1701	NO HIERARCHY
+J00113:48:H3TLJBBXX:3:1101:11444:1314	fig|699218.3.peg.1220	Multimodular transpeptidase-transglycosylase (EC 2.4.1.129) (EC 3.4.-.-)	Peptidoglycan_Biosynthesis		Cell Wall and Capsule	
+J00113:48:H3TLJBBXX:2:1101:21765:1332	fig|340099.4.peg.368	Translation elongation factor Tu	Translation_elongation_factors_bacterial	Protein Metabolism	Protein biosynthesis
+J00113:48:H3TLJBBXX:1:1101:1448:1261	fig|553171.3.peg.59	NO HIERARCHY
+J00113:48:H3TLJBBXX:2:1101:21410:1314	fig|817.1.peg.621	NO HIERARCHY
+J00113:48:H3TLJBBXX:2:1101:30147:1367	fig|537011.5.peg.519	Biopolymer transport protein ExbD/TolR	Ton_and_Tol_transport_systems		Membrane Transport	
+J00113:48:H3TLJBBXX:3:1101:19542:1279	fig|264731.4.peg.2660	TonB-dependent receptor	Ton_and_Tol_transport_systems		Membrane Transport	
+J00113:48:H3TLJBBXX:3:1101:24799:1384	fig|537011.5.peg.2734	NAD-dependent glyceraldehyde-3-phosphate dehydrogenase (EC 1.2.1.12)	Pyridoxin_(Vitamin_B6)_Biosynthesis	Cofactors, Vitamins, Prosthetic Groups, Pigments	Pyridoxine
+K00188:32:H3W5KBBXX:4:1101:5598:1492	fig|575611.3.peg.2344	Uridine kinase (EC 2.7.1.48)	pyrimidine_conversions	Nucleosides and Nucleotides	Pyrimidines
+J00113:48:H3TLJBBXX:3:1101:15219:1314	fig|585502.3.peg.1375	Malate dehydrogenase (EC 1.1.1.37)	TCA_Cycle	Carbohydrates	Central carbohydrate metabolism
+K00188:32:H3W5KBBXX:4:1101:5202:1475	fig|679190.3.peg.742	tRNA (Guanine37-N1) -methyltransferase (EC 2.1.1.31)	Ribosome_biogenesis_bacterial	Protein Metabolism	Protein biosynthesis
+K00188:32:H3W5KBBXX:3:1101:12073:1457	fig|563008.3.peg.1756	Succinate dehydrogenase flavoprotein subunit (EC 1.3.99.1)	Succinate_dehydrogenase	Respiration	Electron donating reactions
+J00113:48:H3TLJBBXX:3:1101:25692:1384	fig|626522.3.peg.2039	GTP pyrophosphokinase (EC 2.7.6.5), (p)ppGpp synthetase I	Stringent_Response,_(p)ppGpp_metabolism		Regulation and Cell signaling	
+J00113:48:H3TLJBBXX:3:1101:7984:1402	fig|1680.3.peg.1521	Multiple sugar ABC transporter, substrate-binding protein	Fructooligosaccharides(FOS)_and_Raffinose_Utilization	Carbohydrates	Di- and oligosaccharides
+J00113:48:H3TLJBBXX:3:1101:21014:1297	fig|264731.4.peg.216	Glucose-1-phosphate thymidylyltransferase (EC 2.7.7.24)	Rhamnose_containing_glycans	Cell Wall and Capsule	Capsular and extracellular polysacchrides
+J00113:48:H3TLJBBXX:4:1101:24850:1261	fig|338966.5.peg.185	Cysteinyl-tRNA synthetase (EC 6.1.1.16)	tRNA_aminoacylation,_Cys	Protein Metabolism	Protein biosynthesis
+K00188:32:H3W5KBBXX:4:1101:26192:1404	fig|235279.5.peg.169	GDP-mannose 4,6-dehydratase (EC 4.2.1.47)	Capsular_heptose_biosynthesis	Cell Wall and Capsule	Capsular and extracellular polysacchrides
+J00113:48:H3TLJBBXX:3:1101:27214:1279	fig|471855.4.peg.2372	Isocitrate dehydrogenase [NADP] (EC 1.1.1.42)	5-FCL-like_protein	Cofactors, Vitamins, Prosthetic Groups, Pigments	Folate and pterines
+J00113:48:H3TLJBBXX:3:1101:4279:1420	fig|537011.5.peg.4288	Phosphoenolpyruvate carboxykinase [ATP] (EC 4.1.1.49)	Pyruvate_metabolism_I:_anaplerotic_reactions,_PEP	Carbohydrates	Central carbohydrate metabolism
+J00113:48:H3TLJBBXX:2:1101:22729:1349	fig|537011.5.peg.2734	NAD-dependent glyceraldehyde-3-phosphate dehydrogenase (EC 1.2.1.12)	Pyridoxin_(Vitamin_B6)_Biosynthesis	Cofactors, Vitamins, Prosthetic Groups, Pigments	Pyridoxine
+J00113:48:H3TLJBBXX:2:1101:26311:1297	fig|264731.4.peg.992	Phosphoserine aminotransferase (EC 2.6.1.52)	Pyridoxin_(Vitamin_B6)_Biosynthesis	Cofactors, Vitamins, Prosthetic Groups, Pigments	Pyridoxine
+J00113:48:H3TLJBBXX:2:1101:21816:1314	fig|398720.4.peg.732	TonB-dependent receptor	Ton_and_Tol_transport_systems		Membrane Transport	
+J00113:48:H3TLJBBXX:4:1101:17360:1367	fig|553175.3.peg.216	Malonyl CoA-acyl carrier protein transacylase (EC 2.3.1.39)	Fatty_Acid_Biosynthesis_FASII	Fatty Acids, Lipids, and Isoprenoids	Fatty acids
+K00188:32:H3W5KBBXX:4:1101:27613:1545	fig|537011.5.peg.222	Na(+)-translocating NADH-quinone reductase subunit F (EC 1.6.5.-)	Na(+)-translocating_NADH-quinone_oxidoreductase_and_rnf-like_group_of_electron_transport_complexes	Respiration	Electron donating reactions
+J00113:48:H3TLJBBXX:1:1101:19755:1367	fig|411471.5.peg.2496	Electron transfer flavoprotein, alpha subunit	Acetyl-CoA_fermentation_to_Butyrate	Carbohydrates	Fermentation
+J00113:48:H3TLJBBXX:4:1101:12439:1384	fig|563008.3.peg.309	NAD-dependent glyceraldehyde-3-phosphate dehydrogenase (EC 1.2.1.12)	Redox-dependent_regulation_of_nucleus_processes	Stress Response	Oxidative stress
+J00113:48:H3TLJBBXX:3:1101:11302:1314	fig|563008.3.peg.17	Threonine synthase (EC 4.2.3.1)	Threonine_and_Homoserine_Biosynthesis	Amino Acids and Derivatives	Lysine, threonine, methionine, and cysteine
+J00113:48:H3TLJBBXX:4:1101:11373:1297	fig|575611.3.peg.2156	O-succinylbenzoic acid--CoA ligase (EC 6.2.1.26)	Menaquinone_and_Phylloquinone_Biosynthesis	Cofactors, Vitamins, Prosthetic Groups, Pigments	Quinone cofactors
+K00188:32:H3W5KBBXX:4:1101:20640:1492	fig|537011.5.peg.390	Indole-3-glycerol phosphate synthase (EC 4.1.1.48)	Tryptophan_synthesis	Amino Acids and Derivatives	Aromatic amino acids and derivatives
+J00113:48:H3TLJBBXX:4:1101:28625:1297	fig|537011.5.peg.4884	SSU ribosomal protein S5p (S2e)	Ribosomal_protein_S5p_acylation	Protein Metabolism	Protein processing and modification
+J00113:48:H3TLJBBXX:3:1101:22922:1367	fig|457388.5.peg.676	NAD-specific glutamate dehydrogenase (EC 1.4.1.2)	Glutamine,_Glutamate,_Aspartate_and_Asparagine_Biosynthesis	Amino Acids and Derivatives	Glutamine, glutamate, aspartate, asparagine; ammonia assimilation
+J00113:48:H3TLJBBXX:3:1101:13900:1384	fig|575612.3.peg.197	Cell division protein FtsI [Peptidoglycan synthetase] (EC 2.4.1.129)	Bacterial_Cytoskeleton		Cell Division and Cell Cycle	
+J00113:48:H3TLJBBXX:1:1101:1692:1297	fig|405566.3.peg.986	Enolase (EC 4.2.1.11)	Serine-glyoxylate_cycle	Carbohydrates	One-carbon Metabolism
+K00188:32:H3W5KBBXX:3:1101:11982:1545	fig|537011.5.peg.3073	Pyruvate-flavodoxin oxidoreductase (EC 1.2.7.-)	Pyruvate:ferredoxin_oxidoreductase	Carbohydrates	Central carbohydrate metabolism
+J00113:48:H3TLJBBXX:1:1101:2666:1402	fig|679190.3.peg.2115	Cold-shock DEAD-box protein A	ATP-dependent_RNA_helicases,_bacterial	RNA Metabolism	RNA processing and modification
+J00113:48:H3TLJBBXX:4:1101:6786:1402	fig|563008.3.peg.623	Pyruvate,phosphate dikinase (EC 2.7.9.1)	Pyruvate_metabolism_I:_anaplerotic_reactions,_PEP	Carbohydrates	Central carbohydrate metabolism
+J00113:48:H3TLJBBXX:1:1101:18477:1297	fig|537011.5.peg.4646	Glycogen debranching enzyme (EC 3.2.1.-)	Glycogen_metabolism	Carbohydrates	Polysaccharides
+J00113:48:H3TLJBBXX:1:1101:31761:1279	fig|537011.5.peg.360	Triosephosphate isomerase (EC 5.3.1.1)	Glycolysis_and_Gluconeogenesis	Carbohydrates	Central carbohydrate metabolism
+K00188:32:H3W5KBBXX:4:1101:26293:1510	fig|537011.5.peg.4487	ATP-dependent DNA helicase RecQ	DNA_repair,_bacterial_RecFOR_pathway	DNA Metabolism	DNA repair
+K00188:32:H3W5KBBXX:4:1101:15281:1562	fig|537013.3.peg.1371	Translation elongation factor G	Translation_elongation_factors_bacterial	Protein Metabolism	Protein biosynthesis
+J00113:48:H3TLJBBXX:4:1101:8694:1367	fig|484018.6.peg.2137	tRNA(Ile)-lysidine synthetase	Cell_division-ribosomal_stress_proteins_cluster		Clustering-based subsystems	
+J00113:48:H3TLJBBXX:2:1101:15199:1349	fig|619693.3.peg.1299	Aminopeptidase Y (Arg, Lys, Leu preference) (EC 3.4.11.15)	Aminopeptidases_(EC_3.4.11.-)	Protein Metabolism	Protein degradation
+J00113:48:H3TLJBBXX:2:1101:20760:1384	fig|196162.6.peg.606	L-arabinose-binding periplasmic protein precursor AraF (TC 3.A.1.2.2)	L-Arabinose_utilization	Carbohydrates	Monosaccharides
+J00113:48:H3TLJBBXX:2:1101:27844:1349	fig|469585.3.peg.4204	Carbamoyl-phosphate synthase large chain (EC 6.3.5.5)	De_Novo_Pyrimidine_Synthesis	Nucleosides and Nucleotides	Pyrimidines
+J00113:48:H3TLJBBXX:3:1101:18223:1279	fig|537011.5.peg.2734	NAD-dependent glyceraldehyde-3-phosphate dehydrogenase (EC 1.2.1.12)	Pyridoxin_(Vitamin_B6)_Biosynthesis	Cofactors, Vitamins, Prosthetic Groups, Pigments	Pyridoxine
+J00113:48:H3TLJBBXX:4:1101:11738:1402	fig|537011.5.peg.3886	UDP-N-acetylmuramoylalanine--D-glutamate ligase (EC 6.3.2.9)	Peptidoglycan_biosynthesis--gjo		Cell Wall and Capsule	
+K00188:32:H3W5KBBXX:3:1101:24517:1527	fig|575614.3.peg.790	tRNA dihydrouridine synthase B (EC 1.-.-.-)	tRNA_modification_Archaea	RNA Metabolism	RNA processing and modification
+J00113:48:H3TLJBBXX:3:1101:21034:1297	fig|264731.4.peg.216	Glucose-1-phosphate thymidylyltransferase (EC 2.7.7.24)	Rhamnose_containing_glycans	Cell Wall and Capsule	Capsular and extracellular polysacchrides
+J00113:48:H3TLJBBXX:4:1101:3062:1314	fig|445970.5.peg.754	Polyribonucleotide nucleotidyltransferase (EC 2.7.7.8)	Bacterial_RNA-metabolizing_Zn-dependent_hydrolases		Clustering-based subsystems	
+K00188:32:H3W5KBBXX:3:1101:22376:1439	fig|575615.3.peg.698	ATP synthase beta chain (EC 3.6.3.14)	F0F1-type_ATP_synthase	Respiration	ATP synthases
+K00188:32:H3W5KBBXX:4:1101:27471:1404	fig|699218.3.peg.1170	Butyryl-CoA dehydrogenase (EC 1.3.99.2)	Anaerobic_respiratory_reductases	Respiration	Electron accepting reactions
+J00113:48:H3TLJBBXX:2:1101:28777:1279	fig|619693.3.peg.2625	Glutamine synthetase type III, GlnN (EC 6.3.1.2)	Peptidoglycan_Biosynthesis		Cell Wall and Capsule	
+J00113:48:H3TLJBBXX:1:1101:14174:1367	fig|469589.3.peg.2940	LSU ribosomal protein L6p (L9e)	Ribosome_LSU_bacterial	Protein Metabolism	Protein biosynthesis
+J00113:48:H3TLJBBXX:4:1101:25479:1261	fig|536231.5.peg.2599	Phosphoenolpyruvate carboxykinase [ATP] (EC 4.1.1.49)	Serine-glyoxylate_cycle	Carbohydrates	One-carbon Metabolism
+J00113:48:H3TLJBBXX:3:1101:31426:1332	fig|10847.1.peg.6	Phage major capsid protein	Phage_capsid_proteins	Phages, Prophages, Transposable elements	Bacteriophage structural proteins
+J00113:48:H3TLJBBXX:3:1101:9272:1349	fig|537007.6.peg.88	Alpha-galactosidase (EC 3.2.1.22)	Melibiose_Utilization	Carbohydrates	Di- and oligosaccharides
+J00113:48:H3TLJBBXX:4:1101:11353:1367	fig|575615.3.peg.2808	Biopolymer transport protein ExbD/TolR	Ton_and_Tol_transport_systems		Membrane Transport	
+K00188:32:H3W5KBBXX:4:1101:20254:1527	fig|575615.3.peg.1125	Transcription termination protein NusB	Transcription_factors_bacterial	RNA Metabolism	Transcription
+K00188:32:H3W5KBBXX:3:1101:16570:1439	fig|470145.6.peg.1212	Glutamyl-tRNA synthetase (EC 6.1.1.17)	tRNA_aminoacylation,_Glu_and_Gln	Protein Metabolism	Protein biosynthesis
+J00113:48:H3TLJBBXX:2:1101:10622:1367	fig|537011.5.peg.4647	Alpha-glucosidase SusB (EC 3.2.1.20)	Cellulosome	Carbohydrates	Polysaccharides
+J00113:48:H3TLJBBXX:2:1101:15940:1297	fig|699218.3.peg.904	Glycolate dehydrogenase (EC 1.1.99.14), subunit GlcD	Glycolate,_glyoxylate_interconversions	Carbohydrates	Central carbohydrate metabolism
+J00113:48:H3TLJBBXX:2:1101:17665:1332	fig|411489.7.peg.1197	Aspartyl-tRNA(Asn) amidotransferase subunit A (EC 6.3.5.6)	tRNA_aminoacylation,_Asp_and_Asn	Protein Metabolism	Protein biosynthesis
+J00113:48:H3TLJBBXX:4:1101:7973:1279	fig|626522.3.peg.323	NO HIERARCHY
+K00188:32:H3W5KBBXX:3:1101:17057:1510	fig|553171.3.peg.305	Aminopeptidase C (EC 3.4.22.40)	Protein_degradation	Protein Metabolism	Protein degradation
+J00113:48:H3TLJBBXX:1:1101:10927:1402	fig|626522.3.peg.1769	1-hydroxy-2-methyl-2-(E)-butenyl 4-diphosphate synthase (EC 1.17.7.1)	CBSS-83331.1.peg.3039	Clustering-based subsystems	Isoprenoid/cell wall biosynthesis: PREDICTED UNDECAPRENYL DIPHOSPHATE PHOSPHATASE
+J00113:48:H3TLJBBXX:1:1101:17178:1367	fig|272559.17.peg.348	Glycyl-tRNA synthetase (EC 6.1.1.14)	tRNA_aminoacylation,_Gly	Protein Metabolism	Protein biosynthesis
+J00113:48:H3TLJBBXX:1:1101:2808:1261	fig|699218.3.peg.1210	NADP-specific glutamate dehydrogenase (EC 1.4.1.4)	Glutamine,_Glutamate,_Aspartate_and_Asparagine_Biosynthesis	Amino Acids and Derivatives	Glutamine, glutamate, aspartate, asparagine; ammonia assimilation
+K00188:32:H3W5KBBXX:4:1101:26730:1527	fig|537011.5.peg.371	Ribosomal RNA large subunit methyltransferase N (EC 2.1.1.-)	Conserved_gene_cluster_associated_with_Met-tRNA_formyltransferase		Clustering-based subsystems	
+J00113:48:H3TLJBBXX:2:1101:28919:1349	fig|537011.5.peg.3677	Xaa-Pro aminopeptidase (EC 3.4.11.9)	Aminopeptidases_(EC_3.4.11.-)	Protein Metabolism	Protein degradation
+J00113:48:H3TLJBBXX:1:1101:24008:1384	fig|641112.4.peg.3946	Rubrerythrin	Rubrerythrin	Stress Response	Oxidative stress
+J00113:48:H3TLJBBXX:2:1101:22110:1332	fig|626522.3.peg.232	ATP synthase alpha chain (EC 3.6.3.14)	F0F1-type_ATP_synthase	Respiration	ATP synthases
+J00113:48:H3TLJBBXX:2:1101:24170:1279	fig|553174.3.peg.987	NO HIERARCHY
+K00188:32:H3W5KBBXX:4:1101:25613:1492	fig|537011.5.peg.1765	Translation elongation factor Tu	Translation_elongation_factors_bacterial	Protein Metabolism	Protein biosynthesis
+K00188:32:H3W5KBBXX:3:1101:10317:1475	fig|59374.5.peg.285	Acriflavin resistance protein	Multidrug_Resistance_Efflux_Pumps	Virulence, Disease and Defense	Resistance to antibiotics and toxic compounds
+J00113:48:H3TLJBBXX:1:1101:24535:1349	fig|699218.3.peg.856	Chaperone protein DnaK	Heat_shock_dnaK_gene_cluster_extended	Stress Response	Heat shock
+J00113:48:H3TLJBBXX:4:1101:21602:1367	fig|817.1.peg.621	NO HIERARCHY
+J00113:48:H3TLJBBXX:2:1101:22749:1314	fig|553174.3.peg.1495	Beta-galactosidase (EC 3.2.1.23)	Galactosylceramide_and_Sulfatide_metabolism		Sulfur Metabolism	
+J00113:48:H3TLJBBXX:3:1101:16762:1384	fig|585502.3.peg.1455	NO HIERARCHY
+J00113:48:H3TLJBBXX:4:1101:11657:1402	fig|537011.5.peg.3886	UDP-N-acetylmuramoylalanine--D-glutamate ligase (EC 6.3.2.9)	Peptidoglycan_biosynthesis--gjo		Cell Wall and Capsule	
+J00113:48:H3TLJBBXX:3:1101:8288:1332	fig|483216.6.peg.929	TonB-dependent receptor	Ton_and_Tol_transport_systems		Membrane Transport	
+J00113:48:H3TLJBBXX:1:1101:4787:1349	fig|563008.3.peg.123	SSU ribosomal protein S6p	Ribosome_SSU_bacterial	Protein Metabolism	Protein biosynthesis
+J00113:48:H3TLJBBXX:2:1101:25946:1297	fig|563008.3.peg.799	DNA-directed RNA polymerase alpha subunit (EC 2.7.7.6)	RNA_polymerase_bacterial	RNA Metabolism	Transcription
+J00113:48:H3TLJBBXX:2:1101:26545:1279	fig|435591.10.peg.79	Inosine-5'-monophosphate dehydrogenase (EC 1.1.1.205)	Purine_conversions	Nucleosides and Nucleotides	Purines
+J00113:48:H3TLJBBXX:3:1101:1103:1297	fig|246199.4.peg.3220	LSU ribosomal protein L16p (L10e)	Ribosome_LSU_bacterial	Protein Metabolism	Protein biosynthesis
+J00113:48:H3TLJBBXX:2:1101:28858:1349	fig|649760.3.peg.763	SSU ribosomal protein S7p (S5e)	Ribosome_SSU_bacterial	Protein Metabolism	Protein biosynthesis
+J00113:48:H3TLJBBXX:1:1101:3366:1314	fig|483215.6.peg.3315	TonB-dependent receptor	Ton_and_Tol_transport_systems		Membrane Transport	
+J00113:48:H3TLJBBXX:4:1101:28138:1261	fig|469592.4.peg.3518	Glucosamine-6-phosphate deaminase (EC 3.5.99.6)	UDP-N-acetylmuramate_from_Fructose-6-phosphate_Biosynthesis		Cell Wall and Capsule	
+J00113:48:H3TLJBBXX:3:1101:18132:1332	fig|626522.3.peg.608	NAD-dependent glyceraldehyde-3-phosphate dehydrogenase (EC 1.2.1.12)	Pyridoxin_(Vitamin_B6)_Biosynthesis	Cofactors, Vitamins, Prosthetic Groups, Pigments	Pyridoxine
+J00113:48:H3TLJBBXX:3:1101:25449:1279	fig|619693.3.peg.806	Peptidyl-prolyl cis-trans isomerase (EC 5.2.1.8)	Queuosine-Archaeosine_Biosynthesis	RNA Metabolism	RNA processing and modification
+J00113:48:H3TLJBBXX:4:1101:23186:1332	fig|619693.3.peg.2099	Phosphoribosylformylglycinamidine synthase, glutamine amidotransferase subunit (EC 6.3.5.3)	De_Novo_Purine_Biosynthesis	Nucleosides and Nucleotides	Purines
+J00113:48:H3TLJBBXX:4:1101:18142:1279	fig|575614.3.peg.853	TonB-dependent receptor	Ton_and_Tol_transport_systems		Membrane Transport	
+J00113:48:H3TLJBBXX:3:1101:9455:1314	fig|10847.1.peg.11	Phage capsid assembly	Phage_capsid_proteins	Phages, Prophages, Transposable elements	Bacteriophage structural proteins
+J00113:48:H3TLJBBXX:3:1101:1905:1420	fig|435591.13.peg.924	Signal recognition particle receptor protein FtsY (=alpha subunit) (TC 3.A.5.1.1)	Universal_GTPases	Protein Metabolism	Protein biosynthesis
+K00188:32:H3W5KBBXX:4:1101:15189:1475	fig|435591.13.peg.2346	LSU ribosomal protein L15p (L27Ae)	Ribosome_LSU_bacterial	Protein Metabolism	Protein biosynthesis
+J00113:48:H3TLJBBXX:1:1101:17310:1349	fig|435590.6.peg.3333	NAD-dependent glyceraldehyde-3-phosphate dehydrogenase (EC 1.2.1.12)	Pyridoxin_(Vitamin_B6)_Biosynthesis	Cofactors, Vitamins, Prosthetic Groups, Pigments	Pyridoxine
+J00113:48:H3TLJBBXX:3:1101:16396:1349	fig|537011.5.peg.2734	NAD-dependent glyceraldehyde-3-phosphate dehydrogenase (EC 1.2.1.12)	Pyridoxin_(Vitamin_B6)_Biosynthesis	Cofactors, Vitamins, Prosthetic Groups, Pigments	Pyridoxine
+J00113:48:H3TLJBBXX:3:1101:8988:1279	fig|537011.5.peg.2145	Pyrophosphate--fructose 6-phosphate 1-phosphotransferase, beta subunit (EC 2.7.1.90)	Glycolysis_and_Gluconeogenesis	Carbohydrates	Central carbohydrate metabolism
+K00188:32:H3W5KBBXX:4:1101:16316:1492	fig|592028.3.peg.602	Heat shock protein 60 family chaperone GroEL	GroEL_GroES	Protein Metabolism	Protein folding
+J00113:48:H3TLJBBXX:3:1101:24880:1279	fig|537007.6.peg.457	Dihydroxyacetone kinase family protein	A_Gram-positive_cluster_that_relates_ribosomal_protein_L28P_to_a_set_of_uncharacterized_proteins	Clustering-based subsystems	Ribosomal Protein L28P relates to a set of uncharacterized proteins
+K00188:32:H3W5KBBXX:4:1101:13251:1422	fig|537011.5.peg.518	Biopolymer transport protein ExbD/TolR	Ton_and_Tol_transport_systems		Membrane Transport	
+J00113:48:H3TLJBBXX:3:1101:24759:1349	fig|515619.6.peg.908	Possible alpha-xyloside ABC transporter, permease component	Xylose_utilization	Carbohydrates	Monosaccharides
+J00113:48:H3TLJBBXX:3:1101:13535:1384	fig|411463.4.peg.2241	Translation elongation factor Tu	Translation_elongation_factors_bacterial	Protein Metabolism	Protein biosynthesis
+K00188:32:H3W5KBBXX:4:1101:11241:1457	fig|585502.3.peg.607	TonB-dependent receptor	Ton_and_Tol_transport_systems		Membrane Transport	
+J00113:48:H3TLJBBXX:3:1101:23622:1279	fig|699218.3.peg.991	SSU ribosomal protein S1p	Ribosome_SSU_bacterial	Protein Metabolism	Protein biosynthesis
+K00188:32:H3W5KBBXX:3:1101:24974:1510	fig|457421.5.peg.1576	GTP-sensing transcriptional pleiotropic repressor codY	Conserved_gene_cluster_associated_with_Met-tRNA_formyltransferase		Clustering-based subsystems	
+J00113:48:H3TLJBBXX:4:1101:29873:1314	fig|575615.3.peg.2605	Cell division protein FtsI [Peptidoglycan synthetase] (EC 2.4.1.129)	Bacterial_Cytoskeleton		Cell Division and Cell Cycle	
+J00113:48:H3TLJBBXX:1:1101:12804:1314	fig|476272.5.peg.3132	Asparaginyl-tRNA synthetase (EC 6.1.1.22)	tRNA_aminoacylation,_Asp_and_Asn	Protein Metabolism	Protein biosynthesis
+J00113:48:H3TLJBBXX:4:1101:4219:1384	fig|585502.3.peg.2458	Pyruvate kinase (EC 2.7.1.40)	Entner-Doudoroff_Pathway	Carbohydrates	Central carbohydrate metabolism
+J00113:48:H3TLJBBXX:4:1101:14590:1314	fig|649761.3.peg.58	Na(+)-translocating NADH-quinone reductase subunit F (EC 1.6.5.-)	Na(+)-translocating_NADH-quinone_oxidoreductase_and_rnf-like_group_of_electron_transport_complexes	Respiration	Electron donating reactions
+J00113:48:H3TLJBBXX:3:1101:16011:1279	fig|537011.5.peg.1925	NO HIERARCHY
+J00113:48:H3TLJBBXX:4:1101:3051:1297	fig|445970.5.peg.754	Polyribonucleotide nucleotidyltransferase (EC 2.7.7.8)	Bacterial_RNA-metabolizing_Zn-dependent_hydrolases		Clustering-based subsystems	
+J00113:48:H3TLJBBXX:2:1101:11170:1402	fig|537011.5.peg.1362	RNA polymerase sigma factor RpoD	Transcription_initiation,_bacterial_sigma_factors	RNA Metabolism	Transcription
+J00113:48:H3TLJBBXX:2:1101:7872:1349	fig|476272.5.peg.2177	Hydroxylamine reductase (EC 1.7.-.-)	Nitrosative_stress		Nitrogen Metabolism	
+J00113:48:H3TLJBBXX:2:1101:21592:1349	fig|340099.4.peg.368	Translation elongation factor Tu	Translation_elongation_factors_bacterial	Protein Metabolism	Protein biosynthesis
+J00113:48:H3TLJBBXX:1:1101:1702:1314	fig|405566.3.peg.986	Enolase (EC 4.2.1.11)	Serine-glyoxylate_cycle	Carbohydrates	One-carbon Metabolism
+J00113:48:H3TLJBBXX:3:1101:19553:1402	fig|537011.5.peg.4094	ClpB protein	Protein_chaperones	Protein Metabolism	Protein folding
+J00113:48:H3TLJBBXX:2:1101:5193:1279	fig|619693.3.peg.274	RNA polymerase sigma factor RpoD	Transcription_initiation,_bacterial_sigma_factors	RNA Metabolism	Transcription
+J00113:48:H3TLJBBXX:2:1101:13798:1349	fig|59374.5.peg.61	Heat shock protein 60 family chaperone GroEL	GroEL_GroES	Protein Metabolism	Protein folding
+J00113:48:H3TLJBBXX:2:1101:4888:1384	fig|411490.6.peg.8	Fumarate hydratase class I, aerobic (EC 4.2.1.2)	Serine-glyoxylate_cycle	Carbohydrates	One-carbon Metabolism
+J00113:48:H3TLJBBXX:4:1101:18477:1332	fig|537011.5.peg.2734	NAD-dependent glyceraldehyde-3-phosphate dehydrogenase (EC 1.2.1.12)	Pyridoxin_(Vitamin_B6)_Biosynthesis	Cofactors, Vitamins, Prosthetic Groups, Pigments	Pyridoxine
