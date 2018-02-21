@@ -71,7 +71,7 @@ sortmerna_location=$starting_location/programs/sortmerna-2.1
 #	7. DIAMOND
 diamond_database="$starting_location/setup_and_test/tiny_databases/RefSeq_bac_TINY_24MB"
 diamond_subsys_db="$starting_location/setup_and_test/tiny_databases/subsys_db_TINY_24MB"
-diamond_location="$starting_location/programs/diamond"
+diamond_location="$starting_location/programs"
 
 ####################################################################
 #
@@ -170,8 +170,8 @@ do
 	echo "Now starting on " $file
 	echo "Converting to " $shortname
 
-	$diamond_location blastx --db $diamond_database -q $file -a $file.RefSeq -t ./ -k 1 --sensitive
-	$diamond_location view --daa $file.RefSeq.daa -o $shortname -f tab
+	$diamond_location/diamond blastx --db $diamond_database -q $file -a $file.RefSeq -t ./ -k 1 --sensitive
+	$diamond_location/diamond view --daa $file.RefSeq.daa -o $shortname -f tab
 done
 
 mkdir $output_location/step_4_output_test/
@@ -193,8 +193,8 @@ do
 	shortname=`echo $file | awk -F "ribodepleted" '{print $1 "subsys_annotated"}'`
 	echo "Now starting on Subsystems annotations for " $file
 
-	$diamond_location blastx --db $diamond_subsys_db -q $file -a $file.Subsys -t ./ -k 1 --sensitive
-	$diamond_location view --daa $file.Subsys.daa -o $shortname -f tab
+	$diamond_location/diamond blastx --db $diamond_subsys_db -q $file -a $file.Subsys -t ./ -k 1 --sensitive
+	$diamond_location/diamond view --daa $file.Subsys.daa -o $shortname -f tab
 done
 
 mv $output_location/step_3_output_test/*subsys_annotated* $output_location/step_4_output_test/
