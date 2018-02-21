@@ -16,10 +16,10 @@
 #
 # This script was created to test the SAMSA2 pipeline, up to the DIAMOND
 # annotation step. It uses TINY databases and will not give valid results
-# files. To download the full databases, run full_database_download.bash 
+# files. To download the full databases, run full_database_download.bash
 # that can be accessed at https://github.com/transcript/samsa2/tree/master/setup
-# and run samsa2_master_script.bash located at 
-# https://github.com/transcript/samsa2/tree/master/sample_files_paired-end. 
+# and run samsa2_master_script.bash located at
+# https://github.com/transcript/samsa2/tree/master/sample_files_paired-end.
 #
 # The steps in this script are:
 #	1.   Merging with PEAR, if applicable
@@ -38,7 +38,7 @@
 set -e # terminate script after first thing fails
 
 echo "WARNING: THIS IS A TEST RUN."
-echo "You are running an example script to test SAMSA2 using TINY databases." 
+echo "You are running an example script to test SAMSA2 using TINY databases."
 echo "To run real metatranscriptomes, please download one or both of the databases by running full_database_download.bash located at https://github.com/transcript/samsa2/tree/master/setup."
 echo -e "NOTE: Before running this script, please download and run package_installation.bash located at https://github.com/transcript/samsa2/tree/master/setup in order to set up SAMSA2 dependencies.\n\n"
 
@@ -107,7 +107,7 @@ echo -e "\nPaired-end merging step completed.\n"
 # Note: if skipping PEAR, make sure that all starting files are in the
 # $output_location/step_1_output_test/ folder!
 
-for file in $output_location/step_1_output_test/*assembled*
+for file in $output_location/step_1_output_test/*merged*
 do
 	shortname=`echo $file | awk -F "merged" '{print $1 "cleaned.fastq"}'`
 
@@ -129,7 +129,7 @@ then
 	touch $output_location/step_2_output_test/raw_counts.txt
 else
 	touch $output_location/step_2_output_test/raw_counts.txt
-fi	
+fi
 
 for file in $output_location/step_2_output_test/*cleaned.fastq
 do
@@ -167,7 +167,7 @@ echo "Now starting on DIAMOND org annotations at: "; date
 for file in $output_location/step_3_output_test/*ribodepleted.fastq
 do
 	shortname=`echo $file | awk -F "ribodepleted" '{print $1 "RefSeq_annotated"}'`
-	echo "Now starting on " $file 
+	echo "Now starting on " $file
 	echo "Converting to " $shortname
 
 	$diamond_location blastx --db $diamond_database -q $file -a $file.RefSeq -t ./ -k 1 --sensitive
