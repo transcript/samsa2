@@ -32,40 +32,40 @@
 starting_location=/home/samsa2
 
 # 1. Download necessary R packages:
-echo "Now downloading R packages at: "; date
+echo "Now extracting R packages at: "; date
 mkdir $starting_location/R_scripts/packages
 cd $starting_location/R_scripts/packages
 R --save < ../install_packages.R -v
-echo "R package downloads finished at: "; date
+echo "R package extraction finished at: "; date
 
 cd $starting_location/programs
 
 # 2.  Unpack PEAR package:
-echo "Now downloading PEAR at: "; date
+echo "Now extracting PEAR at: "; date
 tar -xvzf $starting_location/programs/pear-0.9.10-linux-x86_64.tar.gz
-echo "PEAR download finished at: "; date
+echo "PEAR extraction finished at: "; date
 
 # 3. Unzip Trimmomatic package:
-echo "Now downloading Trimmomatic at: "; date
+echo "Now extracting Trimmomatic at: "; date
 unzip $starting_location/programs/Trimmomatic-0.36.zip
-echo "Trimmomatic download finished at: "; date
+echo "Trimmomatic extraction finished at: "; date
 
 # 4. Unpack DIAMOND package
-echo "Now downloading diamond at: "; date
+echo "Now extracting DIAMOND at: "; date
 tar -xvzf $starting_location/programs/diamond-linux64.tar.gz
-echo "DIAMOND download finished at: "; date
+echo "DIAMOND extraction finished at: "; date
 
 # 5. Unpack and build sortmerna package:
-echo "Now downloading sortmerna at: "; date
+echo "Now extracting SortMeRNA at: "; date
 tar -xvzf $starting_location/programs/sortmerna-2.1.tar.gz
 cd $starting_location/programs/sortmerna-2.1
 bash ./build.sh
-echo "Sortmerna download finished at: "; date
+echo "SortMeRNA extraction finished at: "; date
 
 # Index silva-bac-16s-id90.fasta for sortmerna use:
 sortmerna_location=$starting_location/programs/sortmerna-2.1
 $sortmerna_location/indexdb_rna --ref $sortmerna_location/rRNA_databases/silva-bac-16s-id90.fasta,$sortmerna_location/index/silva-bac-16s-db
 
-echo "Finished downloading and installing all SAMSA2 package dependencies at: "; date
+echo "Finished extracting and installing all SAMSA2 package dependencies at: "; date
 echo "Completed!"
 exit
