@@ -92,7 +92,7 @@ for file in $starting_files_location/*R1*
 do
 	file1=$file
 	file2=`echo $file1 | awk -F "R1" '{print $1 "R2" $2}'`
-	out_path=`echo $file | awk -F "R1" '{print $1 "merged"}'`
+	out_path=`echo $file | awk -F "_R1" '{print $1 ".merged"}'`
 	out_name=`echo ${out_path##*/}`
 	$pear_location/pear -f $file1 -r $file2 -o $out_name
 done

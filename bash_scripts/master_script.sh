@@ -81,14 +81,14 @@ do
 	gunzip $file
 done
 
-for file in $starting_files_location/*R1*
+for file in $starting_files_location/*_R1*
 do
 	file1=$file
 	file2=`echo $file1 | awk -F "R1" '{print $1 "R2" $2}'`
-	out_path=`echo $file | awk -F "R1" '{print $1 "merged"}'`
+	out_path=`echo $file | awk -F "_R1" '{print $1 ".merged"}'`
 	out_name=`echo ${out_path##*/}`
 
-	$pear_location/pear-0.9.6 -f $file1 -r $file2 -o $out_name
+	$pear_location/pear -f $file1 -r $file2 -o $out_name
 done
 
 mkdir $starting_location/step_1_output/
@@ -143,7 +143,7 @@ do
 done
 
 mkdir $starting_location/step_3_output/
-mv $starting_location/step_2_output/*ribodepleted $starting_location/step_3_output/
+mv $starting_location/step_2_output/*ribodepleted* $starting_location/step_3_output/
 
 ####################################################################
 #
