@@ -26,17 +26,17 @@
 # (in BLAST m8 format) to get the results into something more compressed
 # and readable.
 #
-# Usage: 
+# Usage:
 #
-# -I		infile			specifies the infile (a DIAMOND results file 
+# -I		infile			specifies the infile (a DIAMOND results file
 #								in m8 format)
-# -D		database		specifies a reference database to search against 
+# -D		database		specifies a reference database to search against
 #								for results
 # -O		organism		returns organism results
 # -F		function		returns functional results
-# -SO		specific org	creates a separate outfile for results that hit 
+# -SO		specific org	creates a separate outfile for results that hit
 #							a specific organism
-# 
+#
 ##########################################################################
 
 # imports
@@ -86,7 +86,7 @@ for line in infile:
 	if line_counter % 1000000 == 0:
 		t99 = time.clock()
 		print str(line_counter)[:-6] + "M lines processed so far in " + str(t99-t0) + " seconds."
-	
+
 	unique_seq_db[splitline[0]] = 1
 
 	try:
@@ -103,7 +103,7 @@ print "Number of unique sequences: " + str(len(unique_seq_db))
 print "Time elapsed: " + str(t1-t0) + " seconds."
 
 infile.close()
-	
+
 # time to search for these in the reference database
 db = open (db_name, "r")
 
@@ -127,17 +127,16 @@ db_error_counter = 0
 for line in db:
 	if line.startswith(">") == True:
 		db_line_counter += 1
-		splitline = line.split("  ")
-		
+		splitline = line.split()
+
 		# ID, the hit returned in DIAMOND results
 		db_id = str(splitline[0])[1:]
-		
+
 		# name and functional description
 		db_entry = line.split("[", 1)
 		db_entry = db_entry[0].split(" ", 1)
-		print db_entry[1]
 		db_entry = db_entry[1][1:-1]
-		
+
 		# organism name
 		if line.count("[") != 1:
 			splitline = line.split("[")
@@ -157,7 +156,7 @@ for line in db:
 							db_org = split_db_org[1] + " " + split_db_org[2]
 						print line
 						print db_org
-		else:	
+		else:
 			db_org = line.split("[", 1)
 			db_org = db_org[1].split()
 			try:
@@ -166,10 +165,10 @@ for line in db:
 				db_org = line.strip().split("[", 1)
 				db_org = db_org[1][:-1]
 				db_error_counter += 1
-		
+
 		db_org = re.sub('[^a-zA-Z0-9-_*. ]', '', db_org)
 
-		# add to dictionaries		
+		# add to dictionaries
 		if "-F" in sys.argv:
 			db_func_dictionary[db_id] = db_entry
 		if "-O" in sys.argv:
@@ -177,12 +176,12 @@ for line in db:
 		if "-SO" in sys.argv:
 			if target_org in db_org:
 				db_SO_dictionary[db_id] = db_entry
-		
+
 		# line counter to show progress
 		if db_line_counter % 1000000 == 0:							# each million
 			t95 = time.clock()
 			print str(db_line_counter)[:-6] + "M lines processed so far in " + str(t95-t2) + " seconds."
-		
+
 t3 = time.clock()
 
 print "\nSuccess!"
