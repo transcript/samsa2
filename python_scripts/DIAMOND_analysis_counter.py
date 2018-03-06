@@ -135,7 +135,7 @@ for line in db:
 		# name and functional description
 		db_entry = line.split("[", 1)
 		db_entry = db_entry[0].split(" ", 1)
-		db_entry = db_entry[1][1:-1]
+		db_entry = db_entry[1][:-1]
 
 		# organism name
 		if line.count("[") != 1:
