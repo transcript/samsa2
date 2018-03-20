@@ -3,25 +3,31 @@
 Version 2 of the SAMSA pipeline - faster!  Lighter!  More options!  Less waiting!  
 
 ### New in version 2:
-* DIAMOND integration, allowing for SAMSA to be run without ever needing an MG-RAST account.
+* DIAMOND integration, allowing for SAMSA2 to be run without ever needing an MG-RAST account.
 * Option to annotate against custom databases.
 * Better, more polished R scripts that can be executed from the command line.
 * PCA plots and other graphical outputs.
 * Filtering of ribosomes for even more speed.
 * And more!
 
-## Quick start
-1. Clone or download the following programs:
-	1. SAMSA, version 2.0: https://github.com/transcript/samsa_v2
-	2. DIAMOND, version 0.8.3: https://github.com/bbuchfink/diamond
-	3. Trimmomatic, a flexible read cleaner: http://www.usadellab.org/cms/?page=trimmomatic
-	4. PEAR, if using paired-end data (recommended): https://sco.h-its.org/exelixis/web/software/pear/
-	5. SortMeRNA: http://bioinfo.lifl.fr/RNA/sortmerna/
-2. Make changes to the master_script.bash, which performs the first 3 of 4 steps in the SAMSA pipeline (preprocessing, annotation, aggregation)
-3. If not using master_script, use DIAMOND to annotate your reads against a database of your choosing (note that database must be local and DIAMOND-indexed).  See "example\_DIAMOND\_annotation\_script.bash" for more details.
-4. If not using master_script, use "DIAMOND\_analysis\_counter.py" to create a ranked abundance summary of the DIAMOND results from each metatransciptome file.
-5. Import these abundance summaries into R and use "run\_DESeq\_stats.R" to determine the most significantly differing features between either individual metatranscriptomes, or control vs. experimental groups.
+### Dependencies
 
+The following programs can be downloaded OR can be installed from the binaries provided in the programs/ folder.
+
+1. DIAMOND, version 0.8.3: https://github.com/bbuchfink/diamond
+2. Trimmomatic, a flexible read cleaner: http://www.usadellab.org/cms/?page=trimmomatic
+3. PEAR, if using paired-end data (recommended): https://sco.h-its.org/exelixis/web/software/pear/
+4. SortMeRNA: http://bioinfo.lifl.fr/RNA/sortmerna/
+
+## Quick start
+
+1. Download SAMSA2:   
+    `git clone https://github.com/transcript/samsa2.git`
+2. Either install the dependencies from the links above, or use the setup_and_test/package_installation.bash script provided with SAMSA2 for installing from the included binaries.
+3. Make changes to the master_script.bash, which performs the first 3 of 4 steps in the SAMSA2 pipeline (preprocessing, annotation, aggregation)
+4. If not using master_script, use DIAMOND to annotate your reads against a database of your choosing (note that database must be local and DIAMOND-indexed).  See "example\_DIAMOND\_annotation\_script.bash" for more details.
+5. If not using master_script, use "DIAMOND\_analysis\_counter.py" to create a ranked abundance summary of the DIAMOND results from each metatransciptome file.
+6. Import these abundance summaries into R and use "run\_DESeq\_stats.R" to determine the most significantly differing features between either individual metatranscriptomes, or control vs. experimental groups.
 
 ## SAMSA: Simple Analysis of Metatranscriptomes by Sequence Annotation
 Metatranscriptome, RNA-seq data from multiple members of a microbial community, offers incredibly powerful insights into the workings of a complex ecosystem.  RNA sequences are able to not only identify the individual members of a community down to the strain level, but can also provide information on the activity of these microbes at the time of sample collection - something that cannot be determined through other meta- (metagenome, 16S rRNA sequencing) method.  
