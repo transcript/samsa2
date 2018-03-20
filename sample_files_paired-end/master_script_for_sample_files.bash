@@ -120,7 +120,7 @@ echo "STEP 2 DONE"
 # STEP 2.9: GETTING RAW SEQUENCES COUNTS
 # Note: These are used later for statistical analysis.
 
-if [ -f $starting_files_location/step_2_output/raw_counts.txt]
+if [ -f $starting_files_location/step_2_output/raw_counts.txt ]
 then
 	rm $starting_files_location/step_2_output/raw_counts.txt
 	touch $starting_files_location/step_2_output/raw_counts.txt
