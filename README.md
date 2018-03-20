@@ -3,7 +3,7 @@
 Version 2 of the SAMSA pipeline - faster!  Lighter!  More options!  Less waiting!  
 
 ### New in version 2:
-* DIAMOND integration, allowing for SAMSA to be run without ever needing an MG-RAST account.
+* DIAMOND integration, allowing for SAMSA2 to be run without ever needing an MG-RAST account.
 * Option to annotate against custom databases.
 * Better, more polished R scripts that can be executed from the command line.
 * PCA plots and other graphical outputs.
@@ -24,7 +24,7 @@ The following programs can be downloaded OR can be installed from the binaries p
 1. Download SAMSA2:   
     `git clone https://github.com/transcript/samsa2.git`
 2. Either install the dependencies from the links above, or use the setup_and_test/package_installation.bash script provided with SAMSA2 for installing from the included binaries.
-3. Make changes to the master_script.bash, which performs the first 3 of 4 steps in the SAMSA pipeline (preprocessing, annotation, aggregation)
+3. Make changes to the master_script.bash, which performs the first 3 of 4 steps in the SAMSA2 pipeline (preprocessing, annotation, aggregation)
 4. If not using master_script, use DIAMOND to annotate your reads against a database of your choosing (note that database must be local and DIAMOND-indexed).  See "example\_DIAMOND\_annotation\_script.bash" for more details.
 5. If not using master_script, use "DIAMOND\_analysis\_counter.py" to create a ranked abundance summary of the DIAMOND results from each metatransciptome file.
 6. Import these abundance summaries into R and use "run\_DESeq\_stats.R" to determine the most significantly differing features between either individual metatranscriptomes, or control vs. experimental groups.
