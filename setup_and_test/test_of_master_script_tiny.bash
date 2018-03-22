@@ -123,7 +123,7 @@ echo -e "\nCleaning files with Trimmomatic completed.\n"
 # STEP 2.9: GETTING RAW SEQUENCES COUNTS
 # Note: These are used later for statistical analysis.
 
-if [ -f $output_location/step_2_output_test/raw_counts.txt]
+if [ -f $output_location/step_2_output_test/raw_counts.txt ]
 then
 	rm $output_location/step_2_output_test/raw_counts.txt
 	touch $output_location/step_2_output_test/raw_counts.txt
