@@ -53,8 +53,8 @@ starting_location=/home/samsa2
 starting_files_location=$starting_location/sample_files_paired-end/1_starting_files
 
 #	2. Output files location
-mkdir $starting_files_location/output_test
-output_location=$starting_files_location/output_test
+mkdir $starting_location/output_test
+output_location=$starting_location/output_test
 
 #	3. Python scripts location
 python_programs=$starting_location/python_scripts
