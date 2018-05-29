@@ -170,7 +170,7 @@ do
 	echo "Now starting on " $file
 	echo "Converting to " $shortname
 
-	$diamond_location/diamond blastx --db $diamond_database -q $file -a $file.RefSeq -t ./ -k 1 --sensitive
+	$diamond_location/diamond blastx --db $diamond_database -q $file -a $file.RefSeq -t ./ -k 1 --fast
 	$diamond_location/diamond view --daa $file.RefSeq.daa -o $shortname -f tab
 done
 
@@ -193,7 +193,7 @@ do
 	shortname=`echo $file | awk -F "ribodepleted" '{print $1 "subsys_annotated"}'`
 	echo "Now starting on Subsystems annotations for " $file
 
-	$diamond_location/diamond blastx --db $diamond_subsys_db -q $file -a $file.Subsys -t ./ -k 1 --sensitive
+	$diamond_location/diamond blastx --db $diamond_subsys_db -q $file -a $file.Subsys -t ./ -k 1 --fast
 	$diamond_location/diamond view --daa $file.Subsys.daa -o $shortname -f tab
 done
 
