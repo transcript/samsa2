@@ -38,6 +38,8 @@ However, working with metatranscriptome data often proves challenging, given its
 
 **Annotation:** Annotation is completed using [DIAMOND, an accelerated BLAST-like sequence aligner.](https://github.com/bbuchfink/diamond)  (Why DIAMOND?  At a standard rate of 10 annotations per second, a standard BLAST approach would take several months to finish - just for a single file!)
 
+*Note: DIAMOND is set by default to run in fast mode, where it prioritizes speed.  If you are especially concerned about accuracy, you can change DIAMOND to sensitive mode by editing lines 162 and 199 in the master_script, replacing "--fast" in the DIAMOND command with "--sensitive".  This may significantly increase memory requirements.*
+
 **Aggregation:** DIAMOND returns results on a per-read basis, a bit like a ticker tape or a line item receipt.  In the aggregation step, Python scripts condense these line-by-line results to create summary tables.
 
 **Analysis:** R scripts use DESeq to compute most significantly different features between control vs. experimental samples.  These R scripts generate a tabular output with assigned p-values and log2FoldChange scores for each feature.  These 'features' can be either organisms or specific functions.  R can also create graphs showing visual representation of the metatranscriptome(s).
