@@ -8,15 +8,15 @@ suppressPackageStartupMessages({
 })
 
 option_list = list(
-  make_option(c("-G", "--gtitle"), type="character", default=NULL, 
+  make_option(c("-G", "--gtitle"), type="character", default=NULL,
               help="title to be displayed on graph", metavar="character"),
-  make_option(c("-O", "--out"), type="character", default="combined_graph.pdf", 
+  make_option(c("-O", "--out"), type="character", default="combined_graph.pdf",
               help="output file name [default= %default]", metavar="character"),
   make_option(c("-D", "--directory"), type="character", default=NULL,
               help="working directory location", metavar="character"),
   make_option(c("-N", "--number"), type="integer", default=10,
               help="Number of top organisms to graph; default is 10", metavar="character")
-); 
+);
 
 opt_parser = OptionParser(option_list=option_list);
 opt = parse_args(opt_parser);
@@ -30,6 +30,7 @@ if (is.null(opt$directory)) {
 } else {
   cat ("Working directory is ", opt$directory, "\n")
   wd_location <- opt$directory
+	setwd(wd_location)
 }
 
 if (is.null(opt$out)) {
@@ -113,10 +114,10 @@ colnames(control_table_trimmed) = control_names_trimmed
 colnames(exp_table_trimmed) = exp_names_trimmed
 
 # melting tables
-control_table_trimmed_m <- melt(cbind(control_table_trimmed, 
+control_table_trimmed_m <- melt(cbind(control_table_trimmed,
       Genus = rownames(control_table_trimmed)), id.vars = c('Genus'))
 
-exp_table_trimmed_m <- melt(cbind(exp_table_trimmed, 
+exp_table_trimmed_m <- melt(cbind(exp_table_trimmed,
       Genus = rownames(exp_table_trimmed)), id.vars = c('Genus'))
 
 # other catchall category
@@ -135,11 +136,11 @@ if (nrow(control_table_trimmed)>opt$number && nrow(exp_table_trimmed)>opt$number
   control_table_filtered <- control_table_filtered[,-ncol(control_table_filtered)]
   exp_table_filtered <- exp_table_filtered[,-ncol(exp_table_filtered)]
 }
-  
+
 control_table_filtered_m <- melt(cbind(control_table_filtered,
      Genus = rownames(control_table_filtered)), id.vars = c('Genus'))
 
-exp_table_filtered_m <- melt(cbind(exp_table_filtered, 
+exp_table_filtered_m <- melt(cbind(exp_table_filtered,
      Genus = rownames(exp_table_filtered)), id.vars = c('Genus'))
 
 # merging the tables
@@ -153,11 +154,11 @@ full_table <- rbind(control_table_trimmed_m, newrow, exp_table_trimmed_m)
 full_table_top30 <- rbind(control_table_filtered_m, newrow, exp_table_filtered_m)
 
 # color palette
-CbPalette <- c("#a6cee3", "#1f78b4", "#b2df8a", "#33a02c", "#fb9a99", "#e31a1c", 
-    "#fdbf6f", "#ff7f00", "#cab2d6", "#6a3d9a", "#ffff99", "#b15928", "#8dd3c7",  
-    "#ffffb3", "#bebada", "#fb8072", "#80b1d3", "#fdb462", "#b3de69", "#fccde5",  
-    "#d9d9d9", "#bc80bd", "#ccebc5", "#ffed6f", "#e41a1c", "#377eb8", "#4daf4a",  
-    "#984ea3", "#ff7f00", "#ffff33", "#a65628", "#f781bf", "#999999", "#000000", 
+CbPalette <- c("#a6cee3", "#1f78b4", "#b2df8a", "#33a02c", "#fb9a99", "#e31a1c",
+    "#fdbf6f", "#ff7f00", "#cab2d6", "#6a3d9a", "#ffff99", "#b15928", "#8dd3c7",
+    "#ffffb3", "#bebada", "#fb8072", "#80b1d3", "#fdb462", "#b3de69", "#fccde5",
+    "#d9d9d9", "#bc80bd", "#ccebc5", "#ffed6f", "#e41a1c", "#377eb8", "#4daf4a",
+    "#984ea3", "#ff7f00", "#ffff33", "#a65628", "#f781bf", "#999999", "#000000",
     "#a6cee4", "#1f78b5", "#b2df8b", "#a9a9a9", "#ffffff")
 
 Cb64k <- c("#000000", "#FFFF00", "#1CE6FF", "#FF34FF", "#FF4A46", "#008941", "#006FA6", "#A30059",
@@ -179,7 +180,7 @@ org_relative_ggplot <- ggplot(full_table_top30, aes(x = variable, y = value, fil
   geom_bar(position = "fill", stat = "identity") +
   scale_fill_manual(values = Cb64k) +
   scale_y_continuous(labels = percent_format()) +
-  theme(legend.position = "none", text=element_text(size=16), 
+  theme(legend.position = "none", text=element_text(size=16),
         axis.text.x = element_text(angle=90, vjust=1)) +
   guides(fill = guide_legend(ncol=10)) +
   ggtitle(opt$gtitle) +
@@ -188,7 +189,7 @@ org_relative_ggplot <- ggplot(full_table_top30, aes(x = variable, y = value, fil
 org_absolute_ggplot <- ggplot(full_table_top30, aes(x = variable, y = value, fill = Genus)) +
   geom_bar(stat = "identity") +
   scale_fill_manual(values = Cb64k) +
-  theme(legend.position = "bottom", text=element_text(size=16), 
+  theme(legend.position = "bottom", text=element_text(size=16),
         axis.text.x = element_text(angle=90, vjust=1)) +
   guides(fill = guide_legend(ncol=4)) +
   xlab("Sample ID") + ylab("Total reads per sample")

@@ -10,7 +10,7 @@ suppressPackageStartupMessages({
 option_list = list(
   make_option(c("-I", "--input"), type="character", default="./",
               help="Input directory", metavar="character"),
-  make_option(c("-O", "--out"), type="character", default="PCA_plot.tab", 
+  make_option(c("-O", "--out"), type="character", default="PCA_plot.tab",
               help="output file name [default= %default]", metavar="character")
 )
 
@@ -24,7 +24,7 @@ if (is.null(opt$input)) {
   print ("WARNING: No working input directory specified with '-I' flag.")
   stop()
 } else {  cat ("Working directory is ", opt$input, "\n")
-  wd_location <- opt$input  
+  wd_location <- opt$input
   setwd(wd_location)  }
 
 cat ("Saving results as ", opt$out, "\n")
@@ -107,12 +107,12 @@ complete_table[is.na(complete_table)] <- 1
 rownames(complete_table) <- complete_table$Row.names
 complete_table <- complete_table[,-1]
 completeCondition <- data.frame(condition=factor(c(
-  rep(paste("control", 1:length(control_files), sep=".")), 
+  rep(paste("control", 1:length(control_files), sep=".")),
   rep(paste("experimental", 1:length(exp_files), sep=".")))))
 completeCondition1 <- t(completeCondition)
 colnames(complete_table) <- completeCondition1
 completeCondition2 <- data.frame(condition=factor(c(
-  rep("control", length(control_files)), 
+  rep("control", length(control_files)),
   rep("experimental", length(exp_files)))))
 
 dds <- DESeqDataSetFromMatrix(complete_table, completeCondition2, ~condition)
@@ -129,7 +129,7 @@ percentVar <- round(100 * attr(PCAplot, "percentVar"))
 
 # saving and finishing up
 cat ("Saving PCA plot as ", save_filename, " now.\n")
-pdf(file = save_filename, sep = "", width=10, height=7)
+pdf(file = paste(save_filename,".pdf",sep = ""), width=10, height=7)
 ggplot(PCAplot, aes(PC1, PC2, color=condition)) +
     geom_point(size=3) +
 #    geom_text(aes(label=name), hjust=1, vjust=-1) +

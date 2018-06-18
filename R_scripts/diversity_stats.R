@@ -22,7 +22,7 @@ if (is.null(opt$input)) {
   print ("WARNING: No working input directory specified with '-I' flag.")
   stop()
 } else {  cat ("Working directory is ", opt$input, "\n")
-  wd_location <- opt$input  
+  wd_location <- opt$input
   setwd(wd_location)  }
 
 # import other necessary packages
@@ -63,11 +63,11 @@ y <- 0
 for (x in control_files) {
   y <- y + 1
   if (y == 1) {
-    control_table <- read.table(file = x, header = F, quote = "", sep = "\t")
+    control_table <- read.table(file = x, header = F, quote = "", sep = "\t", fill = T )
     colnames(control_table) = c("DELETE", x, "V3")
     control_table <- control_table[,c(2,3)]      }
   if (y > 1) {
-    temp_table <- read.table(file = x, header = F, quote = "", sep = "\t")
+    temp_table <- read.table(file = x, header = F, quote = "", sep = "\t", fill = T )
     colnames(temp_table) = c("DELETE", x, "V3")
     temp_table <- temp_table[,c(2,3)]
     control_table <- merge(control_table, temp_table, by = "V3", all = T)  }
@@ -81,11 +81,11 @@ y <- 0
 for (x in exp_files) {
   y <- y + 1
   if (y == 1) {
-    exp_table <- read.table(file = x, header=F, quote = "", sep = "\t")
+    exp_table <- read.table(file = x, header=F, quote = "", sep = "\t", fill = T )
     colnames(exp_table) = c("DELETE", x, "V3")
     exp_table <- exp_table[,c(2,3)]  }
   if (y > 1) {
-    temp_table <- read.table(file = x, header = F, quote = "", sep = "\t")
+    temp_table <- read.table(file = x, header = F, quote = "", sep = "\t", fill = T )
     colnames(temp_table) = c("DELETE", x, "V3")
     exp_table <- merge(exp_table, temp_table[,c(2,3)], by = "V3", all = T)  }
 }
@@ -106,11 +106,11 @@ complete_table <- complete_table[,-1]
 # getting diversity statistics
 flipped_complete_table <- data.frame(t(complete_table))
 
-divShannon_exp <- mean(diversity(flipped_complete_table[c(13:24),], index = "shannon"))
-divShannon_con <- mean(diversity(flipped_complete_table[c(1:12),], index = "shannon"))
+divShannon_exp <- mean(diversity(flipped_complete_table[grep("exp",rownames(flipped_complete_table)),], index = "shannon"))
+divShannon_con <- mean(diversity(flipped_complete_table[grep("con",rownames(flipped_complete_table)),], index = "shannon"))
 
-divSimpson_exp <- mean(diversity(flipped_complete_table[c(13:24),], index = "simpson"))
-divSimpson_con <- mean(diversity(flipped_complete_table[c(1:12),], index = "simpson"))
+divSimpson_exp <- mean(diversity(flipped_complete_table[grep("exp",rownames(flipped_complete_table)),], index = "simpson"))
+divSimpson_con <- mean(diversity(flipped_complete_table[grep("con",rownames(flipped_complete_table)),], index = "simpson"))
 
 cat ("Shannon diversity index:\n\t", divShannon_exp, " for experimental samples.\n\t",
      divShannon_con, " for control samples.\n")
