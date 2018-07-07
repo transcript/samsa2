@@ -1,4 +1,4 @@
-# SAMSA2 - A complete metatranscriptome analysis pipeline
+# SAMSA2 - A fork of the complete metatranscriptome analysis pipeline
 
 Version 2 of the SAMSA pipeline - faster!  Lighter!  More options!  Less waiting!  
 
@@ -22,7 +22,7 @@ The following programs can be downloaded OR can be installed from the binaries p
 ## Quick start
 
 1. Download SAMSA2:   
-    `git clone https://github.com/transcript/samsa2.git`
+    `git clone https://github.com/kaedenn/samsa2.git`
 2. Either install the dependencies from the links above, or use the setup_and_test/package_installation.bash script provided with SAMSA2 for installing from the included binaries.
 3. Make changes to the master_script.bash, which performs the first 3 of 4 steps in the SAMSA2 pipeline (preprocessing, annotation, aggregation)
 4. If not using master_script, use DIAMOND to annotate your reads against a database of your choosing (note that database must be local and DIAMOND-indexed).  See "example\_DIAMOND\_annotation\_script.bash" for more details.
