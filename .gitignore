@@ -1,0 +1,11 @@
+# Swap files
+*.swp
+*.swo
+
+# Extracted programs
+programs/Trimmomatic-0.36
+programs/diamond
+programs/diamond-sse2
+programs/diamond_manual.pdf
+programs/sortmerna-2.1
+

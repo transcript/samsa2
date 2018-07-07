@@ -39,31 +39,32 @@ echo -e "NOTE: Before running this script, please run package_installation.bash 
 # VARIABLES - set starting location and starting files location pathways
 #
 #	0. Set starting location and starting files pathway
-starting_location=/home/samsa2
-starting_files_location=$starting_location/input_files
+source "$(dirname "$0")/common.sh"
+
+INPUT_FILES=$SAMSA/input_files
 
 #	1. PEAR
-pear_location=$starting_location/programs/pear-0.9.10-linux-x86_64/bin
+pear_location=$SAMSA/programs/pear-0.9.10-linux-x86_64/bin
 
 # 2. Trimmomatic
-trimmomatic_location=$starting_location/programs/Trimmomatic-0.36
+trimmomatic_location=$SAMSA/programs/Trimmomatic-0.36
 
 #	3. SortMeRNA
-sortmerna_location=$starting_location/programs/sortmerna-2.1
+sortmerna_location=$SAMSA/programs/sortmerna-2.1
 
 #	4. DIAMOND
-diamond_database="$starting_location/full_databases/RefSeq_bac"
-diamond_subsys_db="$starting_location/full_databases/subsys_db"
-diamond_location="$starting_location/programs"
+diamond_database="$SAMSA/full_databases/RefSeq_bac"
+diamond_subsys_db="$SAMSA/full_databases/subsys_db"
+diamond_location="$SAMSA/programs"
 
 #	5. Aggregation
-python_programs=$starting_location/python_scripts
-RefSeq_db="$starting_location/full_databases/RefSeq_bac.fa"
-Subsys_db="$starting_location/full_databases/subsys_db.fa"
+python_programs=$SAMSA/python_scripts
+RefSeq_db="$SAMSA/full_databases/RefSeq_bac.fa"
+Subsys_db="$SAMSA/full_databases/subsys_db.fa"
 
 #	6. R scripts and paths
-export R_LIBS="$starting_location/R_scripts/packages"
-R_programs=$starting_location/R_scripts
+export R_LIBS="$SAMSA/R_scripts/packages"
+R_programs=$SAMSA/R_scripts
 
 ####################################################################
 #
@@ -76,12 +77,12 @@ R_programs=$starting_location/R_scripts
 # Note: if performing R analysis (step 6), be sure to name files with
 # 	the appropriate prefix ("control_$file" and "experimental_$file")!
 
-for file in $starting_files_location/*.gz
+for file in $INPUT_FILES/*.gz
 do
 	gunzip $file
 done
 
-for file in $starting_files_location/*_R1*
+for file in $INPUT_FILES/*_R1*
 do
 	file1=$file
 	file2=`echo $file1 | awk -F "R1" '{print $1 "R2" $2}'`
@@ -91,41 +92,41 @@ do
 	$pear_location/pear -f $file1 -r $file2 -o $out_name
 done
 
-mkdir $starting_location/step_1_output/
-mv $starting_files_location/*merged* $starting_location/step_1_output/
+mkdir $SAMSA/step_1_output/
+mv $INPUT_FILES/*merged* $SAMSA/step_1_output/
 
 ####################################################################
 #
 # STEP 2: CLEANING FILES WITH TRIMMOMATIC
 # Note: if skipping PEAR, make sure that all starting files are in the
-# $starting_location/step_1_output/ folder!
+# $SAMSA/step_1_output/ folder!
 
-for file in $starting_location/step_1_output/*.merged*
+for file in $SAMSA/step_1_output/*.merged*
 do
 	shortname=`echo $file | awk -F "merged" '{print $1 "cleaned.fastq"}'`
 
-	java -jar $trimmomatic_location/trimmomatic-0.33.jar SE -phred33 $file $shortname SLIDINGWINDOW:4:15 MINLEN:99
+	java -jar $TRIMMOMATIC SE -phred33 $file $shortname SLIDINGWINDOW:4:15 MINLEN:99
 done
 
-mkdir $starting_location/step_2_output/
-mv $starting_location/step_1_output/*cleaned.fastq $starting_location/step_2_output/
+mkdir $SAMSA/step_2_output/
+mv $SAMSA/step_1_output/*cleaned.fastq $SAMSA/step_2_output/
 
 ####################################################################
 #
 # STEP 2.9: GETTING RAW SEQUENCES COUNTS
 # Note: These are used later for statistical analysis.
 
-if [ -f $starting_location/step_2_output/raw_counts.txt]
+if [ -f $SAMSA/step_2_output/raw_counts.txt ]
 then
-	rm $starting_location/step_2_output/raw_counts.txt
-	touch $starting_location/step_2_output/raw_counts.txt
+	rm $SAMSA/step_2_output/raw_counts.txt
+	touch $SAMSA/step_2_output/raw_counts.txt
 else
-	touch $starting_location/step_2_output/raw_counts.txt
+	touch $SAMSA/step_2_output/raw_counts.txt
 fi
 
-for file in $starting_location/step_2_output/*.cleaned.fastq
+for file in $SAMSA/step_2_output/*.cleaned.fastq
 do
-	python $python_programs/raw_read_counter.py -I $file -O $starting_location/step_2_output/raw_counts.txt
+	python $python_programs/raw_read_counter.py -I $file -O $SAMSA/step_2_output/raw_counts.txt
 done
 
 ####################################################################
@@ -134,16 +135,16 @@ done
 # Note: this step assumes that the SortMeRNA databases are indexed.  If not,
 # do that first (see the SortMeRNA user manual for details).
 
-for file in $starting_location/step_2_output/*.cleaned.fastq
+for file in $SAMSA/step_2_output/*.cleaned.fastq
 do
 	shortname=`echo $file | awk -F "cleaned" '{print $1 "ribodepleted"}'`
 
-	$sortmerna_location/sortmerna --ref $sortmerna_location/rRNA_databases/silva-bac-16s-id90.fasta,$sortmerna_location/index/silva-bac-16s-db --reads $file --aligned $file.ribosomes --other $shortname --fastx --num_alignments 0 --log -v
+	$SORTMERNA --ref $SORTMERNA_DIR/rRNA_databases/silva-bac-16s-id90.fasta,$SORTMERNA_DIR/index/silva-bac-16s-db --reads $file --aligned $file.ribosomes --other $shortname --fastx --num_alignments 0 --log -v
 
 done
 
-mkdir $starting_location/step_3_output/
-mv $starting_location/step_2_output/*ribodepleted* $starting_location/step_3_output/
+mkdir $SAMSA/step_3_output/
+mv $SAMSA/step_2_output/*ribodepleted* $SAMSA/step_3_output/
 
 ####################################################################
 #
@@ -153,20 +154,20 @@ mv $starting_location/step_2_output/*ribodepleted* $starting_location/step_3_out
 
 echo "Now starting on DIAMOND org annotations at: "; date
 
-for file in $starting_location/step_3_output/*ribodepleted.fastq
+for file in $SAMSA/step_3_output/*ribodepleted.fastq
 do
 	shortname=`echo $file | awk -F "ribodepleted" '{print $1 "RefSeq_annotated"}'`
 	echo "Now starting on " $file
 	echo "Converting to " $shortname
 
-	$diamond_location/diamond blastx --db $diamond_database -q $file -a $file.RefSeq -t ./ -k 1
-	$diamond_location/diamond view --daa $file.RefSeq.daa -o $shortname -f tab
+	$DIAMOND blastx --db $diamond_database -q $file -a $file.RefSeq -t ./ -k 1
+	$DIAMOND view --daa $file.RefSeq.daa -o $shortname -f tab
 done
 
-mkdir -p $starting_location/step_4_output/daa_binary_files/
+mkdir -p $SAMSA/step_4_output/daa_binary_files/
 
-mv $starting_location/step_3_output/*annotated* $starting_location/step_4_output/
-mv $starting_location/step_3_output/*.daa $starting_location/step_4_output/daa_binary_files/
+mv $SAMSA/step_3_output/*annotated* $SAMSA/step_4_output/
+mv $SAMSA/step_3_output/*.daa $SAMSA/step_4_output/daa_binary_files/
 
 echo "RefSeq DIAMOND annotations completed at: "; date
 
@@ -174,16 +175,16 @@ echo "RefSeq DIAMOND annotations completed at: "; date
 #
 # STEP 5: AGGREGATING WITH ANALYSIS_COUNTER
 
-for file in $starting_location/step_4_output/*RefSeq_annotated
+for file in $SAMSA/step_4_output/*RefSeq_annotated
 do
 	python $python_programs/DIAMOND_analysis_counter.py -I $file -D $RefSeq_db -O
 	python $python_programs/DIAMOND_analysis_counter.py -I $file -D $RefSeq_db -F
 done
 
-mkdir -p $starting_location/step_5_output/RefSeq_results/org_results/
-mkdir $starting_location/step_5_output/RefSeq_results/func_results/
-mv $starting_location/step_4_output/*organism.tsv $starting_location/step_5_output/RefSeq_results/org_results/
-mv $starting_location/step_4_output/*function.tsv $starting_location/step_5_output/RefSeq_results/func_results/
+mkdir -p $SAMSA/step_5_output/RefSeq_results/org_results/
+mkdir $SAMSA/step_5_output/RefSeq_results/func_results/
+mv $SAMSA/step_4_output/*organism.tsv $SAMSA/step_5_output/RefSeq_results/org_results/
+mv $SAMSA/step_4_output/*function.tsv $SAMSA/step_5_output/RefSeq_results/func_results/
 
 ####################################################################
 #
@@ -191,17 +192,17 @@ mv $starting_location/step_4_output/*function.tsv $starting_location/step_5_outp
 
 echo "Now starting on DIAMOND Subsystems annotations at: "; date
 
-for file in $starting_location/step_3_output/*ribodepleted.fastq
+for file in $SAMSA/step_3_output/*ribodepleted.fastq
 do
 	shortname=`echo $file | awk -F "ribodepleted" '{print $1 "subsys_annotated"}'`
 	echo "Now starting on Subsystems annotations for " $file
 
-	$diamond_location/diamond blastx --db $diamond_subsys_db -q $file -a $file.Subsys -t ./ -k 1
-	$diamond_location/diamond view --daa $file.Subsys.daa -o $shortname -f tab
+	$DIAMOND blastx --db $diamond_subsys_db -q $file -a $file.Subsys -t ./ -k 1
+	$DIAMOND view --daa $file.Subsys.daa -o $shortname -f tab
 done
 
-mv $starting_location/step_3_output/*subsys_annotated* $starting_location/step_4_output/
-mv $starting_location/step_3_output/*.daa $starting_location/step_4_output/daa_binary_files/
+mv $SAMSA/step_3_output/*subsys_annotated* $SAMSA/step_4_output/
+mv $SAMSA/step_3_output/*.daa $SAMSA/step_4_output/daa_binary_files/
 
 echo "DIAMOND Subsystems annotations completed at: "; date
 
@@ -209,7 +210,7 @@ echo "DIAMOND Subsystems annotations completed at: "; date
 #
 # STEP 5.1: PYTHON SUBSYSTEMS ANALYSIS COUNTER
 
-for file in $starting_location/step_4_output/*subsys_annotated*
+for file in $SAMSA/step_4_output/*subsys_annotated*
 do
 	python $python_programs/DIAMOND_subsystems_analysis_counter.py -I $file -D $Subsys_db -O $file.hierarchy -P $file.receipt
 
@@ -217,10 +218,10 @@ do
 	python $python_programs/subsys_reducer.py -I $file.hierarchy
 done
 
-mkdir -p $starting_location/step_5_output/Subsystems_results/receipts/
-mv $starting_location/step_4_output/*.reduced $starting_location/step_5_output/Subsystems_results/
-mv $starting_location/step_4_output/*.receipt $starting_location/step_5_output/Subsystems_results/receipts/
-rm $starting_location/step_4_output/*.hierarchy
+mkdir -p $SAMSA/step_5_output/Subsystems_results/receipts/
+mv $SAMSA/step_4_output/*.reduced $SAMSA/step_5_output/Subsystems_results/
+mv $SAMSA/step_4_output/*.receipt $SAMSA/step_5_output/Subsystems_results/receipts/
+rm $SAMSA/step_4_output/*.hierarchy
 
 ##################################################################
 #
@@ -234,9 +235,9 @@ rm $starting_location/step_4_output/*.hierarchy
 # Note: For R to properly identify files to compare/contrast, they must include
 # the appropriate prefix (either "control_$file" or experimental_$file")!
 
-Rscript $R_programs/run_DESeq_stats.R -I $starting_location/step_5_output/RefSeq_results/org_results/ -O RefSeq_org_DESeq_results.tab -R $starting_location/raw_counts.txt
-Rscript $R_programs/run_DESeq_stats.R -I $starting_location/step_5_output/RefSeq_results/func_results/ -O RefSeq_func_DESeq_results.tab -R $starting_location/raw_counts.txt
-Rscript $R_programs/Subsystems_DESeq_stats.R -I $starting_location/step_5_output/Subsystems_results/ -O Subsystems_level-1_DESeq_results.tab -L 1 -R $starting_location/raw_counts.txt
+Rscript $R_programs/run_DESeq_stats.R -I $SAMSA/step_5_output/RefSeq_results/org_results/ -O RefSeq_org_DESeq_results.tab -R $SAMSA/step_2_output/raw_counts.txt
+Rscript $R_programs/run_DESeq_stats.R -I $SAMSA/step_5_output/RefSeq_results/func_results/ -O RefSeq_func_DESeq_results.tab -R $SAMSA/step_2_output/raw_counts.txt
+Rscript $R_programs/Subsystems_DESeq_stats.R -I $SAMSA/step_5_output/Subsystems_results/ -O Subsystems_level-1_DESeq_results.tab -L 1 -R $SAMSA/step_2_output/raw_counts.txt
 
 echo "Master bash script finished running at: "; date
 exit
