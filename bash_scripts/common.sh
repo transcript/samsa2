@@ -11,8 +11,19 @@ log()
   echo "$@" >&2
 }
 
+checked()
+{
+  $@
+  status=$?
+  if [[ $status -ne 0 ]]; then
+    echo "'$@' exited with non-zero status $status" >&2
+    exit $status
+  fi
+}
+
 PROGRAMS="$SAMSA/programs"
 
+PY_DIR="$SAMSA/python_scripts"
 PEAR_DIR="$PROGRAMS/pear-0.9.10-linux-x86_64"
 PEAR="$PEAR_DIR/bin/pear"
 TRIMMOMATIC_DIR="$PROGRAMS/Trimmomatic-0.36"
@@ -22,22 +33,24 @@ SORTMERNA="$SORTMERNA_DIR/sortmerna"
 DIAMOND_DIR="$PROGRAMS"
 DIAMOND="$DIAMOND_DIR/diamond"
 
-if [[ ! -f "$PEAR" ]]; then
-  echo "ERROR: PEAR not found (did you extract it?) at $PEAR" >&2
-  exit 1
-fi
+if [[ -z "$IGNORE_PATHS" ]]; then
+  if [[ ! -f "$PEAR" ]]; then
+    echo "ERROR: PEAR not found (did you extract it?) at $PEAR" >&2
+    exit 1
+  fi
 
-if [[ ! -f "$TRIMMOMATIC" ]]; then
-  echo "ERROR: Trimmomatic not found (did you extract it?) at $TRIMMOMATIC" >&2
-  exit 1
-fi
+  if [[ ! -f "$TRIMMOMATIC" ]]; then
+    echo "ERROR: Trimmomatic not found (did you extract it?) at $TRIMMOMATIC" >&2
+    exit 1
+  fi
 
-if [[ ! -f "$SORTMERNA" ]]; then
-  echo "ERROR: SortMeRNA not found (did you extract and build it?) at $SORTMERNA" >&2
-  exit 1
-fi
+  if [[ ! -f "$SORTMERNA" ]]; then
+    echo "ERROR: SortMeRNA not found (did you extract and build it?) at $SORTMERNA" >&2
+    exit 1
+  fi
 
-if [[ ! -f "$DIAMOND" ]]; then
-  echo "ERROR: Diamond not found (did you extract it?) at $DIAMOND" >&2
-  exit 1
+  if [[ ! -f "$DIAMOND" ]]; then
+    echo "ERROR: Diamond not found (did you extract it?) at $DIAMOND" >&2
+    exit 1
+  fi
 fi

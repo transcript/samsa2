@@ -29,7 +29,7 @@
 ####################################################################
 #
 # Set pathway for SAMSA to location of samsa2 GitHub download:
-source "${BASH_SOURCE%/*}/../bash_scripts/common.sh"
+IGNORE_PATHS=1 source "${BASH_SOURCE%/*}/../bash_scripts/common.sh"
 
 # 1. Download necessary R packages:
 echo "Now extracting R packages at: "; date

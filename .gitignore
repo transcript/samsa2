@@ -3,6 +3,8 @@
 *.swo
 
 # Extracted programs
+R_scripts/packages
+programs/pear-0.9.10-linux-x86_64
 programs/Trimmomatic-0.36
 programs/diamond
 programs/diamond-sse2
