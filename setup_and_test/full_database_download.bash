@@ -21,12 +21,12 @@
 # 
 ####################################################################
 #
-# Set pathway for starting_location to location of samsa2 GitHub download:
-starting_location=/home/samsa2
+# Set pathway for SAMSA to location of samsa2 GitHub download:
+source "${BASH_SOURCE%/*}/../bash_scripts/common.sh"
 
 # Make database directory
-mkdir $starting_location/full_databases
-cd $starting_location/full_databases
+mkdir $SAMSA/full_databases
+cd $SAMSA/full_databases
 
 echo -e "NOTE: The databases are up to 28GB and may require hours to download. Users may want to consider running this download overnight.\n"
 # Download NCBI RefSeq database:
@@ -57,8 +57,8 @@ wget "https://bioshare.bioinformatics.ucdavis.edu/bioshare/download/2c8s521xj990
 echo "NOW DOWNLOADING DIAMOND COMPATIBLE SUBSYSTEMS DATABASE AT: "; date
 wget "https://bioshare.bioinformatics.ucdavis.edu/bioshare/download/2c8s521xj9907hn/subsys_db.dmnd" --no-check-certificate
 
-# $starting_location/programs/diamond makedb --in $starting_location/full_databases/RefSeq_bac.fa --db $starting_location/full_databases/RefSeq_bac
-# $starting_location/programs/diamond makedb --in $starting_location/full_databases/subsys_db.fa --db $starting_location/full_databases/subsys_db
+# $SAMSA/programs/diamond makedb --in $SAMSA/full_databases/RefSeq_bac.fa --db $SAMSA/full_databases/RefSeq_bac
+# $SAMSA/programs/diamond makedb --in $SAMSA/full_databases/subsys_db.fa --db $SAMSA/full_databases/subsys_db
 
 echo "Completed!"
 exit

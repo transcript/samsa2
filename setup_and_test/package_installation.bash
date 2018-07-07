@@ -28,43 +28,42 @@
 #
 ####################################################################
 #
-# Set pathway for starting_location to location of samsa2 GitHub download:
-starting_location=/home/samsa2
+# Set pathway for SAMSA to location of samsa2 GitHub download:
+source "${BASH_SOURCE%/*}/../bash_scripts/common.sh"
 
 # 1. Download necessary R packages:
 echo "Now extracting R packages at: "; date
-mkdir $starting_location/R_scripts/packages
-cd $starting_location/R_scripts/packages
+mkdir $SAMSA/R_scripts/packages
+cd $SAMSA/R_scripts/packages
 R --save < ../install_packages.R -v
 echo "R package extraction finished at: "; date
 
-cd $starting_location/programs
+cd $PROGRAMS
 
 # 2.  Unpack PEAR package:
 echo "Now extracting PEAR at: "; date
-tar -xvzf $starting_location/programs/pear-0.9.10-linux-x86_64.tar.gz
+tar -xvzf ${PEAR_DIR}.tar.gz
 echo "PEAR extraction finished at: "; date
 
 # 3. Unzip Trimmomatic package:
 echo "Now extracting Trimmomatic at: "; date
-unzip $starting_location/programs/Trimmomatic-0.36.zip
+unzip ${TRIMMOMATIC_DIR}.zip
 echo "Trimmomatic extraction finished at: "; date
 
 # 4. Unpack DIAMOND package
 echo "Now extracting DIAMOND at: "; date
-tar -xvzf $starting_location/programs/diamond-linux64.tar.gz
+tar -xvzf $PROGRAMS/diamond-linux64.tar.gz
 echo "DIAMOND extraction finished at: "; date
 
 # 5. Unpack and build sortmerna package:
 echo "Now extracting SortMeRNA at: "; date
-tar -xvzf $starting_location/programs/sortmerna-2.1.tar.gz
-cd $starting_location/programs/sortmerna-2.1
+tar -xvzf ${SORTMERNA_DIR}.tar.gz
+cd $SORTMERNA_DIR
 bash ./build.sh
 echo "SortMeRNA extraction finished at: "; date
 
 # Index silva-bac-16s-id90.fasta for sortmerna use:
-sortmerna_location=$starting_location/programs/sortmerna-2.1
-$sortmerna_location/indexdb_rna --ref $sortmerna_location/rRNA_databases/silva-bac-16s-id90.fasta,$sortmerna_location/index/silva-bac-16s-db
+$SORTMERNA_DIR/indexdb_rna --ref $SORTMERNA_DIR/rRNA_databases/silva-bac-16s-id90.fasta,$SORTMERNA_DIR/index/silva-bac-16s-db
 
 echo "Finished extracting and installing all SAMSA2 package dependencies at: "; date
 echo "Completed!"

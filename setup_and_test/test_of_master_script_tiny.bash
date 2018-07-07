@@ -47,31 +47,31 @@ echo -e "NOTE: Before running this script, please download and run package_insta
 # VARIABLES
 #
 # 	0. Starting location- Set pathway to location of samsa2 GitHub download
-starting_location=/home/samsa2
+source "${BASH_SOURCE%/*}/../bash_scripts/common.sh"
 
 #	1. Starting files location
-starting_files_location=$starting_location/sample_files_paired-end/1_starting_files
+starting_files_location=$SAMSA/sample_files_paired-end/1_starting_files
 
 #	2. Output files location
-mkdir $starting_location/output_test
-output_location=$starting_location/output_test
+mkdir $SAMSA/output_test
+output_location=$SAMSA/output_test
 
 #	3. Python scripts location
-python_programs=$starting_location/python_scripts
+python_programs=$SAMSA/python_scripts
 
 #	4. PEAR
-pear_location=$starting_location/programs/pear-0.9.10-linux-x86_64/bin
+pear_location=$SAMSA/programs/pear-0.9.10-linux-x86_64/bin
 
 # 	5. Trimmomatic
-trimmomatic_location=$starting_location/programs/Trimmomatic-0.36
+trimmomatic_location=$SAMSA/programs/Trimmomatic-0.36
 
 #	6. SortMeRNA
-sortmerna_location=$starting_location/programs/sortmerna-2.1
+sortmerna_location=$SAMSA/programs/sortmerna-2.1
 
 #	7. DIAMOND
-diamond_database="$starting_location/setup_and_test/tiny_databases/RefSeq_bac_TINY_24MB"
-diamond_subsys_db="$starting_location/setup_and_test/tiny_databases/subsys_db_TINY_24MB"
-diamond_location="$starting_location/programs"
+diamond_database="$SAMSA/setup_and_test/tiny_databases/RefSeq_bac_TINY_24MB"
+diamond_subsys_db="$SAMSA/setup_and_test/tiny_databases/subsys_db_TINY_24MB"
+diamond_location="$SAMSA/programs"
 
 ####################################################################
 #

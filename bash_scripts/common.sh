@@ -2,9 +2,14 @@
 
 # Statements common to all scripts
 if [[ -z "$SAMSA" ]]; then
-  SAMSA="$(readlink -f "$(dirname "$0")/..")"
+  SAMSA="$(readlink -f "${BASH_SOURCE%/*}/..")"
 fi
 echo "Using SAMSA at $SAMSA" >&2
+
+log()
+{
+  echo "$@" >&2
+}
 
 PROGRAMS="$SAMSA/programs"
 
