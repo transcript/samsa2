@@ -50,21 +50,19 @@ echo -e "NOTE: Before running this script, please download and run package_insta
 source "${BASH_SOURCE%/*}/../bash_scripts/common.sh"
 
 # Starting files location
-starting_files_location=$SAMSA/sample_files_paired-end/1_starting_files
-
-# Output files location
+INPUT_DIR=$SAMSA/sample_files_paired-end/1_starting_files
 OUT_DIR=$SAMSA/output_test
-if [[ ! -d "$OUT_DIR" ]]; then
-  mkdir "$OUT_DIR"
-fi
+$MKDIR "$OUT_DIR"
+
+STEP_1="$OUT_DIR/step_1_output_test"
+STEP_2="$OUT_DIR/step_2_output_test"
+STEP_3="$OUT_DIR/step_3_output_test"
+STEP_4="$OUT_DIR/step_4_output_test"
+STEP_5="$OUT_DIR/step_5_output_test"
 
 # DIAMOND
 diamond_database="$SAMSA/setup_and_test/tiny_databases/RefSeq_bac_TINY_24MB"
 diamond_subsys_db="$SAMSA/setup_and_test/tiny_databases/subsys_db_TINY_24MB"
-
-# R scripts and paths
-export R_LIBS="$SAMSA/R_scripts/packages"
-R_programs=$SAMSA/R_scripts
 
 ####################################################################
 #
@@ -75,39 +73,38 @@ R_programs=$SAMSA/R_scripts
 #
 # Note: if using single-end sequencing, skip this step (comment out).
 
-#for file in $starting_files_location/*.gz
+#for file in $INPUT_DIR/*.gz
 #do
 #   gunzip $file
 #done
 
-cd $starting_files_location
-for file in $starting_files_location/*R1*
+cd $INPUT_DIR
+for f in $INPUT_DIR/*R1*
 do
-    file1=$file
-    file2=`echo $file1 | awk -F "R1" '{print $1 "R2" $2}'`
-    out_path=`echo $file | awk -F "_R1" '{print $1 ".merged"}'`
-    out_name=`echo ${out_path##*/}`
-    checked $PEAR -f $file1 -r $file2 -o $out_name
+    f2=`echo $f | awk -F "R1" '{print $1 "R2" $2}'`
+    out_path=`echo $f | awk -F "_R1" '{print $1 ".merged"}'`
+
+    checked $PEAR -f $f -r $f2 -o ${out_path##*/}
 done
 
-[[ ! -d "$OUT_DIR/step_1_output_test" ]] && mkdir $OUT_DIR/step_1_output_test/
-mv $starting_files_location/*merged* $OUT_DIR/step_1_output_test/
+$MKDIR $STEP_1
+mv $INPUT_DIR/*merged* $STEP_1
 echo -e "\nPaired-end merging step completed.\n"
 
 ####################################################################
 #
 # STEP 2: CLEANING FILES WITH TRIMMOMATIC
 # Note: if skipping PEAR, make sure that all starting files are in the
-# $OUT_DIR/step_1_output_test/ folder!
+# $STEP_1/ folder!
 
-for file in $OUT_DIR/step_1_output_test/*merged*
+for file in $STEP_1/*merged*
 do
     shortname=`echo $file | awk -F "merged" '{print $1 "cleaned.fastq"}'`
     checked java -jar $TRIMMOMATIC SE -phred33 $file $shortname SLIDINGWINDOW:4:15 MINLEN:99
 done
 
-[[ ! -d "$OUT_DIR/step_2_output_test" ]] && mkdir $OUT_DIR/step_2_output_test/
-mv $OUT_DIR/step_1_output_test/*cleaned.fastq $OUT_DIR/step_2_output_test/
+$MKDIR $STEP_2
+mv $STEP_1/*cleaned.fastq $STEP_2
 echo -e "\nCleaning files with Trimmomatic completed.\n"
 
 ####################################################################
@@ -115,17 +112,14 @@ echo -e "\nCleaning files with Trimmomatic completed.\n"
 # STEP 2.9: GETTING RAW SEQUENCES COUNTS
 # Note: These are used later for statistical analysis.
 
-if [ -f $OUT_DIR/step_2_output_test/raw_counts.txt ]
-then
-    rm $OUT_DIR/step_2_output_test/raw_counts.txt
-    touch $OUT_DIR/step_2_output_test/raw_counts.txt
-else
-    touch $OUT_DIR/step_2_output_test/raw_counts.txt
+if [[ -f $STEP_2/raw_counts.txt ]]; then
+    rm $STEP_2/raw_counts.txt
 fi
+touch $STEP_2/raw_counts.txt
 
-for file in $OUT_DIR/step_2_output_test/*cleaned.fastq
+for file in $STEP_2/*cleaned.fastq
 do
-    checked python $PY_DIR/raw_read_counter.py -I $file -O $OUT_DIR/step_2_output_test/raw_counts.txt
+    checked python $PY_DIR/raw_read_counter.py -I $file -O $STEP_2/raw_counts.txt
 done
 echo -e "\nCounting raw sequences completed!\n"
 
@@ -135,14 +129,17 @@ echo -e "\nCounting raw sequences completed!\n"
 # Note: this step assumes that the SortMeRNA databases are indexed.  If not,
 # do that first (see the SortMeRNA user manual for details).
 
-for file in $OUT_DIR/step_2_output_test/*cleaned.fastq
+for file in $STEP_2/*cleaned.fastq
 do
     shortname=`echo $file | awk -F "cleaned" '{print $1 "ribodepleted"}'`
-    checked $SORTMERNA --ref $SORTMERNA_DIR/rRNA_databases/silva-bac-16s-id90.fasta,$SORTMERNA_DIR/index/silva-bac-16s-db --reads $file --aligned $file.ribosomes --other $shortname --fastx --num_alignments 0 --log -v
+    checked $SORTMERNA \
+      --ref $SORTMERNA_DIR/rRNA_databases/silva-bac-16s-id90.fasta,$SORTMERNA_DIR/index/silva-bac-16s-db \
+      --reads $file --aligned $file.ribosomes --other $shortname --fastx \
+      --num_alignments 0 --log -v
 done
 
-[[ ! -d "$OUT_DIR/step_3_output_test" ]] && mkdir $OUT_DIR/step_3_output_test/
-mv $OUT_DIR/step_2_output_test/*ribodepleted* $OUT_DIR/step_3_output_test/
+$MKDIR $STEP_3
+mv $STEP_2/*ribodepleted* $STEP_3
 
 echo -e "\nRibosomal read removal step completed!\n"
 
@@ -154,7 +151,7 @@ echo -e "\nRibosomal read removal step completed!\n"
 
 echo "Now starting on DIAMOND org annotations at: "; date
 
-for file in $OUT_DIR/step_3_output_test/*ribodepleted.fastq
+for file in $STEP_3/*ribodepleted.fastq
 do
     shortname=`echo $file | awk -F "ribodepleted" '{print $1 "RefSeq_annotated"}'`
     echo "Now starting on " $file
@@ -163,12 +160,11 @@ do
     checked $DIAMOND view --daa $file.RefSeq.daa -o $shortname -f tab
 done
 
-[[ ! -d "$OUT_DIR/step_4_output_test" ]] && mkdir $OUT_DIR/step_4_output_test/
-[[ ! -d "$OUT_DIR/step_4_output_test/daa_binary_files" ]] &&
-mkdir $OUT_DIR/step_4_output_test/daa_binary_files/
+$MKDIR $STEP_4
+$MKDIR $STEP_4/daa_binary_files
 
-mv $OUT_DIR/step_3_output_test/*annotated* $OUT_DIR/step_4_output_test/
-mv $OUT_DIR/step_3_output_test/*.daa $OUT_DIR/step_4_output_test/daa_binary_files/
+mv $STEP_3/*annotated* $STEP_4
+mv $STEP_3/*.daa $STEP_4/daa_binary_files
 
 echo -e "\nRefSeq DIAMOND annotations completed at: "; date
 
@@ -176,16 +172,16 @@ echo -e "\nRefSeq DIAMOND annotations completed at: "; date
 #
 # STEP 5: AGGREGATING WITH ANALYSIS_COUNTER
 
-for file in $OUT_DIR/step_4_output_test/*RefSeq_annotated
+for file in $STEP_4/*RefSeq_annotated
 do
-    python $PY_DIR/DIAMOND_analysis_counter.py -I $file -D $diamond_database.fa -O
-    python $PY_DIR/DIAMOND_analysis_counter.py -I $file -D $diamond_database.fa -F
+    checked python $PY_DIR/DIAMOND_analysis_counter.py -I $file -D $diamond_database.fa -O
+    checked python $PY_DIR/DIAMOND_analysis_counter.py -I $file -D $diamond_database.fa -F
 done
 
-[[ ! -d "$OUT_DIR/step_5_output_test/RefSeq_results/org_results" ]] && mkdir -p $OUT_DIR/step_5_output_test/RefSeq_results/org_results/
-[[ ! -d "$OUT_DIR/step_5_output_test/RefSeq_results/func_results/" ]] && mkdir $OUT_DIR/step_5_output_test/RefSeq_results/func_results/
-mv $OUT_DIR/step_4_output_test/*organism.tsv $OUT_DIR/step_5_output_test/RefSeq_results/org_results/
-mv $OUT_DIR/step_4_output_test/*function.tsv $OUT_DIR/step_5_output_test/RefSeq_results/func_results/
+$MKDIR $STEP_5/RefSeq_results/org_results
+$MKDIR $STEP_5/RefSeq_results/func_results
+mv $STEP_4/*organism.tsv $STEP_5/RefSeq_results/org_results
+mv $STEP_4/*function.tsv $STEP_5/RefSeq_results/func_results
 
 ####################################################################
 #
@@ -193,7 +189,7 @@ mv $OUT_DIR/step_4_output_test/*function.tsv $OUT_DIR/step_5_output_test/RefSeq_
 
 echo "Now starting on DIAMOND Subsystems annotations at: "; date
 
-for file in $OUT_DIR/step_3_output_test/*ribodepleted.fastq
+for file in $STEP_3/*ribodepleted.fastq
 do
     shortname=`echo $file | awk -F "ribodepleted" '{print $1 "subsys_annotated"}'`
     echo "Now starting on Subsystems annotations for " $file
@@ -201,8 +197,8 @@ do
     checked $DIAMOND view --daa $file.Subsys.daa -o $shortname -f tab
 done
 
-mv $OUT_DIR/step_3_output_test/*subsys_annotated* $OUT_DIR/step_4_output_test/
-mv $OUT_DIR/step_3_output_test/*.daa $OUT_DIR/step_4_output_test/daa_binary_files/
+mv $STEP_3/*subsys_annotated* $STEP_4
+mv $STEP_3/*.daa $STEP_4/daa_binary_files
 
 echo -e "\nDIAMOND Subsystems annotations completed at: "; date
 
@@ -210,18 +206,19 @@ echo -e "\nDIAMOND Subsystems annotations completed at: "; date
 #
 # STEP 5.1: PYTHON SUBSYSTEMS ANALYSIS COUNTER
 
-for file in $OUT_DIR/step_4_output_test/*subsys_annotated*
+for file in $STEP_4/*subsys_annotated*
 do
-    checked python $PY_DIR/DIAMOND_subsystems_analysis_counter.py -I $file -D $diamond_subsys_db.fa -O $file.hierarchy -P $file.receipt
+    checked python $PY_DIR/DIAMOND_subsystems_analysis_counter.py -I $file \
+      -D $diamond_subsys_db.fa -O $file.hierarchy -P $file.receipt
 
     # This quick program reduces down identical hierarchy annotations
     checked python $PY_DIR/subsys_reducer.py -I $file.hierarchy
 done
 
-[[ ! -d "$OUT_DIR/step_5_output_test/Subsystems_results/receipts/" ]] && mkdir -p $OUT_DIR/step_5_output_test/Subsystems_results/receipts/
-mv $OUT_DIR/step_4_output_test/*.reduced $OUT_DIR/step_5_output_test/Subsystems_results/
-mv $OUT_DIR/step_4_output_test/*.receipt $OUT_DIR/step_5_output_test/Subsystems_results/receipts/
-rm $OUT_DIR/step_4_output_test/*.hierarchy
+$MKDIR $STEP_5/Subsystems_results/receipts
+mv $STEP_4/*.reduced $STEP_5/Subsystems_results
+mv $STEP_4/*.receipt $STEP_5/Subsystems_results/receipts
+rm $STEP_4/*.hierarchy
 
 ##################################################################
 #
@@ -235,11 +232,18 @@ rm $OUT_DIR/step_4_output_test/*.hierarchy
 # Note: For R to properly identify files to compare/contrast, they must include
 # the appropriate prefix (either "control_$file" or experimental_$file")!
 
-[[ ! -d "$OUT_DIR/step_5_output_test/RefSeq_results/org_results" ]] && mkdir -p "$OUT_DIR/step_5_output_test/RefSeq_results/org_results"
-[[ ! -d "$OUT_DIR/step_5_output_test/RefSeq_results/func_results" ]] && mkdir "$OUT_DIR/step_5_output_test/RefSeq_results/func_results"
-checked Rscript $R_programs/run_DESeq_stats.R -I $OUT_DIR/step_5_output_test/RefSeq_results/org_results/ -O RefSeq_org_DESeq_results.tab -R $OUT_DIR/step_2_output_test/raw_counts.txt
-checked Rscript $R_programs/run_DESeq_stats.R -I $OUT_DIR/step_5_output_test/RefSeq_results/func_results/ -O RefSeq_func_DESeq_results.tab -R $OUT_DIR/step_2_output_test/raw_counts.txt
-checked Rscript $R_programs/Subsystems_DESeq_stats.R -I $OUT_DIR/step_5_output_test/Subsystems_results/ -O Subsystems_level-1_DESeq_results.tab -L 1 -R $OUT_DIR/step_2_output_test/raw_counts.txt
+checked Rscript $R_DIR/run_DESeq_stats.R \
+  -I $STEP_5/RefSeq_results/org_results \
+  -O RefSeq_org_DESeq_results.tab \
+  -R $STEP_2/raw_counts.txt
+checked Rscript $R_DIR/run_DESeq_stats.R \
+  -I $STEP_5/RefSeq_results/func_results \
+  -O RefSeq_func_DESeq_results.tab \
+  -R $STEP_2/raw_counts.txt
+checked Rscript $R_DIR/Subsystems_DESeq_stats.R \
+  -I $STEP_5/Subsystems_results \
+  -O Subsystems_level-1_DESeq_results.tab -L 1 \
+  -R $STEP_2/raw_counts.txt
 
 if [[ -z "$TEST_NO_RM" ]]; then
   echo "Now removing output files."
