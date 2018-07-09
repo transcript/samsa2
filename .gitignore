@@ -2,6 +2,11 @@
 *.swp
 *.swo
 
+# Temporary files
+.RData
+.Rhistory
+output_test
+
 # Extracted programs
 R_scripts/packages
 programs/pear-0.9.10-linux-x86_64
