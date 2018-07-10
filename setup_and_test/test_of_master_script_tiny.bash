@@ -232,18 +232,19 @@ rm $STEP_4/*.hierarchy
 # Note: For R to properly identify files to compare/contrast, they must include
 # the appropriate prefix (either "control_$file" or experimental_$file")!
 
-checked Rscript $R_DIR/run_DESeq_stats.R \
-  -I $STEP_5/RefSeq_results/org_results \
-  -O RefSeq_org_DESeq_results.tab \
-  -R $STEP_2/raw_counts.txt
-checked Rscript $R_DIR/run_DESeq_stats.R \
-  -I $STEP_5/RefSeq_results/func_results \
-  -O RefSeq_func_DESeq_results.tab \
-  -R $STEP_2/raw_counts.txt
-checked Rscript $R_DIR/Subsystems_DESeq_stats.R \
-  -I $STEP_5/Subsystems_results \
-  -O Subsystems_level-1_DESeq_results.tab -L 1 \
-  -R $STEP_2/raw_counts.txt
+# XXX: Sample data does not have control/experimental files; skip this step
+#checked Rscript $R_DIR/run_DESeq_stats.R \
+#  -I $STEP_5/RefSeq_results/org_results \
+#  -O RefSeq_org_DESeq_results.tab \
+#  -R $STEP_2/raw_counts.txt
+#checked Rscript $R_DIR/run_DESeq_stats.R \
+#  -I $STEP_5/RefSeq_results/func_results \
+#  -O RefSeq_func_DESeq_results.tab \
+#  -R $STEP_2/raw_counts.txt
+#checked Rscript $R_DIR/Subsystems_DESeq_stats.R \
+#  -I $STEP_5/Subsystems_results \
+#  -O Subsystems_level-1_DESeq_results.tab -L 1 \
+#  -R $STEP_2/raw_counts.txt
 
 if [[ -z "$TEST_NO_RM" ]]; then
   echo "Now removing output files."
