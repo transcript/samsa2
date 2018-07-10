@@ -12,6 +12,8 @@ Version 2 of the SAMSA pipeline - faster!  Lighter!  More options!  Less waiting
 
 ### Dependencies
 
+SAMSA2 requires Python2 for aggregation scripts.  Currently, this pipeline does not work with Python3, although an update is planned.
+
 The following programs can be downloaded OR can be installed from the binaries provided in the programs/ folder.
 
 1. DIAMOND, version 0.8.3: https://github.com/bbuchfink/diamond
