@@ -32,30 +32,44 @@
 # https://github.com/transcript/samsa2/tree/master/setup in order to set
 # up SAMSA2 dependencies and download full databases.
 #
-####################################################################
+#######################################################################
 #
 echo -e "NOTE: Before running this script, please run package_installation.bash and full_database_download.bash located at https://github.com/transcript/samsa2/tree/master/setup in order to set up SAMSA2 dependencies.\n\n"
 #
 # VARIABLES - set starting location and starting files location pathways
 #
-source "${BASH_SOURCE%/*}/../bash_scripts/common.sh"
+source "${BASH_SOURCE%/*}/../bash_scripts/lib/common.sh"
 
 INPUT_DIR=$SAMSA/input_files
 OUT_DIR=$SAMSA
 
-STEP_1="$OUT_DIR/step_1_output_test"
-STEP_2="$OUT_DIR/step_2_output_test"
-STEP_3="$OUT_DIR/step_3_output_test"
-STEP_4="$OUT_DIR/step_4_output_test"
-STEP_5="$OUT_DIR/step_5_output_test"
+STEP_1="$OUT_DIR/step_1_output"
+STEP_2="$OUT_DIR/step_2_output"
+STEP_3="$OUT_DIR/step_3_output"
+STEP_4="$OUT_DIR/step_4_output"
+STEP_5="$OUT_DIR/step_5_output"
 
-# Diamond databases
-diamond_database="$SAMSA/full_databases/RefSeq_bac"
-diamond_subsys_db="$SAMSA/full_databases/subsys_db"
-
-# Aggregation databases
-RefSeq_db="$SAMSA/full_databases/RefSeq_bac.fa"
-Subsys_db="$SAMSA/full_databases/subsys_db.fa"
+if [[ -n "$USE_TINY" ]]; then
+  # Diamond databases
+  diamond_database="$SAMSA/setup_and_test/tiny_databases/RefSeq_bac_TINY_24MB"
+  diamond_subsys_db="$SAMSA/setup_and_test/tiny_databases/subsys_db_TINY_24MB"
+  # Aggregation databases
+  RefSeq_db="$SAMSA/setup_and_test/tiny_databases/RefSeq_bac_TINY_24MB.fa"
+  Subsys_db="$SAMSA/setup_and_test/tiny_databases/subsys_db_TINY_24MB.fa"
+  # Use test output directories
+  STEP_1="${STEP_1}_test"
+  STEP_2="${STEP_2}_test"
+  STEP_3="${STEP_3}_test"
+  STEP_4="${STEP_4}_test"
+  STEP_5="${STEP_5}_test"
+else
+  # Diamond databases
+  diamond_database="$SAMSA/full_databases/RefSeq_bac"
+  diamond_subsys_db="$SAMSA/full_databases/subsys_db"
+  # Aggregation databases
+  RefSeq_db="$SAMSA/full_databases/RefSeq_bac.fa"
+  Subsys_db="$SAMSA/full_databases/subsys_db.fa"
+fi
 
 ####################################################################
 #
@@ -73,16 +87,14 @@ do
     gunzip $file
 done
 
+$MKDIR $STEP_1
 for f in $INPUT_DIR/*_R1*
 do
     f2=`echo $f | awk -F "R1" '{print $1 "R2" $2}'`
     out_path=`echo $f | awk -F "_R1" '{print $1 ".merged"}'`
 
-    checked $PEAR -f $f -r $f2 -o ${out_path##*/}
+    checked $PEAR -f $f -r $f2 -o $STEP_1/${out_path##*/}
 done
-
-$MKDIR $STEP_1
-mv $INPUT_DIR/*merged* $STEP_1
 
 ####################################################################
 #

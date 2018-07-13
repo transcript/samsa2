@@ -22,7 +22,7 @@
 ####################################################################
 #
 # Set pathway for SAMSA to location of samsa2 GitHub download:
-source "${BASH_SOURCE%/*}/../bash_scripts/common.sh"
+source "${BASH_SOURCE%/*}/../bash_scripts/lib/common.sh"
 
 # Make database directory
 mkdir $SAMSA/full_databases

@@ -7,6 +7,22 @@
 .Rhistory
 output_test
 
+# Input directories
+input_files
+
+# Output directories
+logs
+step_1_output
+step_2_output
+step_3_output
+step_4_output
+step_5_output
+step_1_output_test
+step_2_output_test
+step_3_output_test
+step_4_output_test
+step_5_output_test
+
 # Extracted programs
 R_scripts/packages
 programs/pear-0.9.10-linux-x86_64

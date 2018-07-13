@@ -47,7 +47,7 @@ echo -e "NOTE: Before running this script, please download and run package_insta
 # VARIABLES
 #
 # Starting location- Set pathway to location of samsa2 GitHub download
-source "${BASH_SOURCE%/*}/../bash_scripts/common.sh"
+source "${BASH_SOURCE%/*}/../bash_scripts/lib/common.sh"
 
 # Starting files location
 INPUT_DIR=$SAMSA/sample_files_paired-end/1_starting_files
