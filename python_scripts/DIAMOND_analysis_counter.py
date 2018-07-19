@@ -206,7 +206,7 @@ for entry in RefSeq_hit_count_db.keys():
 		print "KeyError:\t" + entry
 		continue
 
-if "SO" in sys.argv:
+if "-SO" in sys.argv:
 	condensed_RefSeq_SO_hit_db = {}
 
 	for entry in RefSeq_hit_count_db.keys():
@@ -239,7 +239,7 @@ if "-O" in sys.argv:
 	outfile_name = infile_name[:-4] + "_organism.tsv"
 if "-F" in sys.argv:
 	outfile_name = infile_name[:-4] + "_function.tsv"
-if "=SO" in sys.argv:
+if "-SO" in sys.argv:
 	target_org_outfile = open(infile_name[:-4] + "_" + target_org + ".tsv", "w")
 
 outfile = open (outfile_name, "w")
