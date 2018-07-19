@@ -28,7 +28,7 @@
 # from the Subsystems results and determine their organism of origin in the
 # RefSeq results.
 #
-# This program takes a search term, the Subsystems ".receipt" file, and the 
+# This program takes a search term, the Subsystems ".receipt" file, and the
 # RefSeq results file as its inputs.  It checks the Subsystems ".receipt"
 # file for the search term, finds the corresponding annotations in the RefSeq
 # results, and returns those sequences.
@@ -38,7 +38,7 @@
 # -I		Original input			The RefSeq results for that sample.
 # -O		Output name				Name of saved retrieved sequences file
 # -T		search Term				Term to be searched for in results for filtering
-# 
+#
 ##########################################################################
 
 # imports
@@ -83,15 +83,14 @@ for line in sr_file:
 		read_id_list.append(splitline[0])
 	if i < 10:
 		i += 1
-#		print splitline[0]
-	
+
 	line_counter += 1
 	if line_counter % 100000 == 0:
-		print str(line_counter)[:-3] + "k lines analyzed so far."
+		print (str(line_counter)[:-3] + "k lines analyzed so far.")
 
 sr_file.close()
 
-print "\nRead IDs scanned: " + str(len(read_id_list)) + " IDs found.\n"
+print ("\nRead IDs scanned: " + str(len(read_id_list)) + " IDs found.\n")
 
 # reading in the original file
 outfile = open(string_find("-O"), "w")
@@ -103,16 +102,15 @@ for line in infile:
 	splitline = line.split("\t")
 	if i < 10:
 		i += 1
-#		print splitline[0]
 	original_db[splitline[0]] = line
 
 	line_counter += 1
 	if line_counter % 1000000 == 0:
-		print str(line_counter)[:-6] + "M lines analyzed so far."
+		print (str(line_counter)[:-6] + "M lines analyzed so far.")
 
 # matching and printing to output
 in_common = set(original_db.keys()).intersection(read_id_list)
-print "\n" + str(len(in_common)) + " reads in common.\nSaving..."
+print ("\n" + str(len(in_common)) + " reads in common.\nSaving...")
 
 for entry in in_common:
 	outfile.write(original_db[entry])
@@ -120,5 +118,5 @@ for entry in in_common:
 infile.close()
 outfile.close()
 
-print "Done scanning the input file; results are saved as " + string_find("-O")
-print "Number of read IDs not found in original file: " + str(len(read_id_list)-len(in_common))
+print ("Done scanning the input file; results are saved as " + string_find("-O"))
+print ("Number of read IDs not found in original file: " + str(len(read_id_list)-len(in_common)))

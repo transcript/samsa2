@@ -24,12 +24,12 @@
 # Sam Westreich, stwestreich@ucdavis.edu, github.com/transcript
 #
 # This program parses through the results file from a DIAMOND annotation run
-# against the Subsystems database, in BLAST m8 format, to get the results 
+# against the Subsystems database, in BLAST m8 format, to get the results
 # into a more compressed format for statistical analysis.
 #
-# Usage: 
+# Usage:
 #
-# -I		infile			specifies the infile (a DIAMOND results file 
+# -I		infile			specifies the infile (a DIAMOND results file
 #								in m8 format)
 # -O		outfile			optional; default outfile name is infile.reduced
 #
@@ -64,7 +64,7 @@ for line in infile:
 	line_counter += 1
 	splitline = line.split("\t", 2)
 	split_levels = splitline[2].split("\t")
-	
+
 	if split_levels[0] not in unique_l4.keys():
 		unique_l4[split_levels[0]] = float(splitline[1])
 		upper_lvls[split_levels[0]] = splitline[2]
@@ -85,7 +85,7 @@ infile = open(string_find("-I"), "r")
 # parsing, round two
 for line in infile:
 	splitline = line.split("\t")
-	
+
 	try:
 		percent_dic[splitline[2]] += float(splitline[0])
 	except KeyError:
@@ -104,12 +104,12 @@ else:
 outfile = open(outfile_name, "w")
 
 # writing out to outfile
-for k, v in sorted(count_dic.items(), key=lambda (k,v): -v):
+for k, v in sorted(count_dic.items(), key=lambda k,v: -v):
 	outfile.write(str(percent_dic[k]) + "\t" + str(count_dic[k]) + "\t" + upper_lvls[k])
 
 outfile.close()
 
 # reporting final statistics
-print "Total number of lines analyzed:\t" + str(line_counter)
-print "Total number of final entries:\t" + str(len(percent_dic.keys()))
-print "Results saved in file:\t\t" + outfile_name
+print ("Total number of lines analyzed:\t" + str(line_counter))
+print ("Total number of final entries:\t" + str(len(percent_dic.keys())))
+print ("Results saved in file:\t\t" + outfile_name)

@@ -79,7 +79,7 @@ unique_seq_db = {}
 line_counter = 0
 
 # reading through the infile - the DIAMOND results m8 format
-print "\nReading through the m8 results infile..."
+print ("\nReading through the m8 results infile...")
 
 for line in infile:
 	line_counter += 1
@@ -98,17 +98,17 @@ for line in infile:
 
 t1 = time.clock()
 
-print "\nAnalysis of " + infile_name + " complete."
-print "Number of total lines: " + str(line_counter)
-print "Number of unique sequences: " + str(len(unique_seq_db))
-print "Time elapsed: " + str(t1-t0) + " seconds."
+print ("\nAnalysis of " + infile_name + " complete.")
+print ("Number of total lines: " + str(line_counter))
+print ("Number of unique sequences: " + str(len(unique_seq_db)))
+print ("Time elapsed: " + str(t1-t0) + " seconds.")
 
 infile.close()
 
 # time to search for these in the reference database
 db = open (db_name, "r")
 
-print "\nReading in reference database..."
+print ("\nReading in reference database...")
 
 t2 = time.clock()
 
@@ -159,8 +159,8 @@ for line in db:
 						if db_org[0].isdigit():
 							split_db_org = db_org.split()
 							db_org = split_db_org[1] + " " + split_db_org[2]
-						print line
-						print db_org
+						print (line)
+						print (db_org)
 		else:
 			db_org = line.rsplit("[")
 			db_org = db_org[1].split(" ")
@@ -175,9 +175,6 @@ for line in db:
 
 		db_org = re.sub('[^a-zA-Z0-9-_*. ]', '', db_org)
 
-		# if db_org == "theta CCMP2712":
-		# 	print line + "\t" + db_org
-
 		# add to dictionaries
 		if "-F" in sys.argv:
 			db_func_dictionary[db_id] = db_entry
@@ -190,17 +187,17 @@ for line in db:
 		# line counter to show progress
 		if db_line_counter % 1000000 == 0:							# each million
 			t95 = time.clock()
-			print str(db_line_counter)[:-6] + "M lines processed so far in " + str(t95-t2) + " seconds."
+			print (str(db_line_counter)[:-6] + "M lines processed so far in " + str(t95-t2) + " seconds.")
 
 db.close()
 t3 = time.clock()
 
-print "Database read successfully.\n"
-print "Time elapsed: " + str(t3-t2) + " seconds."
-print "Number of lines: " + str(db_line_counter)
-print "Number of errors: " + str(db_error_counter)
+print ("Database read successfully.\n")
+print ("Time elapsed: " + str(t3-t2) + " seconds.")
+print ("Number of lines: " + str(db_line_counter))
+print ("Number of errors: " + str(db_error_counter))
 if "-SO" in sys.argv:
-	print "Number of unique entries for specific organism: " + str(len(db_SO_dictionary.keys()))
+	print ("Number of unique entries for specific organism: " + str(len(db_SO_dictionary.keys())))
 
 # condensing down the identical matches
 condensed_RefSeq_hit_db = {}
@@ -216,7 +213,7 @@ for entry in RefSeq_hit_count_db.keys():
 		else:
 			condensed_RefSeq_hit_db[org] = RefSeq_hit_count_db[entry]
 	except KeyError:
-		print "KeyError:\t" + entry
+		print ("KeyError:\t" + entry)
 		continue
 
 if "-SO" in sys.argv:
@@ -233,9 +230,9 @@ if "-SO" in sys.argv:
 			continue
 
 # dictionary output and summary
-print "\nDictionary database assembled."
-print "Time elapsed: " + str(t3-t2) + " seconds."
-print "Number of errors: " + str(db_error_counter)
+print ("\nDictionary database assembled.")
+print ("Time elapsed: " + str(t3-t2) + " seconds.")
+print ("Number of errors: " + str(db_error_counter))
 
 # if "-O" in sys.argv:
 # 	print "\nTop ten organism matches:"
@@ -258,7 +255,7 @@ outfile = open (outfile_name, "w")
 
 # writing the output
 error_counter = 0
-for k, v in sorted(condensed_RefSeq_hit_db.items(), key=lambda (k,v): -v):
+for k, v in sorted(condensed_RefSeq_hit_db.items(), key=lambda k,v: -v):
 	try:
 		q = v * 100 / float(line_counter)
 		outfile.write (str(q) + "\t" + str(v) + "\t" + k + "\n")
@@ -268,13 +265,13 @@ for k, v in sorted(condensed_RefSeq_hit_db.items(), key=lambda (k,v): -v):
 		continue
 outfile.close()
 
-print "\nAnnotations saved to file: '" + outfile_name + "'."
-print "Number of errors: " + str(error_counter)
+print ("\nAnnotations saved to file: '" + outfile_name + "'.")
+print ("Number of errors: " + str(error_counter))
 
 # writing the output if optional specific organism flag is active
 if "-SO" in sys.argv:
 	target_org_outfile = open(infile_name[:-3] + "_" + target_org + ".tsv", "w")
-	for k, v in sorted(condensed_RefSeq_SO_hit_db.items(), key=lambda (k,v): -v):
+	for k, v in sorted(condensed_RefSeq_SO_hit_db.items(), key=lambda k,v: -v):
 		try:
 			q = v * 100 / float(line_counter)
 			target_org_outfile.write (str(q) + "\t" + str(v) + "\t" + k + "\n")
@@ -282,5 +279,5 @@ if "-SO" in sys.argv:
 			target_org_outfile.write (str(q) + "\t" + str(v) + "\tWARNING: Key not found for " + k + "\n")
 			error_counter += 1
 			continue
-	print "Specific organism annotations saved to file: " + infile_name[:-3] + "_" + target_org + ".tsv"
+	print ("Specific organism annotations saved to file: " + infile_name[:-3] + "_" + target_org + ".tsv")
 	target_org_outfile.close()

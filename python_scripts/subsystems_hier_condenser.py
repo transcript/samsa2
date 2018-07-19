@@ -26,9 +26,9 @@
 # (in BLAST m8 format) to get the results into something more compressed
 # and readable, against the SUBSYSTEMS database.
 #
-# Usage: 
+# Usage:
 #
-# -I		infile			specifies the infile (a DIAMOND results file 
+# -I		infile			specifies the infile (a DIAMOND results file
 #								in m8 format)
 # -H		hierarcy level	level of output requested (3, 2, or 1)
 #
@@ -72,7 +72,7 @@ for line in infile:
 	if "NO HIERARCHY" in line:
 		continue
 
-	# hierarchy level 1 - most broad	
+	# hierarchy level 1 - most broad
 	elif int(hier_lvl) == 1:
 		try:
 			hier_count_dic[splitline[5]] += int(splitline[1])
@@ -103,17 +103,16 @@ infile.close()
 
 # outfile time
 outfile = open(infile_name + ".level_" + hier_lvl, "w")
-for key, value in sorted(hier_count_dic.items(), key=lambda(key, value): -value):
+for key, value in sorted(hier_count_dic.items(), key=lambda key,value: -value):
 	outfile.write(str(hier_percent_dic[key]) + "\t" + str(value) + "\t" + key + "\n")
-	
-print "Converted data saved in " + infile_name + ".level_" + hier_lvl
+
+print ("Converted data saved in " + infile_name + ".level_" + hier_lvl)
 outfile.close()
 
-print "\nTop ten hierarchy matches at new level:"
-for k, v in sorted(hier_count_dic.items(), key=lambda (k,v): -v)[:10]:
+print ("\nTop ten hierarchy matches at new level:")
+for k, v in sorted(hier_count_dic.items(), key=lambda k,v: -v)[:10]:
 	try:
 		print (str(v) + "\t" + k )
 	except KeyError:
 		print (str(v) + "\tWARNING: Key not found for " + k)
 		continue
-	

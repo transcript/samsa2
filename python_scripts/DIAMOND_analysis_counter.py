@@ -78,14 +78,14 @@ unique_seq_db = {}
 line_counter = 0
 
 # reading through the infile - the DIAMOND results m8 format
-print "\nNow reading through the m8 results infile."
+print ("\nNow reading through the m8 results infile.")
 
 for line in infile:
 	line_counter += 1
 	splitline = line.split("\t")
 	if line_counter % 1000000 == 0:
 		t99 = time.clock()
-		print str(line_counter)[:-6] + "M lines processed so far in " + str(t99-t0) + " seconds."
+		print (str(line_counter)[:-6] + "M lines processed so far in " + str(t99-t0) + " seconds.")
 
 	unique_seq_db[splitline[0]] = 1
 
@@ -97,17 +97,17 @@ for line in infile:
 
 t1 = time.clock()
 
-print "\nAnalysis of " + infile_name + " complete."
-print "Number of total lines: " + str(line_counter)
-print "Number of unique sequences: " + str(len(unique_seq_db))
-print "Time elapsed: " + str(t1-t0) + " seconds."
+print ("\nAnalysis of " + infile_name + " complete.")
+print ("Number of total lines: " + str(line_counter))
+print ("Number of unique sequences: " + str(len(unique_seq_db)))
+print ("Time elapsed: " + str(t1-t0) + " seconds.")
 
 infile.close()
 
 # time to search for these in the reference database
 db = open (db_name, "r")
 
-print "\nStarting database analysis now."
+print ("\nStarting database analysis now.")
 
 t2 = time.clock()
 
@@ -154,8 +154,8 @@ for line in db:
 						if db_org[0].isdigit():
 							split_db_org = db_org.split()
 							db_org = split_db_org[1] + " " + split_db_org[2]
-						print line
-						print db_org
+						print (line)
+						print (db_org)
 		else:
 			db_org = line.split("[", 1)
 			db_org = db_org[1].split()
@@ -180,14 +180,14 @@ for line in db:
 		# line counter to show progress
 		if db_line_counter % 1000000 == 0:							# each million
 			t95 = time.clock()
-			print str(db_line_counter)[:-6] + "M lines processed so far in " + str(t95-t2) + " seconds."
+			print (str(db_line_counter)[:-6] + "M lines processed so far in " + str(t95-t2) + " seconds.")
 
 t3 = time.clock()
 
-print "\nSuccess!"
-print "Time elapsed: " + str(t3-t2) + " seconds."
-print "Number of lines: " + str(db_line_counter)
-print "Number of errors: " + str(db_error_counter)
+print ("\nSuccess!")
+print ("Time elapsed: " + str(t3-t2) + " seconds.")
+print ("Number of lines: " + str(db_line_counter))
+print ("Number of errors: " + str(db_error_counter))
 
 # condensing down the identical matches
 condensed_RefSeq_hit_db = {}
@@ -203,7 +203,7 @@ for entry in RefSeq_hit_count_db.keys():
 		else:
 			condensed_RefSeq_hit_db[org] = RefSeq_hit_count_db[entry]
 	except KeyError:
-		print "KeyError:\t" + entry
+		print ("KeyError:\t" + entry)
 		continue
 
 if "-SO" in sys.argv:
@@ -219,15 +219,15 @@ if "-SO" in sys.argv:
 
 
 # dictionary output and summary
-print "\nDictionary database assembled."
-print "Time elapsed: " + str(t3-t2) + " seconds."
-print "Number of errors: " + str(db_error_counter)
+print ("\nDictionary database assembled.")
+print ("Time elapsed: " + str(t3-t2) + " seconds.")
+print ("Number of errors: " + str(db_error_counter))
 
 if "-O" in sys.argv:
-	print "\nTop ten organism matches:"
+	print ("\nTop ten organism matches:")
 if "-F" in sys.argv:
-	print "\nTop ten function matches:"
-for k, v in sorted(condensed_RefSeq_hit_db.items(), key=lambda (k,v): -v)[:10]:
+	print ("\nTop ten function matches:")
+for k, v in sorted(condensed_RefSeq_hit_db.items(), key=lambda k,v: -v)[:10]:
 	try:
 		print (str(v) + "\t" + k )
 	except KeyError:
@@ -246,7 +246,7 @@ outfile = open (outfile_name, "w")
 
 # writing the output
 error_counter = 0
-for k, v in sorted(condensed_RefSeq_hit_db.items(), key=lambda (k,v): -v):
+for k, v in sorted(condensed_RefSeq_hit_db.items(), key=lambda k,v: -v):
 	try:
 		q = v * 100 / float(line_counter)
 		outfile.write (str(q) + "\t" + str(v) + "\t" + k + "\n")
@@ -266,8 +266,8 @@ if "-SO" in sys.argv:
 			error_counter += 1
 			continue
 
-print "\nAnnotations saved to file: '" + outfile_name + "'."
-print "Number of errors: " + str(error_counter)
+print ("\nAnnotations saved to file: '" + outfile_name + "'.")
+print ("Number of errors: " + str(error_counter))
 
 db.close()
 outfile.close()

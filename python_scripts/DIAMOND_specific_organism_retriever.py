@@ -23,14 +23,14 @@
 # Created 1/30/17, this version updated 5/22/17
 # Sam Westreich, stwestreich@ucdavis.edu, github.com/transcript
 #
-# Purpose: This takes a DIAMOND outfile and the RefSeq database and pulls 
-# out hits to any specific organism, identifying the raw input reads that 
+# Purpose: This takes a DIAMOND outfile and the RefSeq database and pulls
+# out hits to any specific organism, identifying the raw input reads that
 # were mapped to that organism.
 
 # Usage:
 #
 # -I		infile				specifies the infile (a DIAMOND results file
-#									in m8 format)	
+#									in m8 format)
 # -SO		specific target 	the organism search term, either genus or
 #									species.
 # -D		database file		specifies a reference database to search
@@ -66,7 +66,7 @@ if "-SO" in sys.argv:
 			second_elem = sys.argv[(idx + 2) % len(sys.argv)]
 			if elem == "-SO":
 				 target_org = next_elem + " " + second_elem
-	
+
 	if "-O" in sys.argv:
 		target_org_outfile = open(string_find("-O"), "w")
 	else:
@@ -94,25 +94,25 @@ for line in db:
 		# line counter to show progress
 		if db_line_counter % 1000000 == 0:							# each million
 			t95 = time.clock()
-			print str(db_line_counter) + " lines processed so far in " + str(t95-t0) + " seconds."
+			print (str(db_line_counter) + " lines processed so far in " + str(t95-t0) + " seconds.")
 
 		if target_org not in line:
 			continue
 		else:
 			splitline = line.split("  ")
-			
+
 			# ID, the hit returned in DIAMOND results
 			db_id = str(splitline[0])[1:]
-			
+
 			# name and functional description
 			db_entry = line.split("[", 1)
 			db_entry = db_entry[0].split(" ", 1)
 			db_entry = db_entry[1][1:-1]
-			
+
 			# organism name
 			if line.count("[") != 1:
 				splitline = line.split("[")
-	
+
 				db_org = splitline[line.count("[")].strip()[:-1]
 				if db_org[0].isdigit():
 					split_db_org = db_org.split()
@@ -127,7 +127,7 @@ for line in db:
 								split_db_org = db_org.split()
 								db_org = split_db_org[1] + " " + split_db_org[2]
 
-			else:	
+			else:
 				db_org = line.split("[", 1)
 				db_org = db_org[1].split()
 				try:
@@ -136,15 +136,15 @@ for line in db:
 					db_org = line.strip().split("[", 1)
 					db_org = db_org[1][:-1]
 					db_error_counter += 1
-			
+
 			db_org = re.sub('[^a-zA-Z0-9-_*. ]', '', db_org)
-	
-			# add to dictionaries		
+
+			# add to dictionaries
 			db_org_dictionary[db_id] = db_org
-		
+
 db.close()
-print "Database is read and set up, moving on to the infile..."
-			
+print ("Database is read and set up, moving on to the infile...")
+
 infile = open (infile_name, "r")
 
 # setting up databases
@@ -165,16 +165,16 @@ for line in infile:
 			hit_counter += 1
 	except KeyError:
 		continue
-		
+
 	if line_counter % 1000000 == 0:
 		t99 = time.clock()
-		print str(line_counter)[:-6] + "M lines processed so far in " + str(t99-t1) + " seconds."
+		print (str(line_counter)[:-6] + "M lines processed so far in " + str(t99-t1) + " seconds.")
 
 # results stats
-t100 = time.clock()		
-print "Run complete!"
-print "Number of sequences found matching target organism, " + target_org + ": " + str(hit_counter)
-print "Time elapsed: " + str(t100-t0) + " seconds."
+t100 = time.clock()
+print ("Run complete!")
+print ("Number of sequences found matching target organism, " + target_org + ": " + str(hit_counter))
+print ("Time elapsed: " + str(t100-t0) + " seconds.")
 
 infile.close()
 target_org_outfile.close()
