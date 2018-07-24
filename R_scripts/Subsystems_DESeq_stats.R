@@ -133,9 +133,9 @@ exp_table[,c(2:(length(exp_files)+1))] <- exp_data
 
 # Some level 1 entries are blank; this bit repopulates them from level 2.
 control_table$Level1 <- ifelse(control_table$Level1 == "", as.character(control_table$Level2), 
-                               as.character(control_table$Level1))
+  as.character(control_table$Level1))
 exp_table$Level1 <- ifelse(exp_table$Level1 == "", as.character(exp_table$Level2), 
-                               as.character(exp_table$Level1))
+  as.character(exp_table$Level1))
 
 # At this point, the whole table is read in.  Next step (for statistical comparison) is to 
 # get just the level we want to compare.
@@ -175,14 +175,15 @@ colnames(l1_exp_table) <- c(exp_names_trimmed, "Level1")
 l1_control_table <- l1_control_table[, lapply(.SD, sum), by=Level1]
 l1_exp_table <- l1_exp_table[, lapply(.SD, sum), by=Level1]
 l1_table <- merge(l1_control_table, l1_exp_table, by="Level1", all.x = T)
+l1_table$Level1[is.na(l1_table$Level1)] <- ""
 l1_table$Level1 <- sub("^$", "NO HIERARCHY", l1_table$Level1)
 rownames(l1_table) <- l1_table$Level1
 l1_names <- l1_table$Level1
 l1_table$Level1 <- NULL
 l1_table[is.na(l1_table)] <- 0
 
-
 # OPTIONAL: importing the raw counts
+cat ("Now importing raw counts, if provided.\n")
 if (is.null(opt$raw_counts) == FALSE) {
   raw_counts_table <- read.table(counts_file, header=FALSE, sep = "\t", quote = "")
   raw_counts_table <- data.frame(raw_counts_table, 
@@ -204,6 +205,7 @@ if (is.null(opt$raw_counts) == FALSE) {
 }
 
 # now the DESeq stuff
+cat ("Now running DESeq.\n")
 completeCondition <- data.frame(condition=factor(c(rep("control", length(control_files)), 
   rep("experimental", length(exp_files)))))
 dds <- DESeqDataSetFromMatrix(l1_table, completeCondition, ~ condition)
