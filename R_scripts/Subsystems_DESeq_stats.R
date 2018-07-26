@@ -94,7 +94,7 @@ for (x in control_files) {
     control_table <- merge(temp_table, control_table, by = "Level4", all=T)  
   }
 }
-control_table <- control_table[,-ncol(control_table)]
+control_table <- control_table[!is.na(names(control_table))]
 control_table[is.na(control_table)] <- ""
 
 # Need to convert NAs to 0s
@@ -121,7 +121,7 @@ for (x in exp_files) {
     exp_table <- merge(temp_table, exp_table, by = "Level4", all=T)  
   }
 }
-exp_table <- exp_table[,-ncol(exp_table)]
+exp_table <- exp_table[!is.na(names(exp_table))]
 exp_table[is.na(exp_table)] <- ""
 
 # converting NAs to 0s
@@ -177,6 +177,7 @@ l1_exp_table <- l1_exp_table[, lapply(.SD, sum), by=Level1]
 l1_table <- merge(l1_control_table, l1_exp_table, by="Level1", all.x = T)
 l1_table$Level1[is.na(l1_table$Level1)] <- ""
 l1_table$Level1 <- sub("^$", "NO HIERARCHY", l1_table$Level1)
+l1_table <- l1_table[, lapply(.SD, sum), by=Level1]
 rownames(l1_table) <- l1_table$Level1
 l1_names <- l1_table$Level1
 l1_table$Level1 <- NULL
