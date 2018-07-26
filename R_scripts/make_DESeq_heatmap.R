@@ -10,6 +10,8 @@ suppressPackageStartupMessages({
 option_list = list(
   make_option(c("-I", "--input"), type="character", default="./",
               help="Input directory", metavar="character"),
+  make_option(c("-N", "--entryCount"), type="integer", default=50,
+              help="Number of row entries [default= %default]", metavar="character"),
   make_option(c("-O", "--out"), type="character", default="DESeq_heatmap.pdf", 
               help="output file name [default= %default]", metavar="character")
 )
@@ -17,7 +19,7 @@ option_list = list(
 opt_parser = OptionParser(option_list=option_list);
 opt = parse_args(opt_parser);
 
-print("USAGE: $ run_DESeq_stats.R -I working_directory/ -O save.filename -L level (1,2,3,4)")
+print("USAGE: $ make_DESeq_heatmap -I working_directory/ -O save.filename -N number of row entries (50)")
 
 # check for necessary specs
 if (is.null(opt$input)) {
@@ -30,8 +32,7 @@ if (is.null(opt$input)) {
 cat ("Saving results as ", opt$out, "\n")
 save_filename <- opt$out
 
-cat ("Calculating DESeq results for hierarchy level ", opt$level, "\n")
-
+cat ("Loading packages, may take a second...\n")
 # import other necessary packages
 suppressPackageStartupMessages({
   library(DESeq2)
@@ -137,30 +138,26 @@ completeCondition2 <- data.frame(condition=factor(c(
   rep("control", length(control_files)), 
   rep("experimental", length(exp_files)))))
 
+cat ("Calculating DESeq results, may take a second...\n")
 dds <- DESeqDataSetFromMatrix(complete_table, completeCondition2, ~condition)
 
 dds <- DESeq(dds)
+
 transformed_data <- rlog(dds, blind=FALSE)
-complete_array <- data.matrix(complete_table)
+topVarGenes <- head(order(rowVars(assay(transformed_data)), decreasing=T), opt$entryCount)
 
 # making the PCA plot
 
 # calculate euclidean distances from the variance-stabilized data
-dists <- dist(t(assay(transformed_data)))
+matrix <- assay(transformed_data)[ topVarGenes, ]
+matrix <- matrix - rowMeans(matrix)
 
 # Create heatmap of distances
-sampleDistMatrix <- as.matrix( dists )
-rownames(sampleDistMatrix) <- colnames(complete_array)
-colnames(sampleDistMatrix) <- transformed_data$condition
 colors <- colorRampPalette( rev(brewer.pal(9, "Blues")) )(255)
+heatmap <- pheatmap(matrix)
 
 # saving and finishing up
-cat ("Saving PCA plot as ", save_filename, " now.\n")
-pdf(file = save_filename, width=10, height=7)
-pheatmap(sampleDistMatrix,
-         clustering_distance_rows=dists,
-         clustering_distance_cols=dists,
-         show_rownames = TRUE,
-         show_colnames = TRUE,
-         col=colors)
+cat ("Saving heatmap as ", save_filename, " now.\n")
+pdf(file = save_filename, width=7, height=10)
+heatmap
 dev.off()
