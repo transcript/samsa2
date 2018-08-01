@@ -19,7 +19,7 @@
 #
 ##########################################################################
 #
-# DIAMOND_specific_organism_retriever.py
+# DIAMOND_results_filter.py
 # Created 1/30/17, this version updated 5/22/17
 # Sam Westreich, stwestreich@ucdavis.edu, github.com/transcript
 #
@@ -31,8 +31,8 @@
 #
 # -I		infile				specifies the infile (a DIAMOND results file
 #									in m8 format)
-# -SO		specific target 	the organism search term, either genus or
-#									species.
+# -SO		specific target 	the organism search term, either genus,
+#									species, or function.
 # -D		database file		specifies a reference database to search
 #									against for results
 # -O 		outfile name		optional; changes the default outfile name
@@ -40,7 +40,7 @@
 ##########################################################################
 
 # imports
-import sys, time, gzip, re
+import operator, sys, time, gzip, re
 
 # String searching function:
 def string_find(usage_term):
@@ -72,7 +72,7 @@ if "-SO" in sys.argv:
 	else:
 		target_org_outfile = open(infile_name[:-4] + "_" + target_org + ".tsv", "w")
 else:
-	sys.exit("Need to specify target organism with -SO flag.")
+	sys.exit("Need to specify target organism or function to filter by, using -SO flag.")
 
 # loading database file
 if "-D" in sys.argv:
@@ -82,6 +82,7 @@ else:
 
 # Getting the database assembled
 db_org_dictionary = {}
+db_id_dictionary = {}
 db_line_counter = 0
 db_error_counter = 0
 
@@ -99,10 +100,10 @@ for line in db:
 		if target_org not in line:
 			continue
 		else:
-			splitline = line.split(" ")
+			splitline = line.split("  ")
 
 			# ID, the hit returned in DIAMOND results
-			db_id = str(splitline[0])[1:].strip()
+			db_id = str(splitline[0])[1:]
 
 			# name and functional description
 			db_entry = line.split("[", 1)
@@ -131,7 +132,7 @@ for line in db:
 				db_org = line.split("[", 1)
 				db_org = db_org[1].split()
 				try:
-					db_org = str(db_org[0]) + " " + str(db_org[1])
+					db_org = str(db_org[1]) + " " + str(db_org[2])
 				except IndexError:
 					db_org = line.strip().split("[", 1)
 					db_org = db_org[1][:-1]
@@ -141,6 +142,7 @@ for line in db:
 
 			# add to dictionaries
 			db_org_dictionary[db_id] = db_org
+			db_id_dictionary[db_id] = db_entry
 
 db.close()
 print ("Database is read and set up, moving on to the infile...")
@@ -160,9 +162,8 @@ for line in infile:
 	line_counter += 1
 	splitline = line.split("\t")
 	try:
-		if target_org in db_org_dictionary[splitline[1]]:
-			target_org_outfile.write(splitline[0] + "\t" + splitline[1] + "\t" + db_org_dictionary[splitline[1]] + "\n")
-			hit_counter += 1
+		target_org_outfile.write(splitline[0] + "\t" + splitline[1] + "\t" + db_org_dictionary[splitline[1]] + "\t" + db_id_dictionary[splitline[1]] + "\n")
+		hit_counter += 1
 	except KeyError:
 		continue
 
@@ -173,7 +174,7 @@ for line in infile:
 # results stats
 t100 = time.clock()
 print ("Run complete!")
-print ("Number of sequences found matching target organism, " + target_org + ": " + str(hit_counter))
+print ("Number of sequences found matching target query, " + target_org + ":\t" + str(hit_counter))
 print ("Time elapsed: " + str(t100-t0) + " seconds.")
 
 infile.close()
