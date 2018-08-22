@@ -170,7 +170,7 @@ print ("Time elapsed: " + str(t3-t2) + " seconds.")
 print ("Number of errors: " + str(db_error_counter))
 
 print ("\nTop ten hierarchy matches:")
-for k, v in sorted(condensed_hit_db.items(), key=lambda k,v: -v)[:10]:
+for k, v in sorted(condensed_hit_db.items(), key=lambda kv: -kv[1])[:10]:
 	try:
 		print (str(v) + "\t" + k )
 	except KeyError:
@@ -187,7 +187,7 @@ outfile = open (outfile_name, "w")
 
 # writing the output
 error_counter = 0
-for k, v in sorted(condensed_hit_db.items(), key=lambda k,v: -v):
+for k, v in sorted(condensed_hit_db.items(), key=lambda kv: -kv[1]):
 	try:
 		q = v * 100 / float(line_counter)
 		outfile.write (str(q) + "\t" + str(v) + "\t" + k + "\n")

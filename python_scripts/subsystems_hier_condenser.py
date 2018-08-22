@@ -103,14 +103,14 @@ infile.close()
 
 # outfile time
 outfile = open(infile_name + ".level_" + hier_lvl, "w")
-for key, value in sorted(hier_count_dic.items(), key=lambda key,value: -value):
+for key, value in sorted(hier_count_dic.items(), key=lambda keyvalue: -keyvalue[1]):
 	outfile.write(str(hier_percent_dic[key]) + "\t" + str(value) + "\t" + key + "\n")
 
 print ("Converted data saved in " + infile_name + ".level_" + hier_lvl)
 outfile.close()
 
 print ("\nTop ten hierarchy matches at new level:")
-for k, v in sorted(hier_count_dic.items(), key=lambda k,v: -v)[:10]:
+for k, v in sorted(hier_count_dic.items(), key=lambda kv: -kv[1])[:10]:
 	try:
 		print (str(v) + "\t" + k )
 	except KeyError:

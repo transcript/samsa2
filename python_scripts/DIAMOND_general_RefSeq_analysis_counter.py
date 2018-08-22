@@ -234,17 +234,6 @@ print ("\nDictionary database assembled.")
 print ("Time elapsed: " + str(t3-t2) + " seconds.")
 print ("Number of errors: " + str(db_error_counter))
 
-# if "-O" in sys.argv:
-# 	print "\nTop ten organism matches:"
-# if "-F" in sys.argv:
-# 	print "\nTop ten function matches:"
-# for k, v in sorted(condensed_RefSeq_hit_db.items(), key=lambda (k,v): -v)[:10]:
-# 	try:
-# 		print (str(v) + "\t" + k )
-# 	except KeyError:
-# 		print (str(v) + "\tWARNING: Key not found for " + k)
-# 		continue
-
 # creating the outfiles
 if "-O" in sys.argv:
 	outfile_name = infile_name[:-3] + "_organism.tsv"
@@ -255,7 +244,7 @@ outfile = open (outfile_name, "w")
 
 # writing the output
 error_counter = 0
-for k, v in sorted(condensed_RefSeq_hit_db.items(), key=lambda k,v: -v):
+for k, v in sorted(condensed_RefSeq_hit_db.items(), key=lambda kv: -kv[1]):
 	try:
 		q = v * 100 / float(line_counter)
 		outfile.write (str(q) + "\t" + str(v) + "\t" + k + "\n")
@@ -271,7 +260,7 @@ print ("Number of errors: " + str(error_counter))
 # writing the output if optional specific organism flag is active
 if "-SO" in sys.argv:
 	target_org_outfile = open(infile_name[:-3] + "_" + target_org + ".tsv", "w")
-	for k, v in sorted(condensed_RefSeq_SO_hit_db.items(), key=lambda k,v: -v):
+	for k, v in sorted(condensed_RefSeq_SO_hit_db.items(), key=lambda kv: -kv[1]):
 		try:
 			q = v * 100 / float(line_counter)
 			target_org_outfile.write (str(q) + "\t" + str(v) + "\t" + k + "\n")

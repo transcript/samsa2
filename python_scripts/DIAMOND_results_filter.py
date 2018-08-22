@@ -132,7 +132,7 @@ for line in db:
 				db_org = line.split("[", 1)
 				db_org = db_org[1].split()
 				try:
-					db_org = str(db_org[1]) + " " + str(db_org[2])
+					db_org = str(db_org[0]) + " " + str(db_org[1])
 				except IndexError:
 					db_org = line.strip().split("[", 1)
 					db_org = db_org[1][:-1]

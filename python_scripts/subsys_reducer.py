@@ -104,7 +104,7 @@ else:
 outfile = open(outfile_name, "w")
 
 # writing out to outfile
-for k, v in sorted(count_dic.items(), key=lambda k,v: -v):
+for k, v in sorted(count_dic.items(), key=lambda kv: -kv[1]):
 	outfile.write(str(percent_dic[k]) + "\t" + str(count_dic[k]) + "\t" + upper_lvls[k])
 
 outfile.close()
