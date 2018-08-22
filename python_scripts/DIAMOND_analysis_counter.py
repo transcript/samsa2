@@ -160,7 +160,7 @@ for line in db:
 			db_org = line.split("[", 1)
 			db_org = db_org[1].split()
 			try:
-				db_org = str(db_org[1]) + " " + str(db_org[2])
+				db_org = str(db_org[0]) + " " + str(db_org[1])
 			except IndexError:
 				db_org = line.strip().split("[", 1)
 				db_org = db_org[1][:-1]
@@ -187,7 +187,7 @@ t3 = time.clock()
 print ("\nSuccess!")
 print ("Time elapsed: " + str(t3-t2) + " seconds.")
 print ("Number of lines: " + str(db_line_counter))
-print ("Number of errors: " + str(db_error_counter))
+print ("Number of database entries with only genus name (no species): " + str(db_error_counter))
 
 # condensing down the identical matches
 condensed_RefSeq_hit_db = {}
@@ -221,13 +221,13 @@ if "-SO" in sys.argv:
 # dictionary output and summary
 print ("\nDictionary database assembled.")
 print ("Time elapsed: " + str(t3-t2) + " seconds.")
-print ("Number of errors: " + str(db_error_counter))
+print ("Number of errors - IDs not found in reference database: " + str(db_error_counter))
 
 if "-O" in sys.argv:
 	print ("\nTop ten organism matches:")
 if "-F" in sys.argv:
 	print ("\nTop ten function matches:")
-for k, v in sorted(condensed_RefSeq_hit_db.items(), key=lambda k,v: -v)[:10]:
+for k, v in sorted(condensed_RefSeq_hit_db.items(), key=lambda kv: -kv[1])[:10]:
 	try:
 		print (str(v) + "\t" + k )
 	except KeyError:
@@ -246,7 +246,7 @@ outfile = open (outfile_name, "w")
 
 # writing the output
 error_counter = 0
-for k, v in sorted(condensed_RefSeq_hit_db.items(), key=lambda k,v: -v):
+for k, v in sorted(condensed_RefSeq_hit_db.items(), key=lambda kv: -kv[1]):
 	try:
 		q = v * 100 / float(line_counter)
 		outfile.write (str(q) + "\t" + str(v) + "\t" + k + "\n")
@@ -257,7 +257,7 @@ for k, v in sorted(condensed_RefSeq_hit_db.items(), key=lambda k,v: -v):
 
 # writing the output if optional specific organism flag is active
 if "-SO" in sys.argv:
-	for k, v in sorted(condensed_RefSeq_SO_hit_db.items(), key=lambda (k,v): -v):
+	for k, v in sorted(condensed_RefSeq_SO_hit_db.items(), key=lambda kv: -kv[1]):
 		try:
 			q = v * 100 / float(line_counter)
 			target_org_outfile.write (str(q) + "\t" + str(v) + "\t" + k + "\n")
@@ -266,8 +266,8 @@ if "-SO" in sys.argv:
 			error_counter += 1
 			continue
 
-print ("\nAnnotations saved to file: '" + outfile_name + "'.")
-print ("Number of errors: " + str(error_counter))
-
 db.close()
 outfile.close()
+
+print ("\nAnnotations saved to file: '" + outfile_name + "'.")
+print ("Number of errors in writing annotations to outfile: " + str(error_counter))
