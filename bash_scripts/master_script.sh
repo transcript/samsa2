@@ -206,7 +206,7 @@ echo "DIAMOND Subsystems annotations completed at: "; date
 #
 # STEP 5.1: PYTHON SUBSYSTEMS ANALYSIS COUNTER
 
-for file in $STEP_4/*subsys_annotated*
+for file in $STEP_4/*subsys_annotated
 do
     checked python $PY_DIR/DIAMOND_subsystems_analysis_counter.py -I $file \
       -D $Subsys_db -O $file.hierarchy -P $file.receipt
