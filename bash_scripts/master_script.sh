@@ -102,7 +102,7 @@ done
 # Note: if skipping PEAR, make sure that all starting files are in the
 # $STEP_1/ folder!
 
-for file in $STEP_1/*.merged*
+for file in $STEP_1/*.merged.assembled*
 do
     shortname=`echo $file | awk -F "merged" '{print $1 "cleaned.fastq"}'`
     checked java -jar $TRIMMOMATIC SE -phred33 $file $shortname SLIDINGWINDOW:4:15 MINLEN:99
