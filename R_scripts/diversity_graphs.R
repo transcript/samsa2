@@ -38,6 +38,7 @@ suppressPackageStartupMessages({
   library(knitr)
   library(vegan)
   library(gridExtra)
+  library(ggplot2)
 })
 
 # GET FILE NAMES
