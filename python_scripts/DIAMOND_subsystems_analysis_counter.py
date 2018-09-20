@@ -72,7 +72,7 @@ for line in infile:
 	splitline = line.split("\t")
 	if line_counter % 1000000 == 0:
 		t99 = time.clock()
-		print str(line_counter)[:-6] + "M lines processed so far in " + str(t99-t0) + " seconds."
+		print (str(line_counter)[:-6] + "M lines processed so far in " + str(t99-t0) + " seconds.")
 
 	unique_seq_db[splitline[0]] = 1
 
