@@ -37,6 +37,7 @@ cat ("Loading packages, may take a second...\n")
 suppressPackageStartupMessages({
   library(DESeq2)
   library("pheatmap")
+  library(genefilter)
   library(RColorBrewer)
   library(ggplot2)
 })
