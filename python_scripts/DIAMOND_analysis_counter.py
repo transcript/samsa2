@@ -153,8 +153,6 @@ for line in db:
 						if db_org[0].isdigit():
 							split_db_org = db_org.split()
 							db_org = split_db_org[1] + " " + split_db_org[2]
-						# print (line)
-						# print (db_org)
 		else:
 			db_org = line.split("[", 1)
 			db_org = db_org[1].split()

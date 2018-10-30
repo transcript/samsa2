@@ -18,8 +18,8 @@
 # step is set up below.
 #
 # The steps are:
-#   1.   Merging with PEAR, if applicable
-#   2.   Read cleaning with Trimmomatic
+#   1.   Read cleaning with Trimmomatic
+#   2.   Merging with PEAR, if applicable
 #   3.   rRNA removal with SortMeRNA
 #   4.   Annotation using DIAMOND (by default against the RefSeq database)
 #   5.   Aggregation using analysis_counter.py
@@ -73,43 +73,60 @@ fi
 
 ####################################################################
 #
-# STEP 1: MERGING OF PAIRED-END FILES USING PEAR
-# Note: paired-end files are usually named using R1 and R2 in the name.
-#       Example: control_1.R1.fastq
-#                control_1.R2.fastq
-#
-# Note: if using single-end sequencing, skip this step (comment out).
-# Note: if performing R analysis (step 6), be sure to name files with
-#   the appropriate prefix ("control_$file" and "experimental_$file")!
+# STEP 1: CLEANING FILES WITH TRIMMOMATIC
 
-for file in $INPUT_DIR/*.gz
-do
-    gunzip $file
-done
+if ls $INPUT_DIR/*.gz &>/dev/null; then
+  for file in $INPUT_DIR/*.gz
+  do
+      gunzip $file
+    done
+fi
 
 $MKDIR $STEP_1
-for f in $INPUT_DIR/*_R1*
+paired=false
+for f in $INPUT_DIR/*R1*q
 do
     f2=`echo $f | awk -F "R1" '{print $1 "R2" $2}'`
-    out_path=`echo $f | awk -F "_R1" '{print $1 ".merged"}'`
-
-    checked $PEAR -f $f -r $f2 -o $STEP_1/${out_path##*/}
+    out_path=`echo $f | awk -F "_R1" '{print $1 ".cleaned"}'`
+    if [ -f $f2 ]; then
+      paired=true
+      checked java -jar $TRIMMOMATIC PE -phred33 $f $f2 \
+        $out_path".forward" $out_path".forward_unpaired" $out_path".reverse" $out_path".reverse_unpaired" \
+        SLIDINGWINDOW:4:15 MINLEN:70
+    else
+      checked java -jar $TRIMMOMATIC SE -phred33 $f $out_path SLIDINGWINDOW:4:15 MINLEN:70
+    fi
 done
+
+if $paired; then
+  mv $INPUT_DIR/*".cleaned.forward"* $STEP_1
+  mv $INPUT_DIR/*".cleaned.reverse"* $STEP_1
+else
+  mv $INPUT_DIR/*".cleaned" $STEP_1
+fi
 
 ####################################################################
 #
-# STEP 2: CLEANING FILES WITH TRIMMOMATIC
-# Note: if skipping PEAR, make sure that all starting files are in the
-# $STEP_1/ folder!
-
-for file in $STEP_1/*.merged.assembled*
-do
-    shortname=`echo $file | awk -F "merged" '{print $1 "cleaned.fastq"}'`
-    checked java -jar $TRIMMOMATIC SE -phred33 $file $shortname SLIDINGWINDOW:4:15 MINLEN:99
-done
+# STEP 2: MERGING OF PAIRED-END FILES USING PEAR
+# Note: paired-end files are usually named using R1 and R2 in the name.
+#       Example: control_1.R1.fastq
+#                control_1.R2.fastq
 
 $MKDIR $STEP_2
-mv $STEP_1/*cleaned.fastq $STEP_2
+if $paired; then
+  for file in $STEP_1/*.cleaned.forward
+  do
+      f2=`echo $file | awk -F "cleaned.forward" '{print $1 "cleaned.reverse"}'`
+      shortname=`echo $file | awk -F "cleaned.forward" '{print $1 "merged"}'`
+      checked $PEAR -f $file -r $f2 -o $STEP_2/${shortname##*/}
+  done
+else
+  for file in $STEP_1/*.cleaned
+  do
+    new_name=`echo $file | awk -F "cleaned" '{print $1 "merged.assembled.fastq"}'`
+    cp $file $STEP_2/${new_name##*/}
+  done
+fi
 
 ####################################################################
 #
@@ -121,10 +138,17 @@ if [[ -f $STEP_2/raw_counts.txt ]]; then
 fi
 touch $STEP_2/raw_counts.txt
 
-for file in $STEP_2/*.cleaned.fastq
-do
-    checked python $PY_DIR/raw_read_counter.py -I $file -O $STEP_2/raw_counts.txt
-done
+if $paired; then
+  for file in $STEP_1/*cleaned.forward
+  do
+      checked python $PY_DIR/raw_read_counter.py -I $file -O $STEP_2/raw_counts.txt
+  done
+else
+  for file in $STEP_1/*cleaned
+  do
+      checked python $PY_DIR/raw_read_counter.py -I $file -O $STEP_2/raw_counts.txt
+  done
+fi
 
 ####################################################################
 #
@@ -132,9 +156,9 @@ done
 # Note: this step assumes that the SortMeRNA databases are indexed.  If not,
 # do that first (see the SortMeRNA user manual for details).
 
-for file in $STEP_2/*.cleaned.fastq
+for file in $STEP_2/*.assembled.fastq
 do
-    shortname=`echo $file | awk -F "cleaned" '{print $1 "ribodepleted"}'`
+    shortname=`echo $file | awk -F "assembled" '{print $1 "ribodepleted"}'`
     checked $SORTMERNA \
       --ref $SORTMERNA_DIR/rRNA_databases/silva-bac-16s-id90.fasta,$SORTMERNA_DIR/index/silva-bac-16s-db \
       --reads $file --aligned $file.ribosomes --other $shortname --fastx \
