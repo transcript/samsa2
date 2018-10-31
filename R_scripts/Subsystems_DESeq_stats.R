@@ -41,11 +41,13 @@ if (is.null(opt$raw_counts)) {
 }
 
 cat ("Calculating DESeq results for hierarchy level ", opt$level, "\n")
+levelname=paste("Level", opt$level, sep="")
 
 # import other necessary packages
 suppressPackageStartupMessages({
   library(DESeq2)
   library("data.table")
+  library(plyr)
 })
 
 # get list of files
@@ -84,14 +86,32 @@ for (x in control_files) {
   if (y == 1) {
     control_table <- read.table(file = x, header = F, quote = "", sep = "\t", fill = TRUE)
     colnames(control_table) = c("DELETE", x, "Level4", "Level3", "Level1", "Level2")
-    control_table <- control_table[,-1]
-    rownames(control_table) <- control_table$Level4 }
+    if (opt$level == 1) {
+      control_table = control_table[,c(2, 5)]
+    } else if (opt$level == 2) {
+      control_table = control_table[,c(2, 6)]
+    } else if (opt$level == 3) {
+      control_table = control_table[,c(2, 4)]
+    } else {
+      control_table = control_table[,c(2, 3)]
+    }
+    control_table <- ddply(control_table, colnames(control_table)[2], numcolwise(sum))
+    rownames(control_table) <- control_table[,1] }
   if (y > 1) {
     temp_table <- read.table(file = x, header = F, quote = "", sep = "\t", fill = TRUE)
     colnames(temp_table) = c("DELETE", x, "Level4", "Level3", "Level1", "Level2")
-    rownames(temp_table) <- temp_table$Level4
-    temp_table <- temp_table[,c(2,3)]
-    control_table <- merge(temp_table, control_table, by = "Level4", all=T)  
+    if (opt$level == 1) {
+      temp_table = temp_table[,c(2, 5)]
+    } else if (opt$level == 2) {
+      temp_table = temp_table[,c(2, 6)]
+    } else if (opt$level == 3) {
+      temp_table = temp_table[,c(2, 4)]
+    } else {
+      temp_table = temp_table[,c(2, 3)]
+    }
+    temp_table <- ddply(temp_table, colnames(temp_table)[2], numcolwise(sum))
+    rownames(temp_table) <- temp_table[,1]
+    control_table <- merge(temp_table, control_table, by = colnames(temp_table)[1], all=T)
   }
 }
 control_table <- control_table[!is.na(names(control_table))]
@@ -111,14 +131,32 @@ for (x in exp_files) {
   if (y == 1) {
     exp_table <- read.table(file = x, header = F, quote = "", sep = "\t", fill = TRUE)
     colnames(exp_table) = c("DELETE", x, "Level4", "Level3", "Level1", "Level2")
-    exp_table <- exp_table[,-1]
-    rownames(exp_table) <- exp_table$Level4 }
+    if (opt$level == 1) {
+      exp_table = exp_table[,c(2, 5)]
+    } else if (opt$level == 2) {
+      exp_table = exp_table[,c(2, 6)]
+    } else if (opt$level == 3) {
+      exp_table = exp_table[,c(2, 4)]
+    } else {
+      exp_table = exp_table[,c(2, 3)]
+    }
+    exp_table <- ddply(exp_table, colnames(exp_table)[2], numcolwise(sum))
+    rownames(exp_table) <- exp_table[,1] }
   if (y > 1) {
     temp_table <- read.table(file = x, header = F, quote = "", sep = "\t", fill = TRUE)
     colnames(temp_table) = c("DELETE", x, "Level4", "Level3", "Level1", "Level2")
-    rownames(temp_table) <- temp_table$Level4
-    temp_table <- temp_table[,c(2,3)]
-    exp_table <- merge(temp_table, exp_table, by = "Level4", all=T)  
+    if (opt$level == 1) {
+      temp_table = temp_table[,c(2, 5)]
+    } else if (opt$level == 2) {
+      temp_table = temp_table[,c(2, 6)]
+    } else if (opt$level == 3) {
+      temp_table = temp_table[,c(2, 4)]
+    } else {
+      temp_table = temp_table[,c(2, 3)]
+    }
+    temp_table <- ddply(temp_table, colnames(temp_table)[2], numcolwise(sum))
+    rownames(temp_table) <- temp_table[,1]
+    exp_table <- merge(temp_table, exp_table, by = colnames(temp_table)[1], all=T)
   }
 }
 exp_table <- exp_table[!is.na(names(exp_table))]
@@ -131,56 +169,16 @@ exp_data <- as.data.frame(exp_data)
 exp_data[is.na(exp_data)] <- 0
 exp_table[,c(2:(length(exp_files)+1))] <- exp_data
 
-# Some level 1 entries are blank; this bit repopulates them from level 2.
-control_table$Level1 <- ifelse(control_table$Level1 == "", as.character(control_table$Level2), 
-  as.character(control_table$Level1))
-exp_table$Level1 <- ifelse(exp_table$Level1 == "", as.character(exp_table$Level2), 
-  as.character(exp_table$Level1))
-
-# At this point, the whole table is read in.  Next step (for statistical comparison) is to 
-# get just the level we want to compare.
-
-if (opt$level == 1) {
-  l1_control_table <- data.table(control_table[, !names(control_table) %in% c("Level2", "Level3", "Level4")])
-  l1_exp_table <- data.table(exp_table[, !names(exp_table) %in% c("Level2", "Level3", "Level4")])
-}
-if (opt$level == 2) {
-  l1_control_table <- data.table(control_table[, !names(control_table) %in% c("Level1", "Level3", "Level4")])
-  l1_exp_table <- data.table(exp_table[, !names(exp_table) %in% c("Level1", "Level3", "Level4")])
-  names(l1_control_table)[names(l1_control_table) == 'Level2'] <- 'Level1'
-  names(l1_exp_table)[names(l1_exp_table) == 'Level2'] <- 'Level1'
-}
-if (opt$level == 3) {
-  l1_control_table <- data.table(control_table[, !names(control_table) %in% c("Level1", "Level2", "Level4")])
-  l1_exp_table <- data.table(exp_table[, !names(exp_table) %in% c("Level1", "Level2", "Level4")])
-  names(l1_control_table)[names(l1_control_table) == 'Level3'] <- 'Level1'
-  names(l1_exp_table)[names(l1_exp_table) == 'Level3'] <- 'Level1'
-}
-if (opt$level == 4) {
-  l1_control_table <- data.table(control_table[, !names(control_table) %in% c("Level1", "Level3", "Level2")])
-  l1_exp_table <- data.table(exp_table[, !names(exp_table) %in% c("Level1", "Level3", "Level2")])
-  names(l1_control_table)[names(l1_control_table) == 'Level4'] <- 'Level1'
-  names(l1_exp_table)[names(l1_exp_table) == 'Level4'] <- 'Level1'
-  l1_control_table <- data.table(as.data.frame(l1_control_table)[,c(2:(ncol(l1_control_table)),1)])
-  l1_exp_table <- data.table(as.data.frame(l1_exp_table)[,c(2:(ncol(l1_exp_table)),1)])
-}
-
-# remove blank spots (no hierarchy)
-#l1_control_table <- l1_control_table[-which(l1_control_table$Level1 == ""), ]
-#l1_exp_table <- l1_exp_table[-which(l1_exp_table$Level1 == ""), ]
-
 # reducing stuff down to avoid duplicates
-colnames(l1_control_table) <- c(control_names_trimmed, "Level1")
-colnames(l1_exp_table) <- c(exp_names_trimmed, "Level1")
-l1_control_table <- l1_control_table[, lapply(.SD, sum), by=Level1]
-l1_exp_table <- l1_exp_table[, lapply(.SD, sum), by=Level1]
-l1_table <- merge(l1_control_table, l1_exp_table, by="Level1", all.x = T)
-l1_table$Level1[is.na(l1_table$Level1)] <- ""
-l1_table$Level1 <- sub("^$", "NO HIERARCHY", l1_table$Level1)
-l1_table <- l1_table[, lapply(.SD, sum), by=Level1]
-rownames(l1_table) <- l1_table$Level1
-l1_names <- l1_table$Level1
-l1_table$Level1 <- NULL
+colnames(control_table) <- c(colnames(control_table)[1], control_names_trimmed)
+colnames(exp_table) <- c(colnames(exp_table)[1], exp_names_trimmed)
+l1_table <- merge(control_table, exp_table, by=colnames(exp_table)[1], all.x = T)
+l1_table[,levelname][is.na(l1_table[,levelname])] <- ""
+l1_table[,levelname] <- sub("^$", "NO HIERARCHY", l1_table[,levelname])
+l1_table <- ddply(l1_table, colnames(l1_table)[1], numcolwise(sum))
+rownames(l1_table) <- l1_table[,levelname]
+l1_names <- l1_table[,levelname]
+l1_table[,levelname] <- NULL
 l1_table[is.na(l1_table)] <- 0
 
 # OPTIONAL: importing the raw counts
