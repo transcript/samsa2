@@ -21,7 +21,7 @@ option_list = list(
 opt_parser = OptionParser(option_list=option_list);
 opt = parse_args(opt_parser);
 
-print("USAGE: $ run_DESeq_stats.R -I working_directory/ -O save.filename -L level (1,2,3,4)")
+print("USAGE: $ Subsystems_DESeq_stats.R -I input_directory/ -O save.filename -L level (1,2,3,4) [-R raw_counts_file]")
 
 # check for necessary specs
 if (is.null(opt$input)) {
