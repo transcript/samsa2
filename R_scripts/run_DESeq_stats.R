@@ -109,11 +109,10 @@ colnames(exp_table_trimmed) = exp_names_trimmed
 # merging the two tables
 complete_table <- merge(control_table_trimmed, exp_table_trimmed, by=0, all = TRUE)
 complete_table[is.na(complete_table)] <- 0
+# reducing stuff down to avoid duplicates
+complete_table <- aggregate(. ~  Row.names, data = complete_table, sum)
 rownames(complete_table) <- complete_table$Row.names
 complete_table <- complete_table[!(complete_table$Row.names == ""), ]
-# reducing stuff down to avoid duplicates
-complete_table <- complete_table[, lapply(.SD, sum), by=complete_table$Row.names]
-complete_table <- aggregate(. ~  Row.names, data = complete_table, sum)
 # removing extra Row.names column
 complete_table <- complete_table[,-1]
 
