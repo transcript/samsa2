@@ -1,5 +1,27 @@
 # SAMSA2 - A fork of the complete metatranscriptome analysis pipeline
 
+### modification by sebastien.renaut@gmail.com
+
+### New in my version. 
+There is a new master script (master_samsa2.slurm) with several modifications:
+
+* It specifies multithreading for all programs for which it is available (trimmomatic, pear, diamond)
+* The script annomatically creates a checkpoint file. Once a step is finished, it writes the name of that specific step in the file. When you run the script again, it will SKIP the steps labelled in checkpoint.
+* In the merging step, unmerged reads are concatenated and added to a single file. The forward read and the reverse (complement) read are concatenated with a string of 20 Ns in the middle: This is done through a new R script entitled: `combining_umerged.R`
+* Extra care is taken to remove unnecessary files once a step is performed to keep disk usage at a minimum.
+* Each step contains an exit statement to be printed if the master script dies.
+* Trimommatic removes adapter contamination according to a specific file
+* All options are to be specified in the first section of the script
+* The script is formated to be run into a SLURM job scheduler, but this can be easily changed / removed.
+
+
+#### To do:
+* reverse the order of the merging and trimming step.
+* simplify some syntax / make sure all paths are relative...
+
+
+
+
 Version 2 of the SAMSA pipeline - faster!  Lighter!  More options!  Less waiting!  
 
 ### New in version 2:
