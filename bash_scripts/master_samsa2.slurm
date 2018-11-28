@@ -25,14 +25,16 @@ module load r/3.5.0
 # step is set up below.
 #
 # The steps are:
-#	1.   Merging with PEAR, if applicable
-#	2.   Read cleaning with Trimmomatic
-#	3.   rRNA removal with SortMeRNA
-#	4.   Annotation using DIAMOND (by default against the RefSeq database)
-#	5.   Aggregation using analysis_counter.py
-#   4.1  Annotation using DIAMOND against the Subsystems database
-#   5.1  Aggregation using Subsystems-specific analysis counter.py
-#	6.	 Running R scripts to get DESeq statistical analysis.
+#	0.1	Create the checkpoint
+#	0.2	Gunzip the raw sequences
+#	1.	Merging with PEAR, if applicable
+#	2.	Read cleaning with Trimmomatic
+#	3.	rRNA removal with SortMeRNA
+#	4.	Annotation using DIAMOND against Subsys database
+#	5.	Aggregation using analysis_counter.py (Subsys)
+#   	4.1  	Annotation using DIAMOND against Refseq database
+#   	5.1	Aggregation using analysis_counter.py (Refseq)
+#	6.	Running R scripts to get DESeq statistical analysis. (NOT RUN)
 #
 # NOTE: BEFORE running this script, please run package_installation.bash
 # and full_database_download.bash located at:
@@ -48,14 +50,14 @@ echo -e "NOTE: Before running this script, user must run package_installation.ba
 # 	0. Set starting location:
 starting_location=/home/renaut/scratch/ATRAPP_Champlain_2016_Metat/metagenome_St2
 
-#	0.5 Sequences location:
+#	0.5 Sequences location (note that sequences actually need to be stored in directory called $sequence_location/hiseq_raw
 sequence_location=/home/renaut/scratch/ATRAPP_Champlain_2016_Metat/sequences/metagenome/St2
 
 #	1. PEAR
 pear_location=/home/renaut/bin
 
 # 	2. Trimmomatic
-trimmomatic_location=/home/renaut/bin
+trimmomatic_location=/home/renaut/trinityrnaseq-Trinity-v2.8.4/trinity-plugins/Trimmomatic-0.36
 
 #	3. SortMeRNA
 sortmerna_location=/home/renaut/bin
@@ -66,19 +68,19 @@ diamond_subsys_db="/home/renaut/scratch/blast_database/subsys/subsys_db"
 diamond_location=/home/renaut/bin
 
 #	5. Aggregation
-python_programs=/home/renaut/samsa2/python_scripts
+python_programs=/home/renaut/samsa2.master/samsa2/python_scripts
 RefSeq_db="/home/renaut/scratch/blast_database/refseq/RefSeq_bac.fa"
 Subsys_db="/home/renaut/scratch/blast_database/subsys/subsys_db.fa"
 
 #	6. R scripts and paths
-export R_LIBS="/home/renaut/samsa2/R_scripts/packages"
-R_programs=/home/renaut/samsa2/R_scripts
+export R_LIBS="/home/renaut/samsa2.master/samsa2/R_scripts/packages"
+R_programs=/home/renaut/samsa2.master/samsa2/R_scripts
 
 #	threads
 threads="48"
 
 ##################
-#Step0.1: create/read checkpoint
+#STEP 0.1: create/read checkpoint
 cd $starting_location
 
 printf "\nStep 0.1: Checking for the presence of the checkpoint file\n"
@@ -92,7 +94,7 @@ fi
 
 ####################################################################
 #
-#STEP 0.1: GUNZIP PROCESS. 
+#STEP 0.2: GUNZIP PROCESS. 
 #
 #
 Step=$(grep "GUNZIP" pipeline/checkpoints)
@@ -109,6 +111,8 @@ if [ "${Step}" != "GUNZIP" ]
                                 	exit 1
                 		fi
 			done
+		
+		mkdir $sequence_location/hiseq_unzip
 		mv $sequence_location/hiseq_raw/*fastq $sequence_location/hiseq_unzip/.
 		printf "GUNZIP\n" >>pipeline/checkpoints
                 echo "STEP 0.1 DONE:GUNZIP OF PAIRED-END FILES USING GUNZIP"
@@ -142,7 +146,6 @@ if [ "${Step}" != "MERGING" ]
 			out_path=`echo $file | awk -F "R1" '{print $1 "merged"}'`
 			out_name=`echo ${out_path##*/}`
 			$pear_location/pear -f $file1 -j $threads -r $file2 -o $out_name 1>>$starting_location/step_1_merging/pear_log
-			#FOR ATRAPP, GIVEN THAT IT APPEARS LIKE 50-60% ARE MERGED, AND I HAVE A LOT OF SEQUENCES, I WILL ONLY KEEP THE MERGED		
 		
 			if [ $? -ne 0 ]
                         	then
@@ -150,9 +153,10 @@ if [ "${Step}" != "MERGING" ]
                                 	exit 1
                 	fi
 		done
-		 #FOR ATRAPP, I WILL NOW MERGE:I will merge the umerged leaving 20 N's in between.
-	
-		combining_umerged.R $starting_location
+		
+		###I will concatenate forward and reverse complement with 20Ns in the middle.
+		$R_programs/combining_umerged.R $starting_location
+		
 		printf "MERGING\n" >>pipeline/checkpoints
 		mkdir $starting_location/step_1_merging/
 		mv $starting_location/*assembled2.fastq $starting_location/step_1_merging/
@@ -181,7 +185,7 @@ if [ "${Step}" != "TRIMMING" ]
 		do
 		shortname=`echo $file | awk -F "assembled2.fastq" '{print $1 "cleaned.fastq"}'`
 
-		java -jar $trimmomatic_location/trimmomatic-0.36.jar SE -threads $threads -phred33 $file $shortname ILLUMINACLIP:/home/renaut/trinityrnaseq-Trinity-v2.8.4/trinity-plugins/Trimmomatic-0.36/adapters/all_primers.fa:2:30:10 SLIDINGWINDOW:4:15 MINLEN:59 2>>$starting_location/step_2_trimming/trimmomatic_log
+		java -jar $trimmomatic_location/trimmomatic-0.36.jar SE -threads $threads -phred33 $file $shortname ILLUMINACLIP:$trimmomatic_location/adapters/all_primers.fa:2:30:10 SLIDINGWINDOW:4:15 MINLEN:59 2>>$starting_location/step_2_trimming/trimmomatic_log
 		if [ $? -ne 0 ]
 			then 
 				printf "\t!!! There is a problem in the trimmmomatic step"
