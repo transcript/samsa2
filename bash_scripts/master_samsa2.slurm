@@ -254,7 +254,7 @@ if [ "${Step}" != "RIBODEPLETION" ]
 		for file in $starting_location/step_2_trimming/*cleaned.fastq
 		do
 			shortname=`echo $file | awk -F "cleaned" '{print $1 "ribodepleted"}'`
-			$sortmerna_location/sortmerna -a $threads --ref $sortmerna_location/../sortmerna-2.1/rRNA_databases/silva-bac-16s-id90.fasta,$sortmerna_location/../sortmerna-2.1/index/silva-bac-16s --reads $file --aligned $file.ribosomes --other $shortname --fastx --num_alignments 0 --log -v 1>>$starting_location/step_3_ribodepletion/sortmerna_log
+			$sortmerna_location/sortmerna -a $threads --ref $sortmerna_location/../sortmerna-2.1/rRNA_databases/silva-bac-16s-id90.fasta,$sortmerna_location/../sortmerna-2.1/index/silva-bac-16s --reads $file --aligned $file.ribosomes --other $shortname --fastx --log -v 1>>$starting_location/step_3_ribodepletion/sortmerna_log
 		if [ $? -ne 0 ]
 			then 
 				printf "\t!!! There is a problem in the sortmerna step"

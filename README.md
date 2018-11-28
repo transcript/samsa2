@@ -13,10 +13,10 @@ There is a new master script (master_samsa2.slurm) with several modifications:
 * Trimommatic removes adapter contamination according to a specific file
 * All options are to be specified in the first section of the script
 * The script is formated to be run into a SLURM job scheduler, but this can be easily changed / removed.
-
+* I've removed the --num_alignments 0 is sortmrna. This causes problems and slows things down a lot. Plus we don't care about the rRNA alignments. If a sequence aligns to one or 1,000 rRNA its out anyways...
 
 #### To do:
-* reverse the order of the merging and trimming step.
+* reverse the order of the merging and trimming step (but again, maybe not...)
 * simplify some syntax / make sure all paths are relative...
 
 
