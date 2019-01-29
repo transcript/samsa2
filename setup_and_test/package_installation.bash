@@ -63,6 +63,7 @@ bash ./build.sh
 echo "SortMeRNA extraction finished at: "; date
 
 # Index silva-bac-16s-id90.fasta for sortmerna use:
+echo "Indexing the SILVA rRNA database for SortMeRNA; feel free to abort at this step if this isn't needed."
 $SORTMERNA_DIR/indexdb_rna --ref $SORTMERNA_DIR/rRNA_databases/silva-bac-16s-id90.fasta,$SORTMERNA_DIR/index/silva-bac-16s-db
 
 echo "Finished extracting and installing all SAMSA2 package dependencies at: "; date
