@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #SBATCH --time=0-23:59
-#SBATCH --mem=100000
+#SBATCH --mem=100G
 #SBATCH --account=def-bruneaua
 #SBATCH --nodes=1
 #SBATCH --ntasks-per-node=48
@@ -48,10 +48,10 @@ echo -e "NOTE: Before running this script, user must run package_installation.ba
 # VARIABLES - Set pathway for starting_location to location of samsa2 GitHub download
 #
 # 	0. Set starting location:
-starting_location=/home/renaut/scratch/ATRAPP_Champlain_2016_Metat/metagenome_St2
+starting_location=/home/renaut/scratch/ATRAPP/Metagenomic_Champlain_long_term/St1
 
-#	0.5 Sequences location (note that sequences actually need to be stored in directory called $sequence_location/hiseq_raw
-sequence_location=/home/renaut/scratch/ATRAPP_Champlain_2016_Metat/sequences/metagenome/St2
+#	0.5 Sequences location (note that sequences actually need to be stored in directory called $sequence_location/zipped
+sequence_location=/home/renaut/scratch/ATRAPP/sequences/Metagenomic_Champlain_long_term/St1
 
 #	1. PEAR
 pear_location=/home/renaut/bin
@@ -100,7 +100,7 @@ fi
 Step=$(grep "GUNZIP" pipeline/checkpoints)
 if [ "${Step}" != "GUNZIP" ]
 	then
-		for file in $sequence_location/hiseq_raw/*gz
+		for file in $sequence_location/zipped/*gz
 			do
 				file_out=`echo $file | awk -F ".gz" '{print $1}'`	
         			gunzip $file -cd >$file_out
@@ -112,8 +112,8 @@ if [ "${Step}" != "GUNZIP" ]
                 		fi
 			done
 		
-		mkdir $sequence_location/hiseq_unzip
-		mv $sequence_location/hiseq_raw/*fastq $sequence_location/hiseq_unzip/.
+		mkdir $sequence_location/unzipped
+		mv $sequence_location/zipped/*fastq $sequence_location/unzipped/.
 		printf "GUNZIP\n" >>pipeline/checkpoints
                 echo "STEP 0.1 DONE:GUNZIP OF PAIRED-END FILES USING GUNZIP"
                 date
@@ -139,7 +139,7 @@ if [ "${Step}" != "MERGING" ]
 	then
 		mkdir $starting_location/step_1_merging
 		touch $starting_location/step_1_merging/pear_log
-		for file in $sequence_location/hiseq_unzip/*_R1.fastq
+		for file in $sequence_location/unzipped/*_R1.fastq
 		do
 			file1=$file
 			file2=`echo $file1 | awk -F "R1" '{print $1 "R2" $2}'`
@@ -162,7 +162,7 @@ if [ "${Step}" != "MERGING" ]
 		mv $starting_location/*assembled2.fastq $starting_location/step_1_merging/
 		
 		rm $starting_location/*fastq
-		rm $sequence_location/hiseq_unzip/*fastq
+		rm $sequence_location/unzipped/*fastq
 
 		echo "STEP 1 DONE:MERGING OF PAIRED-END FILES USING PEAR"
 		date        

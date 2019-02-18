@@ -1,3 +1,8 @@
+# my files
+bash_scripts/master_samsa2.slurm
+bash_scripts/cyanotoxin_master_samsa2.slurm
+R_scripts/combining_umerged.R
+
 # Swap files
 *.swp
 *.swo
