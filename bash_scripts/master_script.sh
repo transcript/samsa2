@@ -72,8 +72,26 @@ else
 fi
 
 ####################################################################
+#STEP 0.1: create/read checkpoint
+
+printf "\nStep 0.1: Checking for the presence of the checkpoint file\n"
+if [ ! -f "$INPUT_DIR/checkpoints" ]
+        then
+                printf "\tThe file checkpoints does not exist, we will create it.\n"
+        touch "$INPUT_DIR/checkpoints"
+else
+        printf "\tThe file checkpoints already exist\n"
+fi
+
+####################################################################
+
+
 #
 # STEP 1: CLEANING FILES WITH TRIMMOMATIC
+Step=$(grep "TRIMMO" $INPUT_DIR/checkpoints)
+if [ "${Step}" != "TRIMMO" ]
+        then
+
 
 if ls $INPUT_DIR/*.gz &>/dev/null; then
   for file in $INPUT_DIR/*.gz
@@ -104,6 +122,11 @@ if $paired; then
 else
   mv $INPUT_DIR/*".cleaned" $STEP_1
 fi
+
+else
+        printf  "\tThe variable TRIMMO is in the checkpoint file. STEP 1 will then be passed\n"
+fi
+
 
 ####################################################################
 #
