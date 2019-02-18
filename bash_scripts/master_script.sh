@@ -134,6 +134,10 @@ fi
 # Note: paired-end files are usually named using R1 and R2 in the name.
 #       Example: control_1.R1.fastq
 #                control_1.R2.fastq
+Step=$(grep "MERGING" $INPUT_DIR/checkpoints)
+if [ "${Step}" != "MERGING" ]
+        then
+
 
 $MKDIR $STEP_2
 if $paired; then
@@ -151,10 +155,19 @@ else
   done
 fi
 
+printf "MERGING\n" >>$INPUT_DIR/checkpoints
+
+else
+        printf  "\tThe variable MERGING is in the checkpoint file. STEP 2 will then be passed\n"
+fi
+
 ####################################################################
 #
 # STEP 2.9: GETTING RAW SEQUENCES COUNTS
 # Note: These are used later for statistical analysis.
+Step=$(grep "RAW" $INPUT_DIR/checkpoints)
+if [ "${Step}" != "RAW" ]
+        then
 
 if [[ -f $STEP_2/raw_counts.txt ]]; then
     rm $STEP_2/raw_counts.txt
@@ -173,11 +186,20 @@ else
   done
 fi
 
+printf "RAW\n" >>$INPUT_DIR/checkpoints
+
+else
+        printf  "\tThe variable RAW is in the checkpoint file. STEP 2.9 will then be passed\n"
+fi
+
 ####################################################################
 #
 # STEP 3: REMOVING RIBOSOMAL READS WITH SORTMERNA
 # Note: this step assumes that the SortMeRNA databases are indexed.  If not,
 # do that first (see the SortMeRNA user manual for details).
+Step=$(grep "RIBO" $INPUT_DIR/checkpoints)
+if [ "${Step}" != "RIBO" ]
+        then
 
 for file in $STEP_2/*.assembled.fastq
 do
@@ -191,11 +213,20 @@ done
 $MKDIR $STEP_3
 mv $STEP_2/*ribodepleted* $STEP_3
 
+printf "RIBO\n" >>$INPUT_DIR/checkpoints
+
+else
+        printf  "\tThe variable RIBO is in the checkpoint file. STEP 3 will then be passed\n"
+fi
+
 ####################################################################
 #
 # STEP 4: ANNOTATING WITH DIAMOND AGAINST REFSEQ
 # Note: this step assumes that the DIAMOND database is already built.  If not,
 # do that first before running this step.
+Step=$(grep "REFSEQ_ANNOT" $INPUT_DIR/checkpoints)
+if [ "${Step}" != "REFSEQ_ANNOT" ]
+        then
 
 echo "Now starting on DIAMOND org annotations at: "; date
 
@@ -215,9 +246,18 @@ mv $STEP_3/*.daa $STEP_4/daa_binary_files
 
 echo "RefSeq DIAMOND annotations completed at: "; date
 
+printf "REFSEQ_ANNOT\n" >>$INPUT_DIR/checkpoints
+
+else
+        printf  "\tThe variable REFSEQ_ANNOT is in the checkpoint file. STEP 4 will then be passed\n"
+fi
+
 ####################################################################
 #
 # STEP 5: AGGREGATING WITH ANALYSIS_COUNTER
+Step=$(grep "REFSEQ_AGGREG" $INPUT_DIR/checkpoints)
+if [ "${Step}" != "REFSEQ_AGGREG" ]
+        then
 
 for file in $STEP_4/*RefSeq_annotated
 do
@@ -230,9 +270,18 @@ $MKDIR $STEP_5/RefSeq_results/func_results
 mv $STEP_4/*organism.tsv $STEP_5/RefSeq_results/org_results
 mv $STEP_4/*function.tsv $STEP_5/RefSeq_results/func_results
 
+printf "REFSEQ_AGGREG\n" >>$INPUT_DIR/checkpoints
+
+else
+        printf  "\tThe variable REFSEQ_AGGREG is in the checkpoint file. STEP 5 will then be passed\n"
+fi
+
 ####################################################################
 #
 # STEP 4.1: ANNOTATING WITH DIAMOND AGAINST SUBSYSTEMS
+Step=$(grep "SUBSYS_ANNOT" $INPUT_DIR/checkpoints)
+if [ "${Step}" != "SUBSYS_ANNOT" ]
+        then
 
 echo "Now starting on DIAMOND Subsystems annotations at: "; date
 
@@ -249,9 +298,18 @@ mv $STEP_3/*.daa $STEP_4/daa_binary_files
 
 echo "DIAMOND Subsystems annotations completed at: "; date
 
+printf "SUBSYS_ANNOT\n" >>$INPUT_DIR/checkpoints
+
+else
+        printf  "\tThe variable SUBSYS_ANNOT is in the checkpoint file. STEP 4.1 will then be passed\n"
+fi
+
 ##################################################################
 #
 # STEP 5.1: PYTHON SUBSYSTEMS ANALYSIS COUNTER
+Step=$(grep "SUBSYS_AGGREG" $INPUT_DIR/checkpoints)
+if [ "${Step}" != "SUBSYS_AGGREG" ]
+        then
 
 for file in $STEP_4/*subsys_annotated
 do
@@ -267,6 +325,12 @@ mv $STEP_4/*.reduced $STEP_5/Subsystems_results
 mv $STEP_4/*.receipt $STEP_5/Subsystems_results/receipts
 rm $STEP_4/*.hierarchy
 
+printf "SUBSYS_AGGREG\n" >>$INPUT_DIR/checkpoints
+
+else
+        printf  "\tThe variable SUBSYS_AGGREG is in the checkpoint file. STEP 5.1 will then be passed\n"
+fi
+
 ##################################################################
 #
 # At this point, all the results files are ready for analysis using R.
@@ -278,6 +342,9 @@ rm $STEP_4/*.hierarchy
 # STEP 6: R ANALYSIS
 # Note: For R to properly identify files to compare/contrast, they must include
 # the appropriate prefix (either "control_$file" or experimental_$file")!
+Step=$(grep "R_ANALYSIS" $INPUT_DIR/checkpoints)
+if [ "${Step}" != "R_ANALYSIS" ]
+        then
 
 checked Rscript $R_DIR/run_DESeq_stats.R \
   -I $STEP_5/RefSeq_results/org_results \
@@ -292,6 +359,13 @@ checked Rscript $R_DIR/Subsystems_DESeq_stats.R \
   -O Subsystems_level-1_DESeq_results.tab -L 1 \
   -R $STEP_2/raw_counts.txt
 
+printf "R_ANALYSIS\n" >>$INPUT_DIR/checkpoints
+
+else
+        printf  "\tThe variable R_ANALYSIS is in the checkpoint file. STEP 6 will then be passed\n"
+fi
+
 echo "Master bash script finished running at: "; date
 exit
 ####################################################################
+
