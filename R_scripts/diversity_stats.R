@@ -93,10 +93,6 @@ exp_table[is.na(exp_table)] <- 0
 rownames(exp_table) = exp_table$V3
 exp_table_trimmed <- exp_table[,-1]
 
-# getting the column names simplified
-colnames(control_table_trimmed) = control_names_trimmed
-colnames(exp_table_trimmed) = exp_names_trimmed
-
 # merging the two tables together
 complete_table <- merge(control_table_trimmed, exp_table_trimmed, by=0, all = TRUE)
 complete_table[is.na(complete_table)] <- 1
