@@ -46,7 +46,7 @@ control_files <- list.files(
   pattern = "control_*", full.names = T, recursive = FALSE)
 control_names = ""
 for (name in control_files) {
-  control_names <- c(control_names, unlist(strsplit(name, split='_', fixed=TRUE))[4])}
+  control_names <- c(control_names, unlist(strsplit(name, split='_', fixed=TRUE))[2])}
 control_names <- control_names[-1]
 control_names_trimmed = ""
 for (name in control_names) {
@@ -57,7 +57,7 @@ exp_files <- list.files(
   pattern = "experimental_*", full.names = T, recursive = FALSE)
 exp_names = ""
 for (name in exp_files) {
-  exp_names <- c(exp_names, unlist(strsplit(name, split='_', fixed=TRUE))[4])}
+  exp_names <- c(exp_names, unlist(strsplit(name, split='_', fixed=TRUE))[2])}
 exp_names <- exp_names[-1]
 exp_names_trimmed = ""
 for (name in exp_names) {
@@ -70,11 +70,11 @@ y <- 0
 for (x in control_files) {
   y <- y + 1
   if (y == 1) {
-    control_table <- read.table(file = x, header = F, quote = "", sep = "\t")
+    control_table <- read.table(file = x, header = F, quote = "", sep = "\t", fill = TRUE)
     colnames(control_table) = c("DELETE", x, "V3")
     control_table <- control_table[,c(2,3)]      }
   if (y > 1) {
-    temp_table <- read.table(file = x, header = F, quote = "", sep = "\t")
+    temp_table <- read.table(file = x, header = F, quote = "", sep = "\t", fill = TRUE)
     colnames(temp_table) = c("DELETE", x, "V3")
     temp_table <- temp_table[,c(2,3)]
     control_table <- merge(control_table, temp_table, by = "V3", all = T)  }
@@ -88,11 +88,11 @@ y <- 0
 for (x in exp_files) {
   y <- y + 1
   if (y == 1) {
-    exp_table <- read.table(file = x, header=F, quote = "", sep = "\t")
+    exp_table <- read.table(file = x, header=F, quote = "", sep = "\t", fill = TRUE)
     colnames(exp_table) = c("DELETE", x, "V3")
     exp_table <- exp_table[,c(2,3)]  }
   if (y > 1) {
-    temp_table <- read.table(file = x, header = F, quote = "", sep = "\t")
+    temp_table <- read.table(file = x, header = F, quote = "", sep = "\t", fill = TRUE)
     colnames(temp_table) = c("DELETE", x, "V3")
     exp_table <- merge(exp_table, temp_table[,c(2,3)], by = "V3", all = T)  }
 }
@@ -101,8 +101,8 @@ rownames(exp_table) = exp_table$V3
 exp_table_trimmed <- exp_table[,-1]
 
 # getting the column names simplified
-colnames(control_table_trimmed) = control_names_trimmed
-colnames(exp_table_trimmed) = exp_names_trimmed
+#colnames(control_table_trimmed) = control_names_trimmed
+#colnames(exp_table_trimmed) = exp_names_trimmed
 
 # merging the two tables together
 complete_table <- merge(control_table_trimmed, exp_table_trimmed, by=0, all = TRUE)
