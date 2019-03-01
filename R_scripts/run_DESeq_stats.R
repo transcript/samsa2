@@ -74,7 +74,7 @@ for (x in control_files) {
   if (y == 1) {
     control_table <- read.table(file = x, header = F, quote = "", sep = "\t")
     colnames(control_table) = c("DELETE", x, "V3")
-    control_table <- control_table[,c(2,3)]      }
+    control_table <- control_table[,c(3,2)]      }
   if (y > 1) {
     temp_table <- read.table(file = x, header = F, quote = "", sep = "\t")
     colnames(temp_table) = c("DELETE", x, "V3")
@@ -83,17 +83,21 @@ for (x in control_files) {
 }
 control_table[is.na(control_table)] <- 0
 rownames(control_table) = control_table$V3
-control_table_trimmed <- control_table[,-1]
+control_table_trimmed <- data.frame(control_table[,-1])
+# this next step is for if there's only 1 control file (no replicates)
+if (y == 1) {
+  rownames(control_table_trimmed) = rownames(control_table)
+}
 
 # loading the experimental table
-y <- 0
+z <- 0
 for (x in exp_files) {
-  y <- y + 1
-  if (y == 1) {
+  z <- z + 1
+  if (z == 1) {
     exp_table <- read.table(file = x, header=F, quote = "", sep = "\t")
     colnames(exp_table) = c("DELETE", x, "V3")
     exp_table <- exp_table[,c(2,3)]  }
-  if (y > 1) {
+  if (z > 1) {
     temp_table <- read.table(file = x, header = F, quote = "", sep = "\t")
     colnames(temp_table) = c("DELETE", x, "V3")
     exp_table <- merge(exp_table, temp_table[,c(2,3)], by = "V3", all = T)  }
@@ -148,14 +152,16 @@ completeCondition2 <- data.frame(condition=factor(c(
 dds <- DESeqDataSetFromMatrix(complete_table, completeCondition2, ~condition)
 dds <- DESeq(dds)
 
-baseMeanPerLvl <- sapply( levels(dds$condition), function(lvl) rowMeans( counts(dds,normalized=TRUE)[,dds$condition == lvl] ) )
-
 # This step creates the summary results output
 res <- results(dds)
 org_results <- data.frame(res)
-org_results <- merge(org_results, baseMeanPerLvl, by="row.names")
-org_results <- org_results[,c(1,2,8,9,3,4,5,6,7)]
-colnames(org_results)[c(3,4)] <- c("controlMean", "experimentalMean")
+# these next steps won't work if there's only 1 control sample (no replicates)
+if (y > 1) {
+  baseMeanPerLvl <- sapply( levels(dds$condition), function(lvl) rowMeans( counts(dds,normalized=TRUE)[,dds$condition == lvl] ) )
+  org_results <- merge(org_results, baseMeanPerLvl, by="row.names")
+  org_results <- org_results[,c(1,2,8,9,3,4,5,6,7)]
+  colnames(org_results)[c(3,4)] <- c("controlMean", "experimentalMean")
+}
 
 sorted_org_results <- org_results[order(-org_results$baseMean),]
 colnames(sorted_org_results)[1] <- "Organism Name"
