@@ -128,7 +128,6 @@ else
   printf  "\tThe variable TRIMMO is in the checkpoint file. STEP 1 will be skipped.\n"
 fi
 
-
 ####################################################################
 #
 # STEP 2: MERGING OF PAIRED-END FILES USING PEAR
@@ -156,7 +155,11 @@ else
   done
 fi
 
-printf "MERGING\n" >>$INPUT_DIR/checkpoints
+###I will concatenate forward and reverse complement with 20Ns in the middle.
+$R_programs/combining_umerged.R $STEP_1
+
+printf "MERGING\n" >>pipeline/checkpoints
+mv $STEP_1/*assembled2.fastq $STEP_2/
 
 else
   printf  "\tThe variable MERGING is in the checkpoint file. STEP 2 will be skipped.\n"
@@ -202,9 +205,9 @@ Step=$(grep "RIBO" $INPUT_DIR/checkpoints)
 if [ "${Step}" != "RIBO" ]
   then
 
-for file in $STEP_2/*.assembled.fastq
+for file in $STEP_2/*.assembled2.fastq
 do
-  shortname=`echo $file | awk -F "assembled" '{print $1 "ribodepleted"}'`
+  shortname=`echo $file | awk -F "assembled2" '{print $1 "ribodepleted"}'`
   checked $SORTMERNA -a $threads \
     --ref $SORTMERNA_DIR/rRNA_databases/silva-bac-16s-id90.fasta,$SORTMERNA_DIR/index/silva-bac-16s-db \
     --reads $file --aligned $file.ribosomes --other $shortname --fastx \
