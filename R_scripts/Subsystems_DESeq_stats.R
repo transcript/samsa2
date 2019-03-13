@@ -173,6 +173,7 @@ exp_table[,c(2:(length(exp_files)+1))] <- exp_data
 colnames(control_table) <- c(colnames(control_table)[1], control_names_trimmed)
 colnames(exp_table) <- c(colnames(exp_table)[1], exp_names_trimmed)
 l1_table <- merge(control_table, exp_table, by=colnames(exp_table)[1], all.x = T)
+levelname=colnames(l1_table)[1]
 l1_table[,levelname][is.na(l1_table[,levelname])] <- ""
 l1_table[,levelname] <- sub("^$", "NO HIERARCHY", l1_table[,levelname])
 l1_table <- ddply(l1_table, colnames(l1_table)[1], numcolwise(sum))
