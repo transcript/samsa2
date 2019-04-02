@@ -66,6 +66,12 @@ for (name in exp_names) {
   exp_names_trimmed <- c(exp_names_trimmed, unlist(strsplit(name, split='.', fixed=TRUE))[1])}
 exp_names_trimmed <- exp_names_trimmed[-1]
 
+# sanity check
+if (length(exp_files) == 0 || length(control_files) == 0) {
+  print ("\nWARNING: No files found.  Is the directory correct?  Are the files named with 'control_' and 'experimental_' as prefixes?")
+  stop()
+}
+
 # READ IN FILES
 # loading the control table
 y <- 0
