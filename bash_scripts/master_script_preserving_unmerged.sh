@@ -158,7 +158,7 @@ fi
 ###I will concatenate forward and reverse complement with 20Ns in the middle.
 Rscript $R_DIR/combining_unmerged.R $STEP_1
 
-printf "MERGING\n" >>pipeline/checkpoints
+printf "MERGING\n" >> $INPUT_DIR/checkpoints
 mv $STEP_1/*assembled2.fastq $STEP_2/
 
 else
