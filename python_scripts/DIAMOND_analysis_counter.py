@@ -144,7 +144,10 @@ for line in db:
 			if db_org[0].isdigit():
 				split_db_org = db_org.split()
 				try:
-					db_org = split_db_org[1] + " " + split_db_org[2]
+					if split_db_org[1] == "sp.":
+						db_org = split_db_org[0] + " " + split_db_org[1] + " " + split_db_org[2]
+					else:
+						db_org = split_db_org[1] + " " + split_db_org[2]
 				except IndexError:
 					try:
 						db_org = split_db_org[1]
