@@ -122,7 +122,7 @@ if $paired; then
 else
   mv $INPUT_DIR/*".cleaned" $STEP_1
 fi
-printf "TRIMMO\n" >>pipeline/checkpoints
+printf "TRIMMO\n" >> $INPUT_DIR/checkpoints
 
 else
   printf  "\tThe variable TRIMMO is in the checkpoint file. STEP 1 will be skipped.\n"
@@ -155,7 +155,7 @@ else
   done
 fi
 
-###I will concatenate forward and reverse complement with 20Ns in the middle.
+### This next step will concatenate forward and reverse complement with 20Ns in the middle.
 Rscript $R_DIR/combining_unmerged.R $STEP_1
 
 printf "MERGING\n" >> $INPUT_DIR/checkpoints
