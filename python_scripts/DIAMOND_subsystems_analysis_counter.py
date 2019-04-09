@@ -102,7 +102,7 @@ else:
 	sys.exit( "No database file indicated; skipping database search step.")
 
 # IO
-db = open (db_name, "r")
+db = open (db_name, "r", encoding='utf-8', errors='ignore')
 if "-P" in sys.argv:
 	partial_outfile_name = string_find("-P")
 	partial_outfile = open(partial_outfile_name, "w")
