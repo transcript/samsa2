@@ -156,10 +156,9 @@ else
 fi
 
 ### This next step will concatenate forward and reverse complement with 20Ns in the middle.
-Rscript $R_DIR/combining_unmerged.R $STEP_1
+Rscript $R_DIR/combining_unmerged.R $STEP_2
 
 printf "MERGING\n" >> $INPUT_DIR/checkpoints
-mv $STEP_1/*assembled2.fastq $STEP_2/
 
 else
   printf  "\tThe variable MERGING is in the checkpoint file. STEP 2 will be skipped.\n"
