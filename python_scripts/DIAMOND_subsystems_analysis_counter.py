@@ -102,7 +102,12 @@ else:
 	sys.exit( "No database file indicated; skipping database search step.")
 
 # IO
-db = open (db_name, "r", encoding='utf-8', errors='ignore')
+try:
+	db = open (db_name, "r", encoding='utf-8', errors='ignore')
+except TypeError:
+	# error catching for Python 2
+	db = open (db_name, "r")
+
 if "-P" in sys.argv:
 	partial_outfile_name = string_find("-P")
 	partial_outfile = open(partial_outfile_name, "w")
