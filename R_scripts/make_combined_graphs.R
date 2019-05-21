@@ -176,9 +176,12 @@ Cb64k <- c("#000000", "#FFFF00", "#1CE6FF", "#FF34FF", "#FF4A46", "#008941", "#0
            "#5B4534", "#FDE8DC", "#404E55", "#0089A3", "#CB7E98", "#A4E804", "#324E72", "#6A3A4C")
 
 # plotting
+Genus2 = full_table_top30$Genus
+Genus2 = Genus2[Genus2 != "Filler"]
+
 org_relative_ggplot <- ggplot(full_table_top30, aes(x = variable, y = value, fill = Genus)) +
   geom_bar(position = "fill", stat = "identity") +
-  scale_fill_manual(values = Cb64k) +
+  scale_fill_manual(breaks = Genus2, values = Cb64k) +
   scale_y_continuous(labels = percent_format()) +
   theme(legend.position = "none", text=element_text(size=16),
         axis.text.x = element_text(angle=90, vjust=1)) +
@@ -188,7 +191,7 @@ org_relative_ggplot <- ggplot(full_table_top30, aes(x = variable, y = value, fil
 
 org_absolute_ggplot <- ggplot(full_table_top30, aes(x = variable, y = value, fill = Genus)) +
   geom_bar(stat = "identity") +
-  scale_fill_manual(values = Cb64k) +
+  scale_fill_manual(breaks = Genus2, values = Cb64k) +
   theme(legend.position = "bottom", text=element_text(size=16),
         axis.text.x = element_text(angle=90, vjust=1)) +
   guides(fill = guide_legend(ncol=4)) +
