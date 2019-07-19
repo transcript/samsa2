@@ -35,6 +35,7 @@ IGNORE_DEPS=1 source "${BASH_SOURCE%/*}/../bash_scripts/lib/common.sh"
 echo "Now extracting R packages at: "; date
 mkdir $SAMSA/R_scripts/packages
 cd $SAMSA/R_scripts/packages
+# If using R version 3.6, change this file in the line below to install_packages_R_3.6.R .
 R --save < ../install_packages.R -v
 echo "R package extraction finished at: "; date
 
