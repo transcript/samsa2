@@ -27,7 +27,7 @@ if quiet == False:
 if "-usage" in sys.argv:
 	print "USAGE STATEMENT"
 	print "-I\tInput file, required"
-	print "-O\tOutput file, if not specified will default to 'input_simplified'."
+	print "-O\tOutput file, if not specified will default to 'input.genus'."
 	print "-Q\tQuiet mode, hides all messages"
 	sys.exit()
 
