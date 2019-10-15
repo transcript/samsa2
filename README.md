@@ -40,7 +40,7 @@ The following programs can be downloaded OR can be installed from the binaries p
 ## Quick start
 
 1. Download SAMSA2:   
-    `git clone https://github.com/kaedenn/samsa2.git`
+    `git clone https://github.com/transcript/samsa2.git`
 2. Either install the dependencies from the links above, or use the setup_and_test/package_installation.bash script provided with SAMSA2 for installing from the included binaries.
 3. Access the full databases by downloading them using the full\_database\_download.bash script, located in the setup\_and\_test folder.  This downloads the full RefSeq bacteria database, for organism and specific functional results, and the SEED Subsystems database, which is used for hierarchical functional ontology.
 4. Make changes to the master_script.bash, which performs the first 3 of 4 steps in the SAMSA2 pipeline (preprocessing, annotation, aggregation)
