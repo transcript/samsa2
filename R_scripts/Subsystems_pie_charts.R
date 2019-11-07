@@ -91,7 +91,10 @@ if (opt$level == 1) {
   colnames(l1_table) <- c("Average", "Level1")
 }
 
-l1_table <- l1_table[-which(l1_table$Level1 == ""), ]
+# need to add an extra check if there are blank entries
+if (sum(l1_table$Level1 == "") > 0) {
+  l1_table <- l1_table[-which(l1_table$Level1 == ""), ]
+}
 l1_table <- l1_table[, lapply(.SD, sum), by=Level1]
 l1_table <- l1_table[order(-l1_table$Average)]
 
