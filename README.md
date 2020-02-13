@@ -2,7 +2,7 @@
 
 *****
 
-**Version 2.2.0 - Yesod - Modifications added by sebastien.renaut@gmail.com:**
+**Version 2.2.0 - Yesod - Modifications added with help from sebastien.renaut@gmail.com:**
 
 * Multithreading added for PEAR, Trimmomatic, SortMeRNA
 * The script automatically creates a `checkpoint` file. Once a step is finished, it writes the name of that specific step in `checkpoint` and that step is skipped on a rerun of the master_script. This is done to avoid re-running CPU-intensive steps if unnecessary.
@@ -16,7 +16,13 @@
 
 *****
 
-Version 2 of the SAMSA pipeline - faster!  Lighter!  More options!  Less waiting!  
+# Version 2 of the SAMSA pipeline - faster!  Lighter!  More options!  Less waiting!  
+
+### How to cite:
+
+If you use SAMSA2, please cite the following paper:
+
+Westreich, S.T., Treiber, M.L., Mills, D.A. et al. SAMSA2: a standalone metatranscriptome analysis pipeline. *BMC Bioinformatics* **19**, 175 (2018) doi:10.1186/s12859-018-2189-z
 
 ### New in version 2:
 * DIAMOND integration, allowing for SAMSA2 to be run without ever needing an MG-RAST account.
