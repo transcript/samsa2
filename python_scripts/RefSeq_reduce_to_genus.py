@@ -55,17 +55,16 @@ db = {}
 # reading through input file
 for line in input_file:
 	line_counter += 1
-	if line_counter > 6:					#specified to avoid summary info in first 6 lines of file
-		splitline = line.split("\t")
-		Species_name = splitline[2].strip()
-		splitname = Species_name.split()
-		familyName = splitname[0]
-		if familyName in db.keys():
-			db[familyName] += int(splitline[1])
-		else:
-			db[familyName] = int(splitline[1])
+	splitline = line.split("\t")
+	Species_name = splitline[2].strip()
+	splitname = Species_name.split()
+	familyName = splitname[0]
+	if familyName in db.keys():
+		db[familyName] += int(splitline[1])
+	else:
+		db[familyName] = int(splitline[1])
 
-		total_entries += int(splitline[1])
+	total_entries += int(splitline[1])
 
 # sorting the results from largest to smallest, writing to output file
 for k, v in sorted(db.items(), key=lambda (k,v): -v):
