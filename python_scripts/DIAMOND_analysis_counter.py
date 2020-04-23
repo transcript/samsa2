@@ -34,6 +34,7 @@
 #								for results
 # -O		organism		returns organism results
 # -F		function		returns functional results
+# -R		reference		returns reference IDs in results
 # -SO		specific org	creates a separate outfile for results that hit
 #							a specific organism
 #
@@ -55,7 +56,8 @@ t0 = time.clock()
 # checking for an option (organism or function) to be specified
 if "-O" not in sys.argv:
 	if "-F" not in sys.argv:
-		sys.exit("WARNING: need to specify either organism results (with -O flag in command) or functional results (with -F flag in command).")
+		if "-R" not in sys.argv:
+			sys.exit("WARNING: need to specify either organism results (with -O flag in command), reference IDs (with -R flag in command), or functional results (with -F flag in command).")
 
 # loading starting file
 if "-I" in sys.argv:
@@ -121,6 +123,8 @@ if "-F" in sys.argv:
 	db_func_dictionary = {}
 if "-O" in sys.argv:
 	db_org_dictionary = {}
+if "-R" in sys.argv:
+	db_ref_dictionary = {}
 db_line_counter = 0
 db_error_counter = 0
 
@@ -173,6 +177,8 @@ for line in db:
 			db_func_dictionary[db_id] = db_entry
 		if "-O" in sys.argv:
 			db_org_dictionary[db_id] = db_org
+		if "-R" in sys.argv:
+			db_ref_dictionary[db_id] = db_id
 		if "-SO" in sys.argv:
 			if target_org in db_org:
 				db_SO_dictionary[db_id] = db_entry
@@ -198,6 +204,8 @@ for entry in RefSeq_hit_count_db.keys():
 			org = db_org_dictionary[entry]
 		if "-F" in sys.argv:
 			org = db_func_dictionary[entry]
+		if "-R" in sys.argv:
+			org = entry
 		if org in condensed_RefSeq_hit_db.keys():
 			condensed_RefSeq_hit_db[org] += RefSeq_hit_count_db[entry]
 		else:
@@ -221,12 +229,14 @@ if "-SO" in sys.argv:
 # dictionary output and summary
 print ("\nDictionary database assembled.")
 print ("Time elapsed: " + str(t3-t2) + " seconds.")
-print ("Number of errors - IDs not found in reference database: " + str(db_error_counter))
+# print ("Number of errors - IDs not found in reference database: " + str(db_error_counter))
 
 if "-O" in sys.argv:
 	print ("\nTop ten organism matches:")
 if "-F" in sys.argv:
 	print ("\nTop ten function matches:")
+if "-R" in sys.argv:
+	print ("\nTop ten reference IDs:")
 for k, v in sorted(condensed_RefSeq_hit_db.items(), key=lambda kv: -kv[1])[:10]:
 	try:
 		print (str(v) + "\t" + k )
@@ -239,6 +249,8 @@ if "-O" in sys.argv:
 	outfile_name = infile_name[:-4] + "_organism.tsv"
 if "-F" in sys.argv:
 	outfile_name = infile_name[:-4] + "_function.tsv"
+if "-R" in sys.argv:
+	outfile_name = infile_name[:-4] + "_referenceIDs.tsv"
 if "-SO" in sys.argv:
 	target_org_outfile = open(infile_name[:-4] + "_" + target_org + ".tsv", "w")
 

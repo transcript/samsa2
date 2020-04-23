@@ -23,7 +23,7 @@
 # Sam Westreich, stwestreich@ucdavis.edu, github.com/transcript
 #
 # PURPOSE: When running DESeq stats on files, the total number of input
-# sequences needs to be included.  This program generates an outfile with 
+# sequences needs to be included.  This program generates an outfile with
 # the number of reads per sequence file, for later import into the SAMSA
 # pipeline.
 ##########################################################################
@@ -62,7 +62,7 @@ infile = open(infile_name, "r")
 
 for line in infile:
 	read_counter += 1
-	
+
 infile.close()
 
 read_count = read_counter / 4 # to account for fastq files
@@ -79,5 +79,3 @@ if "/" in file_name:
 outfile.write(file_name + "\t" + str(read_count) + "\n")
 
 outfile.close()
-
-
