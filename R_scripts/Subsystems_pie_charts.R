@@ -68,7 +68,9 @@ for (x in files_list) {
     data_table <- merge(temp_table, data_table, by = "Level4")  
     }
 }
-data_table <- data_table[,-ncol(data_table)]
+if (is.na(data_table[1,ncol(data_table)])) {
+  data_table <- data_table[,-ncol(data_table)]
+}
 
 # At this point, the whole table is read in.  Next step (for graphs) is to consolidate it
 # down to averages.
