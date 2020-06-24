@@ -32,7 +32,6 @@ save_filename <- opt$out
 
 # import other necessary packages
 suppressPackageStartupMessages({
-  library(DESeq2)
   library(scales)
   library(reshape2)
   library(knitr)
@@ -106,7 +105,7 @@ exp_table_trimmed <- exp_table[,-1]
 
 # merging the two tables together
 complete_table <- merge(control_table_trimmed, exp_table_trimmed, by=0, all = TRUE)
-complete_table[is.na(complete_table)] <- 1
+complete_table[is.na(complete_table)] <- 0
 rownames(complete_table) <- complete_table$Row.names
 complete_table <- complete_table[,-1]
 
