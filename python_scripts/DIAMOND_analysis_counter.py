@@ -205,7 +205,7 @@ for entry in RefSeq_hit_count_db.keys():
 		if "-F" in sys.argv:
 			org = db_func_dictionary[entry]
 		if "-R" in sys.argv:
-			org = entry
+			org = org + "\t" + entry
 		if org in condensed_RefSeq_hit_db.keys():
 			condensed_RefSeq_hit_db[org] += RefSeq_hit_count_db[entry]
 		else:
