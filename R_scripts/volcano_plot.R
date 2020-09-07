@@ -4,7 +4,10 @@
 # Run with --help flag for help.
 #
 # Need installation of EnhancedVolcano package beforehand
-# install.packages('EnhancedVolcano')
+# if (!requireNamespace('BiocManager', quietly = TRUE))
+#   install.packages('BiocManager')
+# 
+# BiocManager::install('EnhancedVolcano')
 
 suppressPackageStartupMessages({
   library(optparse)
