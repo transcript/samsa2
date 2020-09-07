@@ -84,7 +84,6 @@ volcano_plot <- EnhancedVolcano(
   y = 'padj',
   title = opt$gtitle,
   ylim = c(0, max(-log10(simpres$padj), na.rm=TRUE) + 2),
-  xlim = c(-5, 5),
   pCutoff = opt$pcutoff,
   FCcutoff = opt$fccutoff,
   drawConnectors = opt$connect,
