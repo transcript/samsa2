@@ -19,3 +19,6 @@ install.packages(packageurl2, repos=NULL, type="source", lib=".")
 
 packageurl3 <- "https://cran.r-project.org/src/contrib/Archive/data.table/data.table_1.10.4.tar.gz"
 install.packages(packageurl3, repos=NULL, type="source", lib=".")
+
+# installing EnhancedVolcano; this is pulled from GitHub as the CRAN version isn't compatible with older bioconductor versions
+devtools::install_github("kevinblighe/EnhancedVolcano")
