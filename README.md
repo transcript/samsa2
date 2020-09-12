@@ -96,6 +96,7 @@ Note: these programs are located in the "R_scripts" folder.  They all require tw
 * make_DESeq\_heatmap.R - generates a heatmap contrasting control vs. experimental sets.
 * make_combined\_graphs.R - generates two stacked bar graphs: a relative version (y axis stretched to 100%) and an absolute version (y axis is raw counts).
 * run_DESeq\_stats.R - computes p-values and most significant differences between summarized results sets.
+* volcano\_plot.R - creates a volcano plot of the DESeq stats from run\_DESeq\_stats.R output
 
 #### Need assistance?    
 Step 1: check the documentation!  The documentation includes in-depth explanations of each step, including sample commands.  Be sure to check there if you're having an issue on one particular step.
