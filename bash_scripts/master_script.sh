@@ -122,7 +122,7 @@ if $paired; then
 else
   mv $INPUT_DIR/*".cleaned" $STEP_1
 fi
-printf "TRIMMO\n" >>pipeline/checkpoints
+printf "TRIMMO\n" >>$INPUT_DIR/checkpoints
 
 else
   printf  "\tThe variable TRIMMO is in the checkpoint file. STEP 1 will be skipped.\n"
