@@ -186,7 +186,7 @@ for k, v in sorted(condensed_hit_db.items(), key=lambda kv: -kv[1])[:10]:
 if "-O" in sys.argv:
 	outfile_name = string_find("-O")
 else:
-	outfile_name = infile_name[:-44] + ".hierarchy"
+	outfile_name = infile_name[:-4] + ".hierarchy"
 
 outfile = open (outfile_name, "w")
 
