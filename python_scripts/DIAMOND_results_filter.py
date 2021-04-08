@@ -97,18 +97,16 @@ for line in db:
 			t95 = time.clock()
 			print (str(db_line_counter) + " lines processed so far in " + str(t95-t0) + " seconds.")
 
-		if target_org not in line:
-			continue
-		else:
+		if target_org in line:
 			splitline = line.split("  ")
 
 			# ID, the hit returned in DIAMOND results
-			db_id = str(splitline[0])[1:]
+			db_id = str(splitline[0])[1:].split(" ")[0]
 
 			# name and functional description
 			db_entry = line.split("[", 1)
 			db_entry = db_entry[0].split(" ", 1)
-			db_entry = db_entry[1][1:-1]
+			db_entry = db_entry[1][:-1]
 
 			# organism name
 			if line.count("[") != 1:
@@ -161,6 +159,7 @@ t1 = time.clock()
 for line in infile:
 	line_counter += 1
 	splitline = line.split("\t")
+
 	try:
 		target_org_outfile.write(splitline[0] + "\t" + splitline[1] + "\t" + db_org_dictionary[splitline[1]] + "\t" + db_id_dictionary[splitline[1]] + "\n")
 		hit_counter += 1

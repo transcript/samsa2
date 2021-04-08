@@ -1,0 +1,4 @@
+# Changelog for SAMSA2 updates
+# Created 4/05/2021 (should have been much earlier)
+
+4/08/2021 - updated DIAMOND_results_filter.py to fix an error where it improperly cut off the first letter of the searched functions, resulting in an erroneous zero matches.

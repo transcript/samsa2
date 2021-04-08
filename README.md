@@ -2,6 +2,7 @@
 
 *****
 
+
 **Version 2.2.0 - Yesod - Modifications added with help from sebastien.renaut@gmail.com:**
 
 * Multithreading added for PEAR, Trimmomatic, SortMeRNA
