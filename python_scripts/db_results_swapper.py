@@ -23,16 +23,16 @@
 # Sam Westreich, stwestreich@ucdavis.edu, github.com/transcript
 #
 # This program takes a list of IDs from one database, such as the RefSeq
-# database, and gets all IDs for those entries retrieved against another 
+# database, and gets all IDs for those entries retrieved against another
 # database, such as Subsystems.
 #
-# Usage: 
+# Usage:
 #
-# -I		infile			specifies the infile (a DIAMOND results file 
+# -I		infile			specifies the infile (a DIAMOND results file
 #								in m8 format)
-# -A		annotation		specifies annotated results to search against 
+# -A		annotation		specifies annotated results to search against
 #
-# -O		outfile			specifies a name for the outfile (otherwise defaults 
+# -O		outfile			specifies a name for the outfile (otherwise defaults
 #								to $name_hierarchy.tsv)
 # -P 		partial			partial outfile; a list of all reads with their
 #								hierarchy results (OPTIONAL)
@@ -50,7 +50,7 @@ def string_find(usage_term):
 		if elem == usage_term:
 			 return next_elem
 
-t0 = time.clock()
+t0 = time.time()
 
 # loading starting file
 if "-I" in sys.argv:
@@ -69,12 +69,12 @@ for line in infile:
 	line_counter += 1
 	splitline = line.split("\t")
 	if line_counter % 1000000 == 0:
-		t99 = time.clock()
+		t99 = time.time()
 		print str(line_counter)[:-6] + "MM lines processed so far in " + str(t99-t0) + " seconds."
-	
+
 	id_list.append(splitline[0])
 
-t1 = time.clock()
+t1 = time.time()
 
 # results reporting
 print "\nAnalysis of " + infile_name + " complete."
@@ -82,7 +82,7 @@ print "Number of IDs found: " + str(len(id_list))
 print "Time elapsed: " + str(t1-t0) + " seconds."
 
 infile.close()
-	
+
 # time to search for these in the annotated file
 if "-A" in sys.argv:
 	af_name = string_find("-A")
@@ -100,7 +100,7 @@ outfile = open (outfile_name, "w")
 
 print "\nStarting annotation filtering now."
 
-t2 = time.clock()
+t2 = time.time()
 
 # data storage
 af_line_counter = 0
@@ -112,7 +112,7 @@ for line in af:
 	splitline = line.split("\t", 1)
 	af_dic[splitline[0]] = splitline[1]
 	if af_line_counter % 1000000 == 0:
-		t3 = time.clock()
+		t3 = time.time()
 		print str(af_line_counter)[:-6] + "MM lines processed so far in " + str(t3-t2) + " seconds."
 
 print "Annotation file read in."

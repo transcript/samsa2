@@ -45,7 +45,7 @@ def string_find(usage_term):
 		if elem == usage_term:
 			 return next_elem
 
-t0 = time.clock()
+t0 = time.time()
 
 # loading starting file, hierarchy level
 if "-I" in sys.argv:

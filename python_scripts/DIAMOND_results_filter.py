@@ -86,7 +86,7 @@ db_id_dictionary = {}
 db_line_counter = 0
 db_error_counter = 0
 
-t0 = time.clock()
+t0 = time.time()
 
 for line in db:
 	if line.startswith(">") == True:
@@ -94,7 +94,7 @@ for line in db:
 
 		# line counter to show progress
 		if db_line_counter % 1000000 == 0:							# each million
-			t95 = time.clock()
+			t95 = time.time()
 			print (str(db_line_counter) + " lines processed so far in " + str(t95-t0) + " seconds.")
 
 		if target_org in line:
@@ -153,7 +153,7 @@ unique_seq_db = {}
 line_counter = 0
 hit_counter = 0
 
-t1 = time.clock()
+t1 = time.time()
 
 # reading through the infile
 for line in infile:
@@ -167,11 +167,11 @@ for line in infile:
 		continue
 
 	if line_counter % 1000000 == 0:
-		t99 = time.clock()
+		t99 = time.time()
 		print (str(line_counter)[:-6] + "M lines processed so far in " + str(t99-t1) + " seconds.")
 
 # results stats
-t100 = time.clock()
+t100 = time.time()
 print ("Run complete!")
 print ("Number of sequences found matching target query, " + target_org + ":\t" + str(hit_counter))
 print ("Time elapsed: " + str(t100-t0) + " seconds.")

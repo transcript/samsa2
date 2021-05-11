@@ -51,7 +51,7 @@ def string_find(usage_term):
 		if elem == usage_term:
 			 return next_elem
 
-t0 = time.clock()
+t0 = time.time()
 
 # checking for an option (organism or function) to be specified
 if "-O" not in sys.argv:
@@ -85,7 +85,7 @@ for line in infile:
 	line_counter += 1
 	splitline = line.split("\t")
 	if line_counter % 1000000 == 0:
-		t99 = time.clock()
+		t99 = time.time()
 		print str(line_counter)[:-6] + "M lines processed so far in " + str(t99-t0) + " seconds."
 
 	unique_seq_db[splitline[0]] = 1
@@ -96,7 +96,7 @@ for line in infile:
 		RefSeq_hit_count_db[splitline[1]] = 1
 		continue
 
-t1 = time.clock()
+t1 = time.time()
 
 print ("\nAnalysis of " + infile_name + " complete.")
 print ("Number of total lines: " + str(line_counter))
@@ -110,7 +110,7 @@ db = open (db_name, "r")
 
 print ("\nReading in reference database...")
 
-t2 = time.clock()
+t2 = time.time()
 
 # optional outfile of specific organism results
 if "-SO" in sys.argv:
@@ -187,11 +187,11 @@ for line in db:
 
 		# line counter to show progress
 		if db_line_counter % 1000000 == 0:							# each million
-			t95 = time.clock()
+			t95 = time.time()
 			print (str(db_line_counter)[:-6] + "M lines processed so far in " + str(t95-t2) + " seconds.")
 
 db.close()
-t3 = time.clock()
+t3 = time.time()
 
 print ("Database read successfully.\n")
 print ("Time elapsed: " + str(t3-t2) + " seconds.")
