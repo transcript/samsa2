@@ -30,8 +30,6 @@
 #
 # -I		infile			specifies the infile (a DIAMOND results file
 #								in m8 format)
-# -D		database		specifies a reference database to search against
-#								for results
 # -O		organism		returns organism results
 # -F		function		returns functional results
 # -SO		specific org	creates a separate outfile for results that hit
@@ -48,9 +46,7 @@ def string_find(usage_term):
 		this_elem = elem
 		next_elem = sys.argv[(idx + 1) % len(sys.argv)]
 		if elem == usage_term:
-			 return next_elem
-
-t0 = time.time()
+			return next_elem
 
 # checking for an option (organism or function) to be specified
 if "-O" not in sys.argv:
@@ -62,13 +58,6 @@ if "-I" in sys.argv:
 	infile_name = string_find("-I")
 else:
 	sys.exit ("WARNING: infile must be specified using '-I' flag.")
-
-# checking to make sure database is specified
-if "-D" in sys.argv:
-	db_name = string_find("-D")
-else:
-	sys.exit( "No database file indicated; skipping database search step.")
-
 
 infile = open (infile_name, "r")
 
@@ -83,9 +72,8 @@ print ("\nNow reading through the m8 results infile.")
 for line in infile:
 	line_counter += 1
 	splitline = line.split("\t")
-	if line_counter % 1000000 == 0:
-		t99 = time.time()
-		print (str(line_counter)[:-6] + "M lines processed so far in " + str(t99-t0) + " seconds.")
+	# if line_counter % 1000000 == 0:
+	# 	print (str(line_counter)[:-6] + "M lines processed so far in " + str(t99-t0) + " seconds.")
 
 	unique_seq_db[splitline[0]] = 1
 
@@ -95,21 +83,17 @@ for line in infile:
 		RefSeq_hit_count_db[splitline[1]] = 1
 		continue
 
-t1 = time.time()
 
 print ("\nAnalysis of " + infile_name + " complete.")
 print ("Number of total lines: " + str(line_counter))
 print ("Number of unique sequences: " + str(len(unique_seq_db)))
-print ("Time elapsed: " + str(t1-t0) + " seconds.")
 
 infile.close()
 
 # time to search for these in the reference database
-db = open (db_name, "r")
+db = open (infile_name, "r")
 
 print ("\nStarting database analysis now.")
-
-t2 = time.time()
 
 # optional outfile of specific organism results
 # if "-SO" in sys.argv:
@@ -124,18 +108,29 @@ if "-O" in sys.argv:
 db_line_counter = 0
 db_error_counter = 0
 
+# Reusing db code for parsing diamond file with additional salltitles column
+db = open (infile_name, "r")
+
 for line in db:
-	if line.startswith(">") == True:
+	if line.startswith(">") == False:
+		line = line.strip().split("\t")[-1]
+		multispecies = False
+		if "MULTISPECIES:" in line:
+			multispecies = True
+			line = line.replace("MULTISPECIES: ","").strip()
+
 		db_line_counter += 1
 		splitline = line.split("[",1)
-
 		# ID, the hit returned in DIAMOND results
-		db_id = str(splitline[0].split()[0])[1:]
+		db_id = str(splitline[0].split()[0]) # [1:] # Not needed anymore
 
 		# name and functional description
 		db_entry = line.split("[", 1)
+		# 1 ['WP_168619497.1 ATP-binding cassette domain-containing protein, partial ', 'Rhizobium ruizarguesonis]']
 		db_entry = db_entry[0].split(" ", 1)
+		# 2 ['WP_168619497.1', 'ATP-binding cassette domain-containing protein, partial ']
 		db_entry = db_entry[1][:-1]
+		# 3 ATP-binding cassette domain-containing protein, partial
 
 		# organism name
 		if line.count("[") != 1:
@@ -164,8 +159,11 @@ for line in db:
 				db_org = str(db_org[0]) + " " + str(db_org[1])
 			except IndexError:
 				db_org = line.strip().split("[", 1)
-				db_org = db_org[1][:-1]
-				db_error_counter += 1
+				# Adding sp. to group with other unknown species of the same genus
+				db_org = db_org[1][:-1] + " sp."
+				# Multispecies not counted in the error counter
+				if not multispecies:
+					db_error_counter += 1
 
 		db_org = re.sub('[^a-zA-Z0-9-_*. ]', '', db_org)
 
@@ -177,16 +175,10 @@ for line in db:
 		if "-SO" in sys.argv:
 			if target_org in db_org:
 				db_SO_dictionary[db_id] = db_entry
-
-		# line counter to show progress
-		if db_line_counter % 1000000 == 0:					# each million
-			t95 = time.time()
-			print (str(db_line_counter)[:-6] + "M lines processed so far in " + str(t95-t2) + " seconds.")
-
-t3 = time.time()
+	else:
+		print("ELSE SELSLELELSL")
 
 print ("\nSuccess!")
-print ("Time elapsed: " + str(t3-t2) + " seconds.")
 print ("Number of lines: " + str(db_line_counter))
 print ("Number of errors: " + str(db_error_counter))
 
@@ -221,7 +213,6 @@ if "SO" in sys.argv:
 
 # dictionary output and summary
 print ("\nDictionary database assembled.")
-print ("Time elapsed: " + str(t3-t2) + " seconds.")
 print ("Number of errors: " + str(db_error_counter))
 
 if "-O" in sys.argv:
