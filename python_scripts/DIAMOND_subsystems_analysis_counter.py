@@ -30,8 +30,6 @@
 #
 # -I		infile			specifies the infile (a DIAMOND results file
 #								in m8 format)
-# -D		database		specifies a reference database to search against
-#								for results
 # -O		outfile			specifies a name for the outfile (otherwise defaults
 #								to $name_hierarchy.tsv)
 # -P 		partial			partial outfile; a list of all reads with their
@@ -40,7 +38,7 @@
 ##########################################################################
 
 # imports
-import operator, sys, time, gzip, re
+import operator, sys, gzip, re
 
 # String searching function:
 def string_find(usage_term):
@@ -48,9 +46,7 @@ def string_find(usage_term):
 		this_elem = elem
 		next_elem = sys.argv[(idx + 1) % len(sys.argv)]
 		if elem == usage_term:
-			 return next_elem
-
-t0 = time.time()
+			return next_elem
 
 # loading starting file
 if "-I" in sys.argv:
@@ -66,13 +62,12 @@ unique_seq_db = {}
 read_id_db = {}
 line_counter = 0
 
+print ("\nNow reading through the SEED m8 results infile.")
+
 # reading through the infile
 for line in infile:
 	line_counter += 1
 	splitline = line.split("\t")
-	if line_counter % 1000000 == 0:
-		t99 = time.time()
-		print (str(line_counter)[:-6] + "M lines processed so far in " + str(t99-t0) + " seconds.")
 
 	unique_seq_db[splitline[0]] = 1
 
@@ -85,28 +80,21 @@ for line in infile:
 		hit_count_db[splitline[1]] = 1
 		continue
 
-t1 = time.time()
+
 
 # results reporting
 print ("\nAnalysis of " + infile_name + " complete.")
 print ("Number of total lines: " + str(line_counter))
 print ("Number of unique sequences: " + str(len(unique_seq_db)))
-print ("Time elapsed: " + str(t1-t0) + " seconds.")
 
 infile.close()
 
-# time to search for these in the reference database
-if "-D" in sys.argv:
-	db_name = string_find("-D")
-else:
-	sys.exit( "No database file indicated; skipping database search step.")
-
 # IO
-try:
-	db = open (db_name, "r", encoding='utf-8', errors='ignore')
-except TypeError:
-	# error catching for Python 2
-	db = open (db_name, "r")
+# try:
+db = open (infile_name, "r", encoding='utf-8', errors='ignore')
+# except TypeError:
+# 	# error catching for Python 2
+# 	db = open (db_name, "r")
 
 if "-P" in sys.argv:
 	partial_outfile_name = string_find("-P")
@@ -114,43 +102,34 @@ if "-P" in sys.argv:
 
 print ("\nStarting database analysis now.")
 
-t2 = time.time()
-
 # building a dictionary of the reference database
 db_hier_dictionary = {}
 db_line_counter = 0
 db_error_counter = 0
 
 for line in db:
-	if line.startswith(">") == True:
-		db_line_counter += 1
-		splitline = line.split("\t", 1)
+	line = '\t'.join(line.split("\t")[12:])
 
-		# ID, the hit returned in DIAMOND results
-		db_id = str(splitline[0])[1:]
+	db_line_counter += 1
+	splitline = line.split("\t", 1)
 
-		# name and functional description
-		if "NO HIERARCHY" in splitline[1]:
-			db_hier = "NO HIERARCHY"
+	# ID, the hit returned in DIAMOND results
+	db_id = str(splitline[0]) # [1:]
+
+	# name and functional description
+	if "NO HIERARCHY" in splitline[1]:
+		db_hier = "NO HIERARCHY"
+	else:
+		hier_split = splitline[1].split("\t")
+		if hier_split[3].strip() != "":
+			db_hier = hier_split[0] + "\t" + hier_split[1] + "\t" + hier_split[2] + "\t" + hier_split[3]
 		else:
-			hier_split = splitline[1].split("\t")
-			if hier_split[3].strip() != "":
-				db_hier = hier_split[0] + "\t" + hier_split[1] + "\t" + hier_split[2] + "\t" + hier_split[3]
-			else:
-				db_hier = hier_split[0] + "\t" + hier_split[1] + "\t\t" + hier_split[2] + "\t" + hier_split[3]
+			db_hier = hier_split[0] + "\t" + hier_split[1] + "\t\t" + hier_split[2] + "\t" + hier_split[3]
 
-		# add to dictionaries
-		db_hier_dictionary[db_id] = db_hier
-
-		# line counter to show progress
-		if db_line_counter % 1000000 == 0:							# each million
-			t95 = time.time()
-			print (str(db_line_counter) + " lines processed so far in " + str(t95-t2) + " seconds.")
-
-t3 = time.time()
+	# add to dictionaries
+	db_hier_dictionary[db_id] = db_hier
 
 print ("\nSuccess!")
-print ("Time elapsed: " + str(t3-t2) + " seconds.")
 print ("Number of lines: " + str(db_line_counter))
 print ("Number of errors: " + str(db_error_counter))
 
@@ -171,7 +150,6 @@ for entry in hit_count_db.keys():
 
 # dictionary output and summary
 print ("\nDictionary database assembled.")
-print ("Time elapsed: " + str(t3-t2) + " seconds.")
 print ("Number of errors: " + str(db_error_counter))
 
 print ("\nTop ten hierarchy matches:")
