@@ -10,15 +10,16 @@
 #
 # full_database_download.bash
 # Created September 28, 2017 by Michelle Treiber
+# Updated 1 July 2021 by Sam Westreich - files are now hosted on Zenodo, rather than Bioshare
 #
 ####################################################################
 #
-# This script was created to download full databases for use in 
+# This script was created to download full databases for use in
 # the SAMSA2 master script.
 #
 # NOTE: The databases are up to 28GB and may require many hours to download.
 # Users may want to consider running this download overnight.
-# 
+#
 ####################################################################
 #
 # Set pathway for SAMSA to location of samsa2 GitHub download:
@@ -31,34 +32,37 @@ cd $SAMSA/full_databases
 echo -e "NOTE: The databases are up to 28GB and may require hours to download. Users may want to consider running this download overnight.\n"
 # Download NCBI RefSeq database:
 echo "NOW DOWNLOADING NCBI REFSEQ DATABASE AT: "; date
-wget "https://bioshare.bioinformatics.ucdavis.edu/bioshare/download/2c8s521xj9907hn/RefSeq_bac.fa" --no-check-certificate
+wget "https://zenodo.org/record/5022377/files/RefSeq_bac.fa.bz2" --no-check-certificate
 
 # Download SEED Subsystems database:
 echo "NOW DOWNLOADING SEED SUBSYSTEMS DATABASE AT: "; date
-wget "https://bioshare.bioinformatics.ucdavis.edu/bioshare/download/2c8s521xj9907hn/subsys_db.fa" --no-check-certificate
+wget "https://zenodo.org/record/5022377/files/subsys_db.fa.bz2" --no-check-certificate
+
+# unzipping
+bunzip2 *.bz2
 
 echo -e "\n\nNOTE: IF USERS ARE USING A DIFFERENT VERSION OF DIAMOND OR
 WOULD RATHER MAKE THEIR OWN DIAMOND COMPATIBLE DATABASES
 TO SAVE TIME:
-1. Run package_installation.bash located at 
+1. Run package_installation.bash located at
 		https://github.com/transcript/samsa2/tree/master/setup
-		OR download and install other desired DIAMOND version 
+		OR download and install other desired DIAMOND version
 		See https://github.com/bbuchfink/diamond for more details
 2. Comment out the next 4 lines of code
 3. Uncomment the last 2 lines of code and if using a different
-		version of DIAMOND than the one on SAMSA2 Github, change 
+		version of DIAMOND than the one on SAMSA2 Github, change
 		the diamond location\n\n"
 
 # Download DIAMOND compatible RefSeq database:
 echo "NOW DOWNLOADING DIAMOND COMPATIBLE REFSEQ DATABASE AT: "; date
-wget "https://bioshare.bioinformatics.ucdavis.edu/bioshare/download/2c8s521xj9907hn/RefSeq_bac.dmnd" --no-check-certificate
+wget "https://zenodo.org/record/5022377/files/RefSeq_bac.dmnd.bz2" --no-check-certificate
 
 # Download DIAMOND compatible Subsystems database:
 echo "NOW DOWNLOADING DIAMOND COMPATIBLE SUBSYSTEMS DATABASE AT: "; date
-wget "https://bioshare.bioinformatics.ucdavis.edu/bioshare/download/2c8s521xj9907hn/subsys_db.dmnd" --no-check-certificate
+wget "https://zenodo.org/record/5022377/files/subsys_db.dmnd.bz2" --no-check-certificate
 
-# $SAMSA/programs/diamond makedb --in $SAMSA/full_databases/RefSeq_bac.fa --db $SAMSA/full_databases/RefSeq_bac
-# $SAMSA/programs/diamond makedb --in $SAMSA/full_databases/subsys_db.fa --db $SAMSA/full_databases/subsys_db
+# unzipping
+bunzip2 *.bz2
 
 echo "Completed!"
 exit
