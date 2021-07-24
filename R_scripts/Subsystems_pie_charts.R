@@ -100,6 +100,10 @@ if (sum(l1_table$Level1 == "") > 0) {
 l1_table <- l1_table[, lapply(.SD, sum), by=Level1]
 l1_table <- l1_table[order(-l1_table$Average)]
 
+# this adds another column for percentages
+options(digits = 2)
+l1_table$Percentage <- l1_table$Average/sum(l1_table$Average)*100
+
 # Pie chart time?
 CbPalette <- c("#a6cee3", "#1f78b4", "#b2df8a", "#33a02c", "#fb9a99", "#e31a1c", 
       "#fdbf6f", "#ff7f00", "#cab2d6", "#6a3d9a", "#ffff99", "#b15928", "#8dd3c7",  
@@ -108,13 +112,14 @@ CbPalette <- c("#a6cee3", "#1f78b4", "#b2df8a", "#33a02c", "#fb9a99", "#e31a1c",
       "#377eb8", "#4daf4a",  "#984ea3",  "#ff7f00", "#ffff33",  "#a65628",  
       "#f781bf", "#999999", "#000000", "#a6cee4", "#1f78b5", "#b2df8b")
 
-bp<- ggplot(l1_table[c(0:10),], aes(x="", y=Average, fill=Level1))+
-  geom_bar(width = 1, stat = "identity") +
-  scale_fill_manual(values = CbPalette) +
-  ggtitle("SEED Subsystems hierarchy")
+bp<- ggplot(l1_table[c(0:10),], aes(x = "", y = Average, label = sprintf("%0.2f", 
+    round(Percentage, digits = 2)), fill = Level1)) +
+  geom_bar(stat = "identity") +
+  # comment out this next line if you don't want percentage labels on your pie chart
+  geom_text(position = position_stack(vjust = .5), color = "#000000") +
+  scale_fill_manual(values = CbPalette) 
 
 pie <- bp + coord_polar("y", start=0) +
-#    geom_text(aes(x=1, label=Level1)) +
     theme(axis.text=element_blank(), legend.position = "right" ) 
 
 cat ("\nSuccess!\nSaving Subsystems pie chart as ", save_filename, " now.\n")
