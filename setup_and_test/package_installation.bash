@@ -31,7 +31,7 @@
 # Set pathway for SAMSA to location of samsa2 GitHub download:
 IGNORE_DEPS=1 
 
-if [[ -d "${BASH_SOURCE%/*}/../bash_scripts/lib/common.sh" ]]; then
+if [ -d "${BASH_SOURCE%/*}/../bash_scripts/lib/" ]; then
   source "${BASH_SOURCE%/*}/../bash_scripts/lib/common.sh"
 else
   # assuming that you're running this package_installation.bash script directly ("bash package_installation.bash")

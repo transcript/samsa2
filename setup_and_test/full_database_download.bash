@@ -23,7 +23,7 @@
 ####################################################################
 #
 # Set pathway for SAMSA to location of samsa2 GitHub download:
-if [[ -d "${BASH_SOURCE%/*}/../bash_scripts/lib/common.sh" ]]; then
+if [ -d "${BASH_SOURCE%/*}/../bash_scripts/lib/" ]; then
   source "${BASH_SOURCE%/*}/../bash_scripts/lib/common.sh"
 else
 #assuming that you're running this full_database_download.bash directly ("bash full_database_download.bash")
