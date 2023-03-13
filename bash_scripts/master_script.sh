@@ -1,6 +1,10 @@
 #!/bin/bash
-#SBATCH --mem=100000
-#SBATCH --time=7-0:0:0
+#SBATCH --mem=150G
+#SBATCH --cpus-per-task=32
+#SBATCH --time=3:00:00
+#SBATCH --array=1-18
+#SBATCH --job-name=samsa2
+#SBATCH --output=slurm-logs/%x-%A-%a.out
 
 # Lines starting with #SBATCH are for SLURM job management systems
 # and may be removed if user is not submitting jobs to SLURM
@@ -9,7 +13,7 @@
 #
 # master_script.sh
 # Created April 2017 by Sam Westreich, github.com/transcript
-# This version modified March 12, 2019
+# This version modified March 10, 2023 by Edward Yang
 #
 ####################################################################
 #
@@ -38,19 +42,28 @@ echo -e "NOTE: Before running this script, please run package_installation.bash 
 #
 # VARIABLES - set starting location and starting files location pathways
 #
-source "${BASH_SOURCE%/*}/../bash_scripts/lib/common.sh"
+#source "/stornext/HPCScratch/aSAMSA2test/samsa2/bash_scripts/lib/common.sh"
+export SAMSA=${SLURM_SUBMIT_DIR}                                                 # MODIFY THIS IF NEEDED
+source "$SAMSA/bash_scripts/lib/common.sh"
 
-INPUT_DIR=$SAMSA/input_files
-OUT_DIR=$SAMSA
+# Each Slurm array task chooses an input subdirectory based on its task ID
+INPUT_DIR=$SAMSA/input_files_seperated                                           # MODIFY THIS IF NEEDED
+ARRAY_SAMPLE_PREFIX=`ls $INPUT_DIR | sed ${SLURM_ARRAY_TASK_ID}'q;d'`
+INPUT_DIR=$INPUT_DIR/$ARRAY_SAMPLE_PREFIX
+OUT_DIR=$SAMSA/seperated_outputs/output_$ARRAY_SAMPLE_PREFIX
+mkdir -p $OUT_DIR
+CENTRAL_OUT_DIR=$SAMSA/combined_outputs
+mkdir -p ${CENTRAL_OUT_DIR}/step_{1..6}_output
 
 # number of threads
-threads=`getconf _NPROCESSORS_ONLN`
+threads=${SLURM_CPUS_PER_TASK} #`getconf _NPROCESSORS_ONLN`
 
 STEP_1="$OUT_DIR/step_1_output"
 STEP_2="$OUT_DIR/step_2_output"
 STEP_3="$OUT_DIR/step_3_output"
 STEP_4="$OUT_DIR/step_4_output"
 STEP_5="$OUT_DIR/step_5_output"
+STEP_6="$OUT_DIR/step_6_output"
 
 if [[ -n "$USE_TINY" ]]; then
   # Diamond databases
@@ -65,14 +78,17 @@ if [[ -n "$USE_TINY" ]]; then
   STEP_3="${STEP_3}_test"
   STEP_4="${STEP_4}_test"
   STEP_5="${STEP_5}_test"
+  STEP_6="${STEP_6}_test"
 else
   # Diamond databases
-  diamond_database="$SAMSA/full_databases/RefSeq_bac"
+  diamond_database="$SAMSA/full_databases/New_Bac_Vir_Arc_RefSeq"
   diamond_subsys_db="$SAMSA/full_databases/subsys_db"
   # Aggregation databases
-  RefSeq_db="$SAMSA/full_databases/RefSeq_bac.fa"
+  RefSeq_db="$SAMSA/full_databases/New_Bac_Vir_Arc_RefSeq.fa"
   Subsys_db="$SAMSA/full_databases/subsys_db.fa"
 fi
+
+mkdir -p ${STEP_1} ${STEP_2} ${STEP_3} ${STEP_4} ${STEP_5} ${STEP_6} 
 
 ####################################################################
 #STEP 0.1: create/read checkpoint
@@ -122,6 +138,10 @@ if $paired; then
 else
   mv $INPUT_DIR/*".cleaned" $STEP_1
 fi
+
+# EY ADDED 23-02-27 -------------------------------------------------
+cp $STEP_1/*".cleaned.forward"* $STEP_1/*".cleaned.reverse"* $CENTRAL_OUT_DIR/step_1_output
+# -------------------------------------------------------------------
 printf "TRIMMO\n" >>$INPUT_DIR/checkpoints
 
 else
@@ -155,6 +175,9 @@ else
     cp $file $STEP_2/${new_name##*/}
   done
 fi
+# EY ADDED 23-02-27 -------------------------------------------------
+cp $STEP_2/*.fastq $STEP_2/*.log $CENTRAL_OUT_DIR/step_2_output
+# -------------------------------------------------------------------
 
 printf "MERGING\n" >>$INPUT_DIR/checkpoints
 
@@ -186,6 +209,9 @@ else
     checked python $PY_DIR/raw_read_counter.py -I $file -O $STEP_2/raw_counts.txt
   done
 fi
+# EY ADDED 23-02-27 -------------------------------------------------
+cat $STEP_2/raw_counts.txt >> $CENTRAL_OUT_DIR/step_2_output/raw_counts.txt
+# -------------------------------------------------------------------
 
 printf "RAW\n" >>$INPUT_DIR/checkpoints
 
@@ -213,6 +239,9 @@ done
 
 $MKDIR $STEP_3
 mv $STEP_2/*ribodepleted* $STEP_3
+# EY ADDED 23-02-27 -------------------------------------------------
+cp $STEP_3/*ribodepleted $CENTRAL_OUT_DIR/step_3_output
+# -------------------------------------------------------------------
 
 printf "RIBO\n" >>$INPUT_DIR/checkpoints
 
@@ -236,14 +265,24 @@ do
     shortname=`echo $file | awk -F "ribodepleted" '{print $1 "RefSeq_annotated"}'`
     echo "Now starting on " $file
     echo "Converting to " $shortname
-    checked $DIAMOND blastx --db $diamond_database -q $file -a $file.RefSeq -t ./ -k 1
-    checked $DIAMOND view --daa $file.RefSeq.daa -o $shortname -f tab
+    checked $DIAMOND blastx --db $diamond_database -q $file -a $file.RefSeq -t $TMPDIR -k 1 -p ${SLURM_CPUS_PER_TASK} -b 12 -c 1
+    checked $DIAMOND view --daa $file.RefSeq.daa -o $shortname -f tab -p ${SLURM_CPUS_PER_TASK}
 done
 
 $MKDIR $STEP_4/daa_binary_files
 
 mv $STEP_3/*annotated* $STEP_4
 mv $STEP_3/*.daa $STEP_4/daa_binary_files
+# EY ADDED 23-02-27 -------------------------------------------------
+for i in $STEP_4/*annotated*
+do
+	cp -r $i $CENTRAL_OUT_DIR/step_4_output/`basename $i`
+done
+for i in $STEP_4/daa_binary_files/*.daa
+do
+	cp -r $i $CENTRAL_OUT_DIR/step_4_output/daa_binary_files
+done
+# -------------------------------------------------------------------
 
 echo "RefSeq DIAMOND annotations completed at: "; date
 
@@ -262,21 +301,26 @@ if [ "${Step}" != "REFSEQ_AGGREG" ]
 
 for file in $STEP_4/*RefSeq_annotated
 do
-  checked python $PY_DIR/DIAMOND_analysis_counter.py -I $file -D $RefSeq_db -O
-  checked python $PY_DIR/DIAMOND_analysis_counter.py -I $file -D $RefSeq_db -F
+  checked python $PY_DIR/DIAMOND_analysis_counter.py -I $file -D $RefSeq_db -O -t ${SLURM_CPUS_PER_TASK}
+  checked python $PY_DIR/DIAMOND_analysis_counter.py -I $file -D $RefSeq_db -F -t ${SLURM_CPUS_PER_TASK}
 done
 
 $MKDIR $STEP_5/RefSeq_results/org_results
 $MKDIR $STEP_5/RefSeq_results/func_results
 mv $STEP_4/*organism.tsv $STEP_5/RefSeq_results/org_results
 mv $STEP_4/*function.tsv $STEP_5/RefSeq_results/func_results
+# EY ADDED 23-02-27 -------------------------------------------------
+mkdir -p $CENTRAL_OUT_DIR/step_5_output/RefSeq_results/{org,func}_results
+cp $STEP_5/RefSeq_results/org_results/*organism.tsv $CENTRAL_OUT_DIR/step_5_output/RefSeq_results/org_results/
+cp $STEP_5/RefSeq_results/func_results/*function.txv $CENTRAL_OUT_DIR/step_5_output/RefSeq_results/func_results/
+# -------------------------------------------------------------------
 
 printf "REFSEQ_AGGREG\n" >>$INPUT_DIR/checkpoints
 
 else
   printf  "\tThe variable REFSEQ_AGGREG is in the checkpoint file. STEP 5 will be skipped.\n"
 fi
-
+# exit 0 # EY ADDED FOR TESTING 23-02-27
 ####################################################################
 #
 # STEP 4.1: ANNOTATING WITH DIAMOND AGAINST SUBSYSTEMS
@@ -290,14 +334,18 @@ for file in $STEP_3/*ribodepleted.fastq
 do
     shortname=`echo $file | awk -F "ribodepleted" '{print $1 "subsys_annotated"}'`
     echo "Now starting on Subsystems annotations for " $file
-    checked $DIAMOND blastx --db $diamond_subsys_db -q $file -a $file.Subsys -t ./ -k 1
-    checked $DIAMOND view --daa $file.Subsys.daa -o $shortname -f tab
+    checked /stornext/HPCScratch/aSAMSA2test/Previous_files/diamond blastx --db $diamond_subsys_db -q $file -a $file.Subsys -t $TMPDIR -k 1 -p ${SLURM_CPUS_PER_TASK} -b 12 -c 1
+    checked /stornext/HPCScratch/aSAMSA2test/Previous_files/diamond view --daa $file.Subsys.daa -o $shortname -f tab -p ${SLURM_CPUS_PER_TASK}
 done
 
 mv $STEP_3/*subsys_annotated* $STEP_4
 mv $STEP_3/*.daa $STEP_4/daa_binary_files
 
 echo "DIAMOND Subsystems annotations completed at: "; date
+# EY ADDED 23-02-27 -------------------------------------------------
+cp $STEP_4/*subsys_annotated* $CENTRAL_OUT_DIR/step_4_output
+cp $STEP_4/daa_binary_files/*.daa $CENTRAL_OUT_DIR/step_4_output/daa_binary_files
+# -------------------------------------------------------------------
 
 printf "SUBSYS_ANNOT\n" >>$INPUT_DIR/checkpoints
 
@@ -325,6 +373,11 @@ $MKDIR $STEP_5/Subsystems_results/receipts
 mv $STEP_4/*.reduced $STEP_5/Subsystems_results
 mv $STEP_4/*.receipt $STEP_5/Subsystems_results/receipts
 rm $STEP_4/*.hierarchy
+# EY ADDED 23-02-27 -------------------------------------------------
+mkdir -p $CENTRAL_OUT_DIR/output_5_step/Subsystems_results/receipts
+cp $STEP_5/Subsystems_results/*.reduced $CENTRAL_OUT_DIR/output_5_step/Subsystems_results
+cp $STEP_5/Subsystems_results/receipts/*.receipt $CENTRAL_OUT_DIR/output_5_step/Susbsystems_results/receipts
+# -------------------------------------------------------------------
 
 printf "SUBSYS_AGGREG\n" >>$INPUT_DIR/checkpoints
 
@@ -349,16 +402,22 @@ if [ "${Step}" != "R_ANALYSIS" ]
 
 checked Rscript $R_DIR/run_DESeq_stats.R \
   -I $STEP_5/RefSeq_results/org_results \
-  -O RefSeq_org_DESeq_results.tab \
+  -O $STEP_6/RefSeq_org_DESeq_results.tab \
   -R $STEP_2/raw_counts.txt
 checked Rscript $R_DIR/run_DESeq_stats.R \
   -I $STEP_5/RefSeq_results/func_results \
-  -O RefSeq_func_DESeq_results.tab \
+  -O $STEP_6/RefSeq_func_DESeq_results.tab \
   -R $STEP_2/raw_counts.txt
 checked Rscript $R_DIR/Subsystems_DESeq_stats.R \
   -I $STEP_5/Subsystems_results \
-  -O Subsystems_level-1_DESeq_results.tab -L 1 \
+  -O $STEP_6/Subsystems_level-1_DESeq_results.tab -L 1 \
   -R $STEP_2/raw_counts.txt
+# EY ADDED 23-02-27 -------------------------------------------------
+#for i in $STEP_5/*
+#do
+#	ln -s `realpath $i` $CENTRAL_OUTPUT_DIR/step_5_output/`basename $i`
+#done
+# -------------------------------------------------------------------
 
 printf "R_ANALYSIS\n" >>$INPUT_DIR/checkpoints
 
@@ -367,5 +426,5 @@ else
 fi
 
 echo "Master bash script finished running at: "; date
-exit
+exit 0
 ####################################################################
