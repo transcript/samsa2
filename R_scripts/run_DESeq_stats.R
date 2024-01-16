@@ -128,21 +128,18 @@ complete_table <- complete_table[,-1]
 
 # OPTIONAL: importing the raw counts
 if (is.null(opt$raw_counts) == FALSE) {
-  raw_counts_table <- read.table(counts_file, header=FALSE, sep = "\t", quote = "")
-  raw_counts_table <- data.frame(raw_counts_table, 
-        do.call(rbind, strsplit(as.character(raw_counts_table$V1),'_')))
-  raw_counts_table$X2 <- as.numeric(as.character(raw_counts_table$X2))
-  raw_counts_table <- t(raw_counts_table[,c("X2", "V2")])
-  row.names(raw_counts_table) <- c("SAMPLE","RAW TOTAL")
-  colnames(raw_counts_table) <- raw_counts_table[1,]
-  raw_counts_table <- as.data.frame(raw_counts_table)
-  raw_counts_table <- raw_counts_table[-1,]
+  raw_counts_table <- read.delim(counts_file, header=FALSE, col.names=c("FILESTEM", "RAW_TOTAL"), quote = "")
   
-  # Need to subtract off the total number of annotations
-  raw_counts_table["ANNOTATION COUNT",] <- colSums(complete_table)
-  raw_counts_table["OTHER",] <- raw_counts_table[1,] - raw_counts_table[2,]
+  # Extract sample names from filestems
+  raw_counts_table[, "SAMPLE"] <- gsub("experimental_|control_|.cleaned", "", raw_counts_table$FILESTEM)
 
-  complete_table <- rbind(complete_table, raw_counts_table["OTHER",])
+  # Subtract the annotation count from total to obtain unannotated count
+  raw_counts_table[, "ANNOTATION_COUNT"] <- colSums(complete_table)
+  raw_counts_table[, "OTHER"] <- raw_counts_table["RAW_TOTAL"] - raw_counts_table["ANNOTATION_COUNT"]
+
+  # Append unannotated counts to complete table
+  other_counts_table <- t(data.frame("OTHER"=raw_counts_table[, "OTHER"], row.names=raw_counts_table[, "SAMPLE"]))
+  complete_table <- rbind(complete_table, other_counts_table)
 }
 
 # DESeq statistical calculations
