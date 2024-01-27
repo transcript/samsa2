@@ -55,22 +55,24 @@ control_files <- list.files(
   pattern = "control_*", full.names = T, recursive = FALSE)
 control_names = ""
 for (name in control_files) {
-  control_names <- c(control_names, unlist(strsplit(name, split='_', fixed=TRUE))[2])} 
+  control_names <- c(control_names, unlist(strsplit(name, split='.', fixed=TRUE))[2])}
 control_names <- control_names[-1]
 control_names_trimmed = ""
 for (name in control_names) {
-  control_names_trimmed <- c(control_names_trimmed, unlist(strsplit(name, split='.', fixed=TRUE))[1])}
+  spl <- regexpr("_",name)
+  control_names_trimmed <- c(control_names_trimmed, substring(name,c(1,spl+1),c(spl-1,nchar(name)))[2])}
 control_names_trimmed <- control_names_trimmed[-1]
 
 exp_files <- list.files(
-  pattern = "experiment_*", full.names = T, recursive = FALSE)
+  pattern = "experimental_*", full.names = T, recursive = FALSE)
 exp_names = ""
 for (name in exp_files) {
-  exp_names <- c(exp_names, unlist(strsplit(name, split='_', fixed=TRUE))[2])}
+  exp_names <- c(exp_names, unlist(strsplit(name, split='.', fixed=TRUE))[2])}
 exp_names <- exp_names[-1]
 exp_names_trimmed = ""
 for (name in exp_names) {
-  exp_names_trimmed <- c(exp_names_trimmed, unlist(strsplit(name, split='.', fixed=TRUE))[1])}
+  spl <- regexpr("_",name)
+  exp_names_trimmed <- c(exp_names_trimmed, substring(name,c(1,spl+1),c(spl-1,nchar(name)))[2])}
 exp_names_trimmed <- exp_names_trimmed[-1]
 
 # sanity check
@@ -185,23 +187,18 @@ l1_table[is.na(l1_table)] <- 0
 # OPTIONAL: importing the raw counts
 cat ("Now importing raw counts, if provided.\n")
 if (is.null(opt$raw_counts) == FALSE) {
-  raw_counts_table <- read.table(counts_file, header=FALSE, sep = "\t", quote = "")
-  raw_counts_table <- data.frame(raw_counts_table, 
-        do.call(rbind, strsplit(as.character(raw_counts_table$V1),'_')))
-  raw_counts_table$X2 <- as.numeric(as.character(raw_counts_table$X2))
-  raw_counts_table <- t(raw_counts_table[,c("X2", "V2")])
-  row.names(raw_counts_table) <- c("SAMPLE","RAW TOTAL")
-  colnames(raw_counts_table) <- raw_counts_table[1,]
-  raw_counts_table <- as.data.frame(raw_counts_table)
-  raw_counts_table <- raw_counts_table[-1,]
+  raw_counts_table <- read.delim(counts_file, header=FALSE, col.names=c("FILESTEM", "RAW_TOTAL"), quote = "")
   
-  # Need to subtract off the total number of annotations
-  raw_counts_table["ANNOTATION COUNT",] <- colSums(l1_table)
-  raw_counts_table["OTHER",] <- raw_counts_table[1,] - raw_counts_table[2,]
-  
-  l1_table <- rbind(l1_table, raw_counts_table["OTHER",])
-  l1_names <- c(l1_names, "OTHER")
-  rownames(l1_table) <- l1_names
+  # Extract sample names from filestems
+  raw_counts_table[, "SAMPLE"] <- gsub("experimental_|control_|.cleaned.fastq", "", raw_counts_table$FILESTEM)
+
+  # Subtract the annotation count from total to obtain unannotated count
+  raw_counts_table[, "ANNOTATION_COUNT"] <- colSums(l1_table)
+  raw_counts_table[, "OTHER"] <- raw_counts_table["RAW_TOTAL"] - raw_counts_table["ANNOTATION_COUNT"]
+
+  # Append unannotated counts to complete table
+  other_counts_table <- t(data.frame("OTHER"=raw_counts_table[, "OTHER"], row.names=raw_counts_table[, "SAMPLE"]))
+  l1_table <- rbind(l1_table, other_counts_table)
 }
 
 # now the DESeq stuff
