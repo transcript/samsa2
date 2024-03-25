@@ -137,10 +137,16 @@ for line in db:
 		db_id = str(splitline[0])[1:]
 
 		# name and functional description
-		db_entry = line.split("[", 1)
-		db_entry = db_entry[0].split(" ", 1)
-		db_entry = db_entry[1][:-1]
-
+			# updated to account for multiple brackets; thanks Menia G.!
+		if line.count("[") != 1:
+			db_entry = line.rsplit("[",1) ## Split the line at the first "[" from the end
+			db_entry = db_entry[0].split(" ", 1)
+			db_entry = db_entry[1][:-1]
+		else:
+			db_entry = line.split("[", 1) ## splits the line into two parts, one before the first occurence of "[" and the other after
+			db_entry = db_entry[0].split(" ", 1) ##splits the first parts into two
+			db_entry = db_entry[1][:-1] ##keeps the second part
+		
 		# organism name
 		if line.count("[") != 1:
 			splitline = line.split("[")
